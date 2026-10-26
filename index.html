@@ -669,7 +669,9 @@ $("#joinGo").onclick=async()=>{
 };
 
 /* admin */
-if(ADMIN){setTimeout(()=>openSheet("#adminSheet"),400)}
+function openAdmin(){introT=END;started=true;const g=document.getElementById("gate");if(g)g.hidden=true;setTimeout(()=>openSheet("#adminSheet"),500)}
+if(ADMIN)setTimeout(openAdmin,50);
+addEventListener("hashchange",()=>{if(location.hash==="#admin")openAdmin()});
 $("#adminGo").onclick=async()=>{
   const items=$("#adminList").value.split(/\n|,/).map(parseLine).filter(Boolean),err=$("#adminErr");
   if(!items.length){err.textContent="לא נמצאו שמות ברשימה";return}
