@@ -166,13 +166,16 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
     <div class="handle" id="sHandle"></div>
     <div class="meta" id="sMeta"></div>
     <div id="myBox"></div>
-    <div class="row">
-      <button class="btn" id="flyBtn">✈️ זאת הדבורה שלי – להטיס</button>
+    <div class="row" id="flyRow">
+      <button class="btn" id="flyBtn">✈️ להטיס את הדבורה שלי</button>
     </div>
-    <div class="row" style="margin-top:10px">
+    <div class="row" id="joinRow" style="margin-top:10px">
+      <button class="btn" id="joinFromSheet">🐝 גם אני רוצה דבורה</button>
+    </div>
+    <div class="row" id="shareRow" style="margin-top:10px">
       <button class="btn ghost" id="shareBtn">📸 שיתוף לסטורי</button>
     </div>
-    <div class="bonus">
+    <div class="bonus" id="bonusBox">
       <div><b>🎁 בונוס:</b> עקבו אחרי הכוורת וכתבו <b>"דבורה"</b> בתגובות לרילס של היום, והדבורה שלכם תקבל כתר או אביזר מיוחד ✨</div>
       <a class="btn ghost igbtn" href="https://www.instagram.com/hakaveret_shelanu/" target="_blank" rel="noopener">לעקוב באינסטגרם</a>
     </div>
@@ -661,14 +664,14 @@ function setWinner(w){ // w = {handle, found_at}
 function renderHunt(){
   const p=$("#huntPill");if(!p||!CONFIG.TREASURE.on)return;
   if(currentWinner)p.innerHTML=`🏆 נמצא ע״י <b dir="ltr">@${esc(currentWinner.handle)}</b> · שטר חדש בעוד <b style="font-variant-numeric:tabular-nums">${fmtCountdown(secsToNextTreasure())}</b>`;
-  else p.innerHTML=`💸 שטר של <b>${CONFIG.TREASURE.prize}</b> מוסתר בכוורת · עד 09:00`;
+  else p.innerHTML=`💸 שטר של <b>${CONFIG.TREASURE.prize}</b> מחכה בכוורת! · הבא בעוד <b style="font-variant-numeric:tabular-nums">${fmtCountdown(secsToNextTreasure())}</b>`;
 }
 setInterval(()=>{
   if(!CONFIG.TREASURE.on)return;
   const k=treasureDayKey();
   if(k!==todayKey){todayKey=k;winKey="kaveret_win_"+todayKey;currentWinner=null;foundShown=false;placeTreasure();renderHunt();
     if(mode==="hive")notify("💸 שטר חדש של "+CONFIG.TREASURE.prize+" הוסתר בכוורת! מי ימצא ראשון?");checkWinner()}
-  else if(currentWinner)renderHunt();
+  else renderHunt();
 },1000);
 async function checkWinner(){
   if(!CONFIG.TREASURE.on)return;
@@ -696,7 +699,7 @@ $("#fClaim").onclick=async()=>{
   if(me){$("#fPrize").textContent=CONFIG.TREASURE.prize;$("#fCode").textContent=treasureCode()+"\n@"+h;
     $("#fWhen").textContent=new Date(w.found_at).toLocaleString("he-IL",{dateStyle:"short",timeStyle:"medium"});$("#fWin").hidden=false}
   else{$("#fLateTxt").innerHTML=`<b dir="ltr">@${w.handle}</b> מצא את השטר ראשון ב־${new Date(w.found_at).toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})}.<br>מחר ב־09:00 שטר חדש מוסתר במקום אחר 🐝`;$("#fLate").hidden=false}
-  setWinner(w);
+  setWinner(w);loadWins();
 };
 let foundCool=0;
 $("#fClose").onclick=()=>{$("#found").hidden=true;foundShown=false;foundCool=performance.now()+8000};
@@ -733,8 +736,9 @@ function select(b,{fly:doFly=true}={}){
   if((b.streak||0)>1)tags.push("🔥 "+b.streak+" ימים ברצף");
   if((b.refs||0)>0)tags.push("📣 "+b.refs+" חברים");
   $("#sMeta").innerHTML=tags.map(t=>`<span class="tag">${t}</span>`).join("");
-  const mine=lstore("kaveret_my_bee")===b.handle;
-  $("#myBox").innerHTML=mine?myProgress(b):"";
+  const me=lstore("kaveret_my_bee"),registered=!!(me&&byHandle.get(me)),mine=me===b.handle;
+  $("#myBox").innerHTML=mine?myProgress(b):profileBox(b);
+  $("#flyRow").hidden=!mine;$("#shareRow").hidden=!mine;$("#bonusBox").hidden=!mine&&registered;$("#joinRow").hidden=registered;
   const ib=$("#inviteBtn");if(ib)ib.onclick=()=>invite(b.handle);
   openSheet("#beeSheet");
   if(doFly)flyTo(b);
@@ -889,6 +893,15 @@ function updateLevel(){
     core.intensity=1.5+g.level*.08;
   }
 }
+let winsBy={};
+async function loadWins(){try{if(LIVE){const r=await sb("treasure_wins?select=handle");if(r.ok){winsBy={};(await r.json()).forEach(w=>winsBy[w.handle]=(winsBy[w.handle]||0)+1)}}}catch(e){}}
+function profileBox(b){
+  const w=winsBy[b.handle]||0;
+  return `<div class="mybox">
+    <div>🔥 <b>${b.streak||0}</b> ימים ברצף · שיא <b>${b.best||0}</b></div>
+    <div>📣 <b>${b.refs||0}</b> חברים הצטרפו דרכה · 🏆 <b>${w}</b> ${w===1?"זכייה":"זכיות"} בשטר</div>
+  </div>`;
+}
 function nextReward(cur,steps){for(const [n,label] of steps)if(cur<n)return{n,label};return null}
 function myProgress(b){
   const st=b.streak||0,rf=b.refs||0;
@@ -897,6 +910,7 @@ function myProgress(b){
   return `<div class="mybox">
     <div>🔥 <b>${st}</b> ${st===1?"יום":"ימים"} ברצף${ns?` · עוד ${Math.max(1,ns.n-(b.best||0))} ל${ns.label}`:" · כל הפרסים נפתחו!"}</div>
     <div>📣 <b>${rf}</b> חברים הצטרפו דרכך${nr?` · עוד ${nr.n-rf} ל${nr.label}`:""}</div>
+    <div>🏆 <b>${winsBy[b.handle]||0}</b> זכיות בשטר</div>
     <button class="btn" id="inviteBtn">📣 הזמינו חברים לכוורת</button>
   </div>`;
 }
@@ -944,7 +958,8 @@ $("#newsGo").onclick=async()=>{
 };
 
 /* pilot */
-$("#flyBtn").onclick=()=>{if(!sel)return;startPilot(sel)};
+$("#flyBtn").onclick=()=>{if(!sel||lstore("kaveret_my_bee")!==sel.handle)return;startPilot(sel)};
+$("#joinFromSheet").onclick=()=>{deselect();$("#joinErr").textContent="";openSheet("#joinSheet")};
 function startPilot(b){
   pilotBee=b;closeSheets("#none");$("#bottom").classList.add("hide");$("#top").classList.add("hide");
   $("#pilot").hidden=false;$("#pilotName").textContent="@"+b.handle;
@@ -1180,6 +1195,7 @@ function frameBody(){
   if(LIVE)setInterval(async()=>{try{const last=bees.reduce((m,b)=>Math.max(m,b.id||0),0);const r=await sb("bees?select="+BEE_FIELDS+"&id=gt."+last+"&order=id.asc");if(r.ok){const rows=await r.json();if(rows.length)ingest(rows,true)}}catch(e){}},30000);
   pickLabels();
   loadMsgs();if(LIVE)setInterval(loadMsgs,8000);
+  loadWins();
   if(LIVE)setInterval(async()=>{try{const all=await loadAll(),keep=new Set(all.map(r=>r.handle));bees.filter(b=>!keep.has(b.handle)).map(b=>b.handle).forEach(removeBee);ingest(all,true)}catch(e){}},60000);
 })();
 </script>
