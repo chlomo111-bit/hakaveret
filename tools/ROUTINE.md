@@ -19,6 +19,9 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 - Gagnants du jour : select slot, handle, found_at from treasure_wins where day = (now() at time zone 'Asia/Jerusalem')::date order by slot;
 - Ne jamais promettre d'autres montants. Dans les textes : « 3 שטרות של 20 ₪ ביום ».
 
+## Pollen / miel (depuis le 27.10.2026)
+- Dans le jeu, en pilotant son abeille on attrape des boules de pollen → miel 🍯 (table honey : today, total). Champion du jour : select handle, today from honey where day=(now() at time zone 'Asia/Jerusalem')::date order by today desc limit 3; → à citer dans les reels/stories (« 🍯 @… a récolté N miels aujourd'hui ! »).
+
 ## Règle du post de 07:00 (depuis le 28.10.2026, idée de Shlomo)
 - Chaque jour à 07:00 : un POST (image 1080×1350, 4:5) + une STORY qui rappellent les 3 billets de 20 ₪ du jour et les gagnants d'hier (« 🏆 אתמול זכו: @… »), avec la règle : « 🔒 השטר של היום גלוי רק למי שמגיב/ה על הפוסט הזה! ». Description du post avec CTA « הגיבו כאן 👇 כדי לראות את השטרות של היום ».
 - Juste après la publication du post de 07:00 : `insert into public.billet_gate(day, post_id) values ((now() at time zone 'Asia/Jerusalem')::date, '<id du post publié>') on conflict (day) do update set post_id=excluded.post_id;`
