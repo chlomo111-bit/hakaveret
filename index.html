@@ -322,6 +322,7 @@ function styleFor(b){
   Object.assign(s,b.style||{});
   if(!(b.style&&b.style.hat)){if((b.refs||0)>=1)s.hat="tophat";else if((b.best||0)>=3)s.hat="flower"}
   s.gold=(b.refs||0)>=3||(b.best||0)>=7;
+  if(b.handle==="hakaveret_shelanu"){s.hat="none";s.gold=true;s.eyes="none";s.tint="yellow"}
   return s;
 }
 
@@ -567,15 +568,18 @@ function rebuildBees(){
 let posArr=new Float32Array(0),yawArr=new Float32Array(0);
 
 /* ---------- LABELS ---------- */
+const ADMIN_HANDLE="hakaveret_shelanu";
+const beeScale=b=>(b.handle===ADMIN_HANDLE?2.6:b.queen?1.7:1);
 const labelTex=new Map();
 function makeLabel(b){
-  const key=b.handle+(b.queen?"#q":"");if(labelTex.has(key))return labelTex.get(key);
+  const key=b.handle+(b.queen?"#q":"")+(b.handle===ADMIN_HANDLE?"#a":"");if(labelTex.has(key))return labelTex.get(key);
   const cv=document.createElement("canvas"),g=cv.getContext("2d");const txt="@"+b.handle;
-  g.font="800 44px Heebo, system-ui, sans-serif";const w=Math.ceil(g.measureText(txt).width)+(b.queen?96:44);
+  g.font="800 44px Heebo, system-ui, sans-serif";const w=Math.ceil(g.measureText(txt).width)+(b.queen||b.handle===ADMIN_HANDLE?96:44);
   cv.width=w;cv.height=72;g.font="800 44px Heebo, system-ui, sans-serif";g.direction="ltr";
-  g.fillStyle=b.queen?"rgba(255,194,75,.95)":"rgba(20,12,4,.72)";
+  const adm=b.handle===ADMIN_HANDLE;
+  g.fillStyle=adm?"rgba(255,255,255,.96)":b.queen?"rgba(255,194,75,.95)":"rgba(20,12,4,.72)";
   const r=30;g.beginPath();g.moveTo(r,4);g.arcTo(w-2,4,w-2,68,r);g.arcTo(w-2,68,2,68,r);g.arcTo(2,68,2,4,r);g.arcTo(2,4,w-2,4,r);g.fill();
-  g.fillStyle=b.queen?"#1A1108":"#FFF3D9";g.textBaseline="middle";g.fillText((b.queen?"👑 ":"")+txt,22,38);
+  g.fillStyle=adm?"#B8860B":b.queen?"#1A1108":"#FFF3D9";g.textBaseline="middle";g.fillText((adm?"😇 ":b.queen?"👑 ":"")+txt,22,38);
   const t=new THREE.CanvasTexture(cv);t.encoding=THREE.sRGBEncoding;t.minFilter=THREE.LinearFilter;t.userData={w,h:72};
   labelTex.set(key,t);if(labelTex.size>400){const f=labelTex.keys().next().value;labelTex.get(f).dispose();labelTex.delete(f)}
   return t;
@@ -598,12 +602,16 @@ function pickLabels(){
 }
 function placeLabels(){
   pool.forEach(s=>{if(!s.visible)return;const i=s.userData.i,b=bees[i];if(!b)return;
-    const big=(b===sel||b===pilotBee)?1.5:1,sc=(b.queen?1.7:1)*BEE_S;
+    const big=(b===sel||b===pilotBee)?1.5:1,sc=beeScale(b)*BEE_S;
     const t=s.material.map.userData,h=.62*big;s.scale.set(h*t.w/t.h,h,1);
     s.position.set(posArr[i*3],posArr[i*3+1]+.85*sc+h*.4,posArr[i*3+2]);
     s.visible=big>1||s.position.distanceTo(camera.position)>4.5});
 }
 
+/* ---------- AUREOLE DU COMPTE ADMIN ---------- */
+const angelHalo=new THREE.Mesh(new THREE.TorusGeometry(.55,.07,10,40),new THREE.MeshBasicMaterial({color:0xFFE680}));
+angelHalo.rotation.x=Math.PI/2;angelHalo.visible=false;hive.add(angelHalo);
+const angelGlow=new THREE.PointLight(0xfff1a8,1.2,9,2);angelHalo.add(angelGlow);
 /* ---------- SELECTION RING ---------- */
 const ring=new THREE.Mesh(new THREE.TorusGeometry(1.6,.09,8,32),new THREE.MeshBasicMaterial({color:0xffe08a,transparent:true,opacity:.9}));
 ring.visible=false;hive.add(ring);
@@ -708,7 +716,7 @@ function beeWorldPos(b,out){const i=b.i;return out.set(posArr[i*3],posArr[i*3+1]
 function flyTo(b,dur=1.6){
   const bp=beeWorldPos(b,new THREE.Vector3());
   const back=new THREE.Vector3(bp.x,0,bp.z).normalize().multiplyScalar(-1);if(!isFinite(back.x))back.set(0,0,1);
-  const to=bp.clone().add(back.multiplyScalar(-5.5)).add(new THREE.Vector3(0,1.6,0));
+  const to=bp.clone().add(back.multiplyScalar(-5.5*Math.max(1,beeScale(b)/1.1))).add(new THREE.Vector3(0,1.6,0));
   to.setLength(Math.min(to.length(),31));
   fly={t:0,dur,fromP:camera.position.clone(),fromT:controls.target.clone(),toP:to,b};
   follow=false;
@@ -717,7 +725,7 @@ function select(b,{fly:doFly=true}={}){
   sel=b;ring.visible=true;
   $("#sHandle").textContent="@"+b.handle;
   const L=b.look,tags=[];
-  tags.push(b.queen?"👑 מלכה":"🐝 דבורה");
+  tags.push(b.handle===ADMIN_HANDLE?"😇 מנהלת הכוורת":b.queen?"👑 מלכה":"🐝 דבורה");
   const names={cap:"כובע",tophat:"מגבעת",beanie:"כובע גרב",flower:"פרח",bow:"פפיון",glasses:"משקפיים",sunglasses:"משקפי שמש",scarf:"צעיף"};
   [L.hat,L.eyes,L.neck].forEach(x=>{if(names[x])tags.push(names[x])});
   const day=Math.floor((b.created-new Date(CONFIG.DAY_START+"T00:00:00"))/864e5)+1;
@@ -803,7 +811,7 @@ renderer.domElement.addEventListener("pointerup",e=>{
   ndc.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);ray.setFromCamera(ndc,camera);
   if(treasureHit&&ray.intersectObject(treasureHit).length){treasureFound();return}
   let best=null,bd=1e9;const v=new THREE.Vector3();
-  for(let i=0;i<bees.length;i++){v.set(posArr[i*3],posArr[i*3+1],posArr[i*3+2]);const d=ray.ray.distanceSqToPoint(v);const lim=(bees[i].queen?1.7:1)*BEE_S*.7;
+  for(let i=0;i<bees.length;i++){v.set(posArr[i*3],posArr[i*3+1],posArr[i*3+2]);const d=ray.ray.distanceSqToPoint(v);const lim=beeScale(bees[i])*BEE_S*.7;
     if(d<lim*lim){const dc=v.distanceTo(camera.position);if(dc<bd){bd=dc;best=bees[i]}}}
   if(best)select(best);
 });
@@ -1109,7 +1117,7 @@ function updateBees(t,dt){
       x=rr*Math.cos(a);z=rr*Math.sin(a);y=b.h+Math.sin(t*b.bf+b.bp)*b.bob;
       const vx=-Math.sin(a)*b.w,vz=Math.cos(a)*b.w;yaw=Math.atan2(-vz,vx)}
     posArr[i*3]=x;posArr[i*3+1]=y;posArr[i*3+2]=z;yawArr[i]=yaw;
-    const s=(b.queen?1.7:1)*BEE_S;
+    const s=beeScale(b)*BEE_S;
     dummy.position.set(x,y,z);dummy.rotation.set(0,yaw,Math.sin(t*3+b.bp)*.12);dummy.scale.setScalar(s);dummy.updateMatrix();
     mB.copy(dummy.matrix);beeMesh.setMatrixAt(i,mB);
     mW.multiplyMatrices(mB,wR);wingR.setMatrixAt(i,mW);mW.multiplyMatrices(mB,wLm);wingL.setMatrixAt(i,mW);
@@ -1131,6 +1139,7 @@ function frameBody(){
   const dt=window.CAP?1/30:Math.min(clock.getDelta(),.05),t=window.CAP?(window.capT=(window.capT||0)+1/30):clock.elapsedTime;
   if(window.CAP&&window.capHook)window.capHook(t);
   updateBees(t,dt);
+  {const ab=byHandle.get(ADMIN_HANDLE);if(ab&&posArr.length>ab.i*3+2){angelHalo.visible=true;const sc=beeScale(ab)*BEE_S;angelHalo.position.set(posArr[ab.i*3]+.45*sc*Math.cos(yawArr[ab.i]),posArr[ab.i*3+1]+.62*sc+Math.sin(t*2)*.05,posArr[ab.i*3+2]-.45*sc*Math.sin(yawArr[ab.i]));angelHalo.scale.setScalar(sc*.55)}else angelHalo.visible=false}
   if(mode==="intro"){runIntro(dt);return}
   pollen.rotation.y+=dt*.02;if(treasureHit){treasure.children[0].position.z=Math.sin(t*2)*.08;const hs=6+Math.sin(t*3)*1.5;treasure.userData.halo.scale.set(hs,hs,1)}core.intensity=1.5+Math.sin(t*1.3)*.15;
   if(pilotBee){
@@ -1146,14 +1155,14 @@ function frameBody(){
     fly.t+=dt;const e=ease(clamp(fly.t/fly.dur,0,1));
     const tgt=fly.b?beeWorldPos(fly.b,tmpV.clone()):fly.toT;
     let toP=fly.toP;if(fly.b){const bp=tgt;const back=new THREE.Vector3(bp.x,0,bp.z);const L=back.length()||1;back.multiplyScalar(1/L);
-      toP=bp.clone().addScaledVector(back,-5.5).add(new THREE.Vector3(0,1.6,0));const tl=Math.hypot(toP.x,toP.z);if(tl>31){toP.x*=31/tl;toP.z*=31/tl}}
+      toP=bp.clone().addScaledVector(back,-5.5*Math.max(1,beeScale(fly.b)/1.1)).add(new THREE.Vector3(0,1.6,0));const tl=Math.hypot(toP.x,toP.z);if(tl>31){toP.x*=31/tl;toP.z*=31/tl}}
     camera.position.lerpVectors(fly.fromP,toP,e);controls.target.lerpVectors(fly.fromT,tgt,e);camera.lookAt(controls.target);
     if(fly.t>=fly.dur){const hadBee=!!fly.b;fly=null;follow=hadBee}
   }else if(follow&&sel){
     prevT.copy(controls.target);beeWorldPos(sel,controls.target);camera.position.add(tmpV.subVectors(controls.target,prevT));controls.update();
   }else if(controls.enabled)controls.update();
   if(treasureHit&&!pilotBee&&!fly&&camera.position.distanceTo(treasure.position)<7)treasureFound();
-  if(sel){beeWorldPos(sel,ring.position);ring.position.y-=.2;ring.rotation.x=Math.PI/2;const s=(sel.queen?1.7:1)*(1+Math.sin(t*5)*.08);ring.scale.setScalar(s);ring.lookAt(camera.position)}
+  if(sel){beeWorldPos(sel,ring.position);ring.position.y-=.2;ring.rotation.x=Math.PI/2;const s=beeScale(sel)*(1+Math.sin(t*5)*.08);ring.scale.setScalar(s);ring.lookAt(camera.position)}
   if(frame++%12===0)pickLabels();placeLabels();
   renderer.render(hive,camera);
 }
