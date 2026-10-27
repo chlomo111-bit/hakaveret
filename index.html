@@ -645,6 +645,7 @@ if(CONFIG.TREASURE.on){
     if(gift){g.strokeStyle="rgba(255,201,60,.55)";g.lineWidth=3;g.strokeRect(16,16,224,96)}
     g.fillStyle=P[2];g.beginPath();g.arc(70,64,34,0,7);g.fill();g.fillStyle=P[4];g.font="900 58px Heebo, sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(String(prize||20),178,68);
     g.fillStyle=P[3];g.font="900 34px Heebo, sans-serif";g.fillText("₪",70,66);tx.needsUpdate=true;
+    const hl=treasure.userData.halo;if(hl){hl.material.color.set(gift?0x9B6BFF:0xffffff);hl.material.opacity=gift?.55:1}
     const lb=treasure.userData.giftLabel;if(lb){lb.visible=!!gift;if(gift){const c=lb.material.map.image,x=c.getContext("2d");x.clearRect(0,0,c.width,c.height);
       x.fillStyle="rgba(58,22,118,.92)";x.beginPath();x.roundRect?x.roundRect(4,4,c.width-8,c.height-8,40):x.rect(4,4,c.width-8,c.height-8);x.fill();x.strokeStyle="#FFC93C";x.lineWidth=6;x.stroke();
       x.fillStyle="#FFE7A8";x.font="900 46px Heebo, sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText("🎁 מתנה מ־@"+gift,c.width/2,c.height/2+2);lb.material.map.needsUpdate=true}}};
