@@ -50,6 +50,7 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 - ANTI-SPAM : maximum 1 reel et ~4 stories par jour. Avant toute publication, vérifier avec INSTAGRAM_GET_IG_USER_MEDIA et INSTAGRAM_GET_IG_USER_STORIES qu'un contenu identique ou très proche n'est pas déjà en ligne.
 
 ## Débrief du matin (demande de Shlomo, 27.10.2026)
+- TOUT D'ABORD tester l'accès à la voix : `curl -sS -o /dev/null -w "%{http_code}" https://storage.googleapis.com/` (200/400 = OK, 000/403 du proxy = bloqué). Shlomo a ajouté storage.googleapis.com aux domaines autorisés le 27.10 : dire dans le débrief si la voix James est utilisable aujourd'hui ou toujours bloquée.
 - Au tout début de la production du matin, envoyer à Shlomo un débrief des 24 dernières heures (SendUserMessage + PushNotification, en français, court) :
   abonnés (INSTAGRAM_GET_USER_INFO followers_count ; repère 27.10 13:00 = 29), nouvelles abeilles et reines (bees.created_at sur 24 h ; repère 27.10 13:00 = 37 abeilles), gagnants des billets d'hier (treasure_wins), champion du miel, stories/reels publiés,
   et LE COMMENTAIRE LE PLUS LIKÉ des 24 h sur tous les médias (INSTAGRAM_GET_IG_MEDIA_COMMENTS avec fields "id,text,from,timestamp,like_count", hors hakaveret_shelanu) : citer le texte, l'auteur et le nombre de likes, + les 2 suivants.
