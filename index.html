@@ -630,7 +630,7 @@ function calKey(){return keyOf(ilWall())}
 function secsToNextTreasure(){const w=ilWall(),d=new Date(w);let n=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),TREASURE_HOUR,0,0);if(w>=n)n+=864e5;return Math.max(0,Math.round((n-w)/1000))}
 const fmtCountdown=t=>[Math.floor(t/3600),Math.floor(t%3600/60),t%60].map(x=>String(x).padStart(2,"0")).join(":");
 let todayKey=treasureDayKey();
-const treasure=new THREE.Group();let treasureHit=null;
+const treasure=new THREE.Group();let treasureHit=null,billetLocked=false;
 if(CONFIG.TREASURE.on){
   const cv=document.createElement("canvas");cv.width=256;cv.height=128;const g=cv.getContext("2d");
   g.fillStyle="#3E9B57";g.fillRect(0,0,256,128);g.strokeStyle="#1F5E32";g.lineWidth=10;g.strokeRect(5,5,246,118);
@@ -654,9 +654,12 @@ function placeTreasure(){
   if(R()<.75){const y=4+R()*22;treasure.position.set((RW-2.6)*Math.cos(a),y,(RW-2.6)*Math.sin(a));treasure.lookAt(0,y,0)}
   else{const r=8+R()*16;treasure.position.set(r*Math.cos(a),-4.6,r*Math.sin(a));note.rotation.x=-Math.PI/2}
   note.rotation.z=(R()-.5)*.6;
+  if(billetLocked){treasure.visible=false;treasureHit=null;return}
   treasure.visible=true;treasureHit=treasure.userData.hit;
 }
 let winKey="kaveret_win_"+todayKey,currentWinner=null;
+async function checkAccess(){if(!LIVE||!CONFIG.TREASURE.on)return;try{const h=lstore("kaveret_my_bee")||"";const r=await sb("rpc/billet_access",{method:"POST",body:JSON.stringify({h})});if(!r.ok)return;const ok=await r.json();const was=billetLocked;billetLocked=ok===false;if(billetLocked){treasure.visible=false;treasureHit=null}else if(was&&!currentWinner){placeTreasure()}renderHunt()}catch(e){}}
+setInterval(checkAccess,60000);
 function lstore(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
 function setWinner(w){ // w = {handle, found_at}
   if(!w)return;treasure.visible=false;treasureHit=null;currentWinner=w;renderHunt();
@@ -664,12 +667,13 @@ function setWinner(w){ // w = {handle, found_at}
 function renderHunt(){
   const p=$("#huntPill");if(!p||!CONFIG.TREASURE.on)return;
   if(currentWinner)p.innerHTML=`🏆 נמצא ע״י <b dir="ltr">@${esc(currentWinner.handle)}</b> · שטר חדש בעוד <b style="font-variant-numeric:tabular-nums">${fmtCountdown(secsToNextTreasure())}</b>`;
+  else if(billetLocked)p.innerHTML=`🔒 השטר של היום גלוי רק למי שהגיב/ה על הפוסט של הבוקר באינסטגרם · הבא בעוד <b style="font-variant-numeric:tabular-nums">${fmtCountdown(secsToNextTreasure())}</b>`;
   else p.innerHTML=`💸 שטר של <b>${CONFIG.TREASURE.prize}</b> מחכה בכוורת! · הבא בעוד <b style="font-variant-numeric:tabular-nums">${fmtCountdown(secsToNextTreasure())}</b>`;
 }
 setInterval(()=>{
   if(!CONFIG.TREASURE.on)return;
   const k=treasureDayKey();
-  if(k!==todayKey){todayKey=k;winKey="kaveret_win_"+todayKey;currentWinner=null;foundShown=false;placeTreasure();renderHunt();
+  if(k!==todayKey){todayKey=k;winKey="kaveret_win_"+todayKey;currentWinner=null;foundShown=false;placeTreasure();renderHunt();checkAccess();
     if(mode==="hive")notify("💸 שטר חדש של "+CONFIG.TREASURE.prize+" הוסתר בכוורת! מי ימצא ראשון?");checkWinner()}
   else renderHunt();
 },1000);
@@ -692,7 +696,7 @@ $("#fClaim").onclick=async()=>{
   const h=cleanHandle($("#fHandle").value);if(!HANDLE_RE.test(h)){$("#fErr").textContent="כתבו שם משתמש של אינסטגרם";return}
   $("#fClaim").disabled=true;let w=null,me=false;
   try{
-    if(LIVE){const r=await sb("rpc/claim_treasure",{method:"POST",body:JSON.stringify({h})});const rows=await r.json();w=rows[0];me=!!(w&&w.is_me)}
+    if(LIVE){const r=await sb("rpc/claim_treasure",{method:"POST",body:JSON.stringify({h})});const rows=await r.json();if(!r.ok){$("#fErr").textContent=String(rows&&rows.message||"").includes("not_eligible")?"🔒 רק מי שהגיב/ה על הפוסט של הבוקר יכול/ה לזכות היום":"משהו לא עבד, נסו שוב";$("#fClaim").disabled=false;return}w=rows[0];me=!!(w&&w.is_me)}
     else{const ex=lstore(winKey);if(ex){w=JSON.parse(ex)}else{w={handle:h,found_at:new Date().toISOString()};lstore(winKey,JSON.stringify(w));me=true}}
   }catch(e){$("#fErr").textContent="משהו לא עבד, נסו שוב";$("#fClaim").disabled=false;return}
   $("#fClaim").disabled=false;$("#fAsk").hidden=true;
@@ -1189,7 +1193,7 @@ function frameBody(){
   if(!window.CAP)loop();else window.loop=loop;            // le jeu démarre tout de suite, sans attendre les données
   const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),ms))]);
   try{await withTimeout(document.fonts.load("800 44px Heebo"),3000)}catch(e){}
-  if(CONFIG.TREASURE.on){$("#huntPill").hidden=false;renderHunt();checkWinner();if(LIVE)setInterval(checkWinner,30000)}
+  if(CONFIG.TREASURE.on){$("#huntPill").hidden=false;renderHunt();checkWinner();checkAccess();if(LIVE)setInterval(checkWinner,30000)}
   try{ingest(LIVE?await withTimeout(loadAll(),10000):demoData())}catch(e){toast("לא הצלחנו לטעון את הכוורת, נסו לרענן");ingest([])}
   updateStats();
   if(LIVE)setInterval(async()=>{try{const last=bees.reduce((m,b)=>Math.max(m,b.id||0),0);const r=await sb("bees?select="+BEE_FIELDS+"&id=gt."+last+"&order=id.asc");if(r.ok){const rows=await r.json();if(rows.length)ingest(rows,true)}}catch(e){}},30000);
