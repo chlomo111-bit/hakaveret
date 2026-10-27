@@ -15,6 +15,7 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 - Description = mini-histoire du jour avec les joueurs tagués (@), titre « 🐝 יום N בכוורת », CTA « כתבו "דבורה" 👇 », « 🔗 הקישור בביו », « ומה יקרה מחר? התגובה עם הכי הרבה לייקים קובעת 👇 », « המבצע אינו קשור לאינסטגרם ואינו ממומן על ידה. », 5 hashtags (#הכוורת_שלנו #משחק #דבורים #זכייה #ישראל). Après publication : poster un commentaire CTA (Shlomo l'épingle).
 
 ## Billets (depuis le 27.10.2026 10:45, règle de Shlomo)
+- Exception unique : le 27.10 slot 3 (17:58) = billet cadeau violet 40 ₪ offert par @ronen18 (colonnes billet_slots.gift_from / gift_msg). Les jours suivants : de nouveau 3×20 ₪ normaux, ne jamais remettre de gift sans demande de Shlomo.
 - 3 billets de 20 ₪ par jour (60 ₪/jour), à des heures aléatoires et espacées : créneau 1 entre 09:00 et 11:30, créneau 2 entre 13:00 et 16:00, créneau 3 entre 18:00 et 21:30 (table billet_slots, générée automatiquement par la fonction ensure_slots). Un gagnant par billet (treasure_wins : day + slot). Le jeu affiche le compte à rebours jusqu'au prochain billet.
 - Gagnants du jour : select slot, handle, found_at from treasure_wins where day = (now() at time zone 'Asia/Jerusalem')::date order by slot;
 - Ne jamais promettre d'autres montants. Dans les textes : « 3 שטרות של 20 ₪ ביום ».
@@ -44,6 +45,13 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 - Dans le jeu (index.html, bloc ÉVÉNEMENT 50 ABEILLES) : dès 50 abeilles, chaque joueur voit une fois l'événement (alarme rouge → מלכת־העל géante → les abeilles forment « 50 » → explosion d'or) puis la ruche reste dorée avec pluie d'or et la Super-Reine qui tourne. hakaveret.online/#ev50 le rejoue (aperçu / capture reel).
 - Avant 50 : le compteur affiche « 50 🤯 » et un toast tease « ב־50 דבורים יקרה בכוורת משהו מטורף… ». À utiliser dans les stories/reels pour pousser le parrainage.
 - Le jour où bees >= 50 : reel spécial capturé avec #ev50 (vrais @ de la table bees) + story « 🤯 50 דבורים! הכוורת הפכה לכוורת הזהב ».
+
+## Débrief du matin (demande de Shlomo, 27.10.2026)
+- Au tout début de la production du matin, envoyer à Shlomo un débrief des 24 dernières heures (SendUserMessage + PushNotification, en français, court) :
+  abonnés (INSTAGRAM_GET_USER_INFO followers_count ; repère 27.10 13:00 = 29), nouvelles abeilles et reines (bees.created_at sur 24 h ; repère 27.10 13:00 = 37 abeilles), gagnants des billets d'hier (treasure_wins), champion du miel, stories/reels publiés,
+  et LE COMMENTAIRE LE PLUS LIKÉ des 24 h sur tous les médias (INSTAGRAM_GET_IG_MEDIA_COMMENTS avec fields "id,text,from,timestamp,like_count", hors hakaveret_shelanu) : citer le texte, l'auteur et le nombre de likes, + les 2 suivants.
+- Indiquer l'événement retenu pour la journée (= ce commentaire s'il est réalisable). Jamais de contenu politique (visages de politiciens, partis…) : passer au suivant.
+- Le reel de Ron (@ronen18, billet doublé en cadeau 40 ₪) attend la voix MP3 que Shlomo doit envoyer : ne pas le refaire sans cette voix (images déjà prêtes dans la session du 27.10).
 
 ## Profil Instagram toujours à jour (demande de Shlomo, 27.10.2026)
 - Carrousel « איך משחקים? » (media/regles/, 5 slides 1080×1350) publié le 27.10.2026 : Shlomo l'épingle. Dès qu'une règle change (montants, horaires, nouvelle mécanique), regénérer les slides concernées et republier un nouveau carrousel des règles, puis envoyer à Shlomo (message court) : « épingle le nouveau carrousel » + la bio mise à jour à coller (l'API ne permet ni d'épingler, ni de modifier la bio, ni de créer des highlights).
