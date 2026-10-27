@@ -941,7 +941,7 @@ const orbs=new THREE.Group();hive.add(orbs);
  var orbMat=new THREE.SpriteMaterial({map:new THREE.CanvasTexture(oc),blending:THREE.AdditiveBlending,transparent:true,depthWrite:false})}
 function updateLevel(){
   const g=goalInfo(bees.length);
-  try{$("#nGoal").textContent=g.next.toLocaleString("he-IL");$("#gFill").style.width=Math.min(100,Math.round((bees.length-g.prev)/Math.max(1,g.next-g.prev)*100))+"%"}catch(e){}
+  try{$("#nGoal").textContent=g.next.toLocaleString("he-IL")+(g.next===EV_N?" 🤯":"");if(g.next===EV_N)$("#nGoal").parentNode.title="🤯 ב־50 דבורים יקרה בכוורת משהו מטורף…";$("#gFill").style.width=Math.min(100,Math.round((bees.length-g.prev)/Math.max(1,g.next-g.prev)*100))+"%"}catch(e){}
   if(g.level!==hiveLevel){
     if(hiveLevel>=0&&g.level>hiveLevel&&mode==="hive")notify("🎉 הכוורת גדלה! הגענו ל־"+g.prev.toLocaleString("he-IL")+" דבורים");
     hiveLevel=g.level;orbs.clear();const R=rng(99);
@@ -949,6 +949,102 @@ function updateLevel(){
     core.intensity=1.5+g.level*.08;
   }
 }
+/* ================= ÉVÉNEMENT 50 ABEILLES : « כוורת הזהב » =================
+   Joué une seule fois par appareil quand la ruche atteint 50 abeilles (#ev50 pour le forcer).
+   Alarme → la Super-Reine géante surgit → les abeilles forment « 50 » → explosion d'or → la ruche devient dorée pour toujours. */
+const EV_N=50,EV_FORCE=location.hash==="#ev50",EV_KEY="kaveret_ev50";
+const EV={on:false,done:false,t0:0,since:0,form:null,gold:0,goldTarget:0,hud:null};
+const BASE_BG=new THREE.Color("#2A1606"),GOLD_BG=new THREE.Color("#6B4508");
+const evOverlay=document.createElement("div");evOverlay.style.cssText="position:fixed;inset:0;pointer-events:none;z-index:5;opacity:0;background:#ff3b00";document.body.appendChild(evOverlay);
+// la Super-Reine (abeille géante couronnée)
+const giant=new THREE.Group();
+{const body=new THREE.Mesh(beeGeo,beeMat);const wl=new THREE.Mesh(wingGeo,wingMat),wr=new THREE.Mesh(wingGeo,wingMat);wl.position.y=wr.position.y=.3;wl.scale.z=-1;
+ const G="#FFD23F",crown=new THREE.Mesh(merge([boxGeo(.32,.07,.32,.47,.3,0,G),boxGeo(.07,.15,.07,.59,.41,.12,G),boxGeo(.07,.15,.07,.35,.41,.12,G),boxGeo(.07,.15,.07,.59,.41,-.12,G),boxGeo(.07,.15,.07,.35,.41,-.12,G),boxGeo(.08,.08,.08,.47,.4,0,"#FF4D6D")]),accMat);
+ const glow=new THREE.PointLight(0xffd75a,2.2,40,1.6);giant.add(body,wl,wr,crown,glow);giant.userData={wl,wr};giant.visible=false;hive.add(giant)}
+function placeGiant(p,yaw,s,t){giant.position.copy(p);giant.rotation.set(0,yaw,Math.sin(t*2)*.1);giant.scale.setScalar(s);const f=Math.sin(t*30)*.7;giant.userData.wr.rotation.x=-f;giant.userData.wl.rotation.x=f}
+const giantPath=new THREE.CatmullRomCurve3([new THREE.Vector3(-14,-2,-40),new THREE.Vector3(-6,6,-14),new THREE.Vector3(0,11,6),new THREE.Vector3(5,16,8),new THREE.Vector3(4,24,-2),new THREE.Vector3(0,29,-8)]);
+// pluie d'or (permanente après l'événement) + gerbe de l'explosion
+function evPoints(n,size,opacity){const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.BufferAttribute(new Float32Array(n*3),3));
+  const p=new THREE.Points(g,new THREE.PointsMaterial({color:0xFFD966,size,map:pollenGlowTex,transparent:true,opacity,depthWrite:false,blending:THREE.AdditiveBlending}));p.frustumCulled=false;p.visible=false;hive.add(p);return p}
+const RAIN_N=420,rain=evPoints(RAIN_N,.55,.85),rainV=new Float32Array(RAIN_N);
+{const a=rain.geometry.attributes.position.array;for(let i=0;i<RAIN_N;i++){const r=4+Math.random()*28,q=Math.random()*6.283;a[i*3]=r*Math.cos(q);a[i*3+1]=Math.random()*42-6;a[i*3+2]=r*Math.sin(q);rainV[i]=1.5+Math.random()*2.5}}
+const digits=evPoints(1,.9,0);digits.material.color.set(0xFFC93C);
+const BURST_N=360,burst=evPoints(BURST_N,1.1,1),burstV=new Float32Array(BURST_N*3);
+function formTargets(n){
+  const portrait=innerWidth<innerHeight,W=portrait?170:300,H=portrait?300:170,c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d");
+  g.fillStyle="#fff";g.textAlign="center";g.textBaseline="middle";g.font="900 "+(portrait?150:160)+"px Heebo, Arial, sans-serif";
+  if(portrait){g.fillText("5",W/2,H*.27);g.fillText("0",W/2,H*.76)}else g.fillText("50",W/2,H*.55);
+  const d=g.getImageData(0,0,W,H).data,P=[];for(let y=0;y<H;y+=3)for(let x=0;x<W;x+=3)if(d[(y*W+x)*4+3]>128)P.push([x,y]);
+  const sc=(portrait?23:27)/(portrait?H:W),R=rng(50);
+  {const a=new Float32Array(P.length*3);P.forEach((q,j)=>{a[j*3]=(q[0]-W/2)*sc+(Math.random()-.5)*.3;a[j*3+1]=14-(q[1]-H/2)*sc+(Math.random()-.5)*.3;a[j*3+2]=1.2+(Math.random()-.5)*.6});
+   digits.geometry.setAttribute("position",new THREE.BufferAttribute(a,3));digits.geometry.setDrawRange(0,P.length)}
+  if(P.length<n){const out=[];for(let i=0;i<n;i++){const a=i/n*6.283;out.push(new THREE.Vector3(12*Math.cos(a),14+12*Math.sin(a),2))}return out}
+  const C=[];for(let i=0;i<n;i++)C.push(P[Math.floor(R()*P.length)].slice());
+  for(let it=0;it<10;it++){const sx=new Float32Array(n),sy=new Float32Array(n),cn=new Float32Array(n);
+    for(const p of P){let bi=0,bd=1e9;for(let j=0;j<n;j++){const dx=p[0]-C[j][0],dy=p[1]-C[j][1],dd=dx*dx+dy*dy;if(dd<bd){bd=dd;bi=j}}sx[bi]+=p[0];sy[bi]+=p[1];cn[bi]++}
+    for(let j=0;j<n;j++)if(cn[j]){C[j][0]=sx[j]/cn[j];C[j][1]=sy[j]/cn[j]}}
+  return C.map(p=>new THREE.Vector3((p[0]-W/2)*sc,14-(p[1]-H/2)*sc,2));
+}
+function evSound(kind){try{if(!SND.ac||SND.muted)return;const ac=SND.ac,t=ac.currentTime;
+  if(kind==="alarm"){for(let i=0;i<5;i++){tone(i%2?660:880,t+i*.45,.42,"square",.05,SND.master,.02)}SND.buzz.gain.setTargetAtTime(.22,t,.2)}
+  else if(kind==="boom"){const len=ac.sampleRate*1.6,buf=ac.createBuffer(1,len,ac.sampleRate),ch=buf.getChannelData(0);for(let i=0;i<len;i++)ch[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);
+    const s=ac.createBufferSource(),lp=ac.createBiquadFilter(),g=ac.createGain();s.buffer=buf;lp.type="lowpass";lp.frequency.value=260;g.gain.value=.9;s.connect(lp);lp.connect(g);g.connect(SND.master);s.start(t);
+    const o=ac.createOscillator(),og=ac.createGain();o.frequency.setValueAtTime(90,t);o.frequency.exponentialRampToValueAtTime(30,t+.8);og.gain.setValueAtTime(.6,t);og.gain.exponentialRampToValueAtTime(.001,t+1);o.connect(og);og.connect(SND.master);o.start(t);o.stop(t+1.05)}
+  else if(kind==="fanfare"){[523.25,659.25,783.99,1046.5,783.99,1046.5].forEach((f,i)=>{tone(f,t+i*.13,i>3?1.4:.3,"sawtooth",.05,SND.master);tone(f,t+i*.13,i>3?1.4:.3,"triangle",.07,SND.fx)});SND.buzz.gain.setTargetAtTime(.035,t+1,.6)}
+}catch(e){}}
+function applyGold(k){EV.gold=k;hive.background.copy(BASE_BG).lerp(GOLD_BG,k);hive.fog.color.copy(hive.background);rain.visible=k>0;rain.material.opacity=.85*k}
+function evStart(t){
+  EV.on=true;EV.done=true;EV.t0=t;EV.step=0;lstore(EV_KEY,"1");
+  if(sel)deselect();follow=false;fly=null;controls.enabled=false;closeSheets();EV.side=sideOpen();if(EV.side)openSide(false);
+  EV.hud=["#top","#bottom","#chatBtn"].map(s=>{const e=$(s);if(e&&!e.classList.contains("hide")){e.classList.add("hide");return e}}).filter(Boolean);
+  EV.form={k:0,tg:formTargets(bees.length)};
+  EV.camZ=26;
+  evSound("alarm");
+}
+function evEnd(t){
+  EV.on=false;EV.form=null;digits.visible=false;evOverlay.style.opacity=0;caption("");burst.visible=false;
+  camera.position.set(0,14,EV.camZ);controls.target.set(0,14,0);controls.enabled=true;controls.update();
+  (EV.hud||[]).forEach(e=>e.classList.remove("hide"));if(EV.side)openSide(true);
+  notify("✨ 50 דבורים! הכוורת הפכה לכוורת הזהב ✨");notify("👑 מלכת־העל עפה עכשיו מעל כולם");
+}
+function evCheck(t){
+  if(REEL||EV.on)return;
+  if(!EV.since)EV.since=t;
+  const reached=bees.length>=EV_N;
+  if(!EV.done&&reached&&lstore(EV_KEY)&&!EV_FORCE){EV.done=true;applyGold(1)}
+  if(EV.gold>=1||(EV.done&&!EV.on&&EV.gold>0)){const a=t*.12;placeGiant(new THREE.Vector3(18*Math.cos(a),30+Math.sin(t*.7),18*Math.sin(a)),Math.atan2(-Math.cos(a),-Math.sin(a)),6,t);giant.visible=true}
+  if(EV.done||!(reached||EV_FORCE)||!bees.length)return;
+  if(t-EV.since<2.5||pilotBee||fly||document.querySelector(".sheet:not(.closed)"))return;
+  evStart(t);
+}
+function evFrame(t,dt){
+  const e=t-EV.t0;
+  // caméra + secousses
+  let shake=0;if(e<2.6)shake=.35;if(e>=2.6)shake+=1.4*Math.exp(-(e-2.6)*2.2);if(e>=11)shake+=1.8*Math.exp(-(e-11)*2);
+  const look=new THREE.Vector3(0,14,0);
+  // la Super-Reine
+  if(e>=2.4){giant.visible=true;
+    if(e<7){const u=ease(clamp((e-2.4)/4.4,0,1)),p=giantPath.getPointAt(u),tg=giantPath.getTangentAt(u);placeGiant(p,Math.atan2(-tg.z,tg.x),10,t);look.lerp(p,.35*(1-prog(e,5.5,7)))}
+    else{const p=new THREE.Vector3(0,31+Math.sin(t*1.5)*.6,-8);placeGiant(p,-Math.PI/2+Math.sin(t*.8)*.25,10-4*prog(e,12,15),t)}}
+  camera.position.set(Math.sin(t*37)*shake*.6,14+Math.cos(t*29)*shake*.5,EV.camZ);camera.lookAt(look);
+  // formation « 50 »
+  EV.form.k=ease(prog(e,6.2,8.2))*(1-ease(prog(e,11,12.4)));
+  digits.visible=EV.form.k>0;digits.material.opacity=.9*ease(prog(e,7,8.4))*(1-prog(e,11,11.3))*(.85+.15*Math.sin(t*8));
+  // overlay : alarme rouge, flashs blancs
+  if(e<2.5){evOverlay.style.background="#ff2a00";evOverlay.style.opacity=Math.sin(e*12)>0?.28:.05}
+  else{evOverlay.style.background="#fff";evOverlay.style.opacity=Math.max(.85*Math.exp(-(e-2.5)*4),e>=11?Math.exp(-(e-11)*2.5):0)}
+  // sons + événements ponctuels
+  if(EV.step===0&&e>=2.5){EV.step=1;evSound("boom")}
+  if(EV.step===1&&e>=11){EV.step=2;evSound("boom");evSound("fanfare");
+    const a=burst.geometry.attributes.position.array;for(let i=0;i<BURST_N;i++){a[i*3]=0;a[i*3+1]=14;a[i*3+2]=2;const th=Math.random()*6.283,ph=Math.acos(Math.random()*2-1),v=10+Math.random()*22;burstV[i*3]=v*Math.sin(ph)*Math.cos(th);burstV[i*3+1]=v*Math.cos(ph);burstV[i*3+2]=v*Math.sin(ph)*Math.sin(th)}
+    burst.visible=true}
+  if(burst.visible){const a=burst.geometry.attributes.position.array;for(let i=0;i<BURST_N*3;i++){a[i]+=burstV[i]*dt;burstV[i]*=.985}for(let i=0;i<BURST_N;i++)burstV[i*3+1]-=6*dt;burst.geometry.attributes.position.needsUpdate=true;burst.material.opacity=1-prog(e,11.5,14.5)}
+  if(e>=11)applyGold(ease(prog(e,11,13)));
+  caption(e<2.5?"😱 מה קורה בכוורת?!":e<6.2?"👑 <em>מלכת־העל</em> הגיעה!":e<11?"<em>50</em> דבורים!!! 🐝":e<15?"✨ הכוורת הפכה ל<em>כוורת הזהב</em> ✨":"");
+  if(e>=15.5)evEnd(t);
+}
+function evRain(dt){if(!rain.visible)return;const a=rain.geometry.attributes.position.array;for(let i=0;i<RAIN_N;i++){a[i*3+1]-=rainV[i]*dt;if(a[i*3+1]<-6)a[i*3+1]=36}rain.geometry.attributes.position.needsUpdate=true}
+
 let winsBy={};
 async function loadWins(){try{if(LIVE){const r=await sb("treasure_wins?select=handle");if(r.ok){winsBy={};(await r.json()).forEach(w=>winsBy[w.handle]=(winsBy[w.handle]||0)+1)}}}catch(e){}}
 function profileBox(b){
@@ -1157,6 +1253,7 @@ function endIntro(){
   setTimeout(()=>caption(""),1400);
   controls.enabled=true;$("#top").classList.remove("hide");$("#bottom").classList.remove("hide");$("#chatBtn").classList.remove("hide");if(innerWidth>=900)openSide(true);
   setTimeout(()=>{dailyCheckIn();showNews()},1800);
+  setTimeout(()=>{if(bees.length&&bees.length<EV_N&&!store.get("tz50")){store.set("tz50","1");notify("🤯 ב־50 דבורים יקרה בכוורת משהו מטורף… הזמינו חברים!")}},7000);
 }
 
 /* ================= reel mode ================= */
@@ -1188,8 +1285,9 @@ function updateBees(t,dt){
     else{const a=b.ph+b.w*t;const rr=b.r+Math.sin(t*.7+b.bp)*b.wob;
       x=rr*Math.cos(a);z=rr*Math.sin(a);y=b.h+Math.sin(t*b.bf+b.bp)*b.bob;
       const vx=-Math.sin(a)*b.w,vz=Math.cos(a)*b.w;yaw=Math.atan2(-vz,vx)}
+    let s=beeScale(b)*BEE_S;
+    if(EV.form&&EV.form.k>0&&EV.form.tg[i]){const k=EV.form.k,p=EV.form.tg[i];x+=(p.x-x)*k;y+=(p.y-y)*k;z+=(p.z-z)*k;if(k>.5)yaw=-Math.PI/2+Math.sin(t*4+i)*.15;s+=(BEE_S*.9-s)*k}
     posArr[i*3]=x;posArr[i*3+1]=y;posArr[i*3+2]=z;yawArr[i]=yaw;
-    const s=beeScale(b)*BEE_S;
     dummy.position.set(x,y,z);dummy.rotation.set(0,yaw,Math.sin(t*3+b.bp)*.12);dummy.scale.setScalar(s);dummy.updateMatrix();
     mB.copy(dummy.matrix);beeMesh.setMatrixAt(i,mB);
     mW.multiplyMatrices(mB,wR);wingR.setMatrixAt(i,mW);mW.multiplyMatrices(mB,wLm);wingL.setMatrixAt(i,mW);
@@ -1215,7 +1313,9 @@ function frameBody(){
   {const ab=byHandle.get(ADMIN_HANDLE);if(ab&&posArr.length>ab.i*3+2){angelHalo.visible=true;const sc=beeScale(ab)*BEE_S;angelHalo.position.set(posArr[ab.i*3]+.45*sc*Math.cos(yawArr[ab.i]),posArr[ab.i*3+1]+.62*sc+Math.sin(t*2)*.05,posArr[ab.i*3+2]-.45*sc*Math.sin(yawArr[ab.i]));angelHalo.scale.setScalar(sc*.55)}else angelHalo.visible=false}
   if(mode==="intro"){runIntro(dt);return}
   pollen.rotation.y+=dt*.02;if(treasureHit){treasure.children[0].position.z=Math.sin(t*2)*.08;const hs=6+Math.sin(t*3)*1.5;treasure.userData.halo.scale.set(hs,hs,1)}core.intensity=1.5+Math.sin(t*1.3)*.15;
-  if(pilotBee){
+  evCheck(t);evRain(dt);
+  if(EV.on){evFrame(t,dt)}
+  else if(pilotBee){
     const k=pilot.keys;let jx=pilot.jx,jy=pilot.jy;
     if(k["arrowleft"]||k["a"])jx=-1;if(k["arrowright"]||k["d"])jx=1;if(k["arrowup"]||k["w"])jy=1;if(k["arrowdown"]||k["s"])jy=-.6;
     pilot.yaw-=jx*dt*2.2;const sp=jy*9;const fw=new THREE.Vector3(Math.cos(pilot.yaw),0,-Math.sin(pilot.yaw));
@@ -1234,9 +1334,9 @@ function frameBody(){
   }else if(follow&&sel){
     prevT.copy(controls.target);beeWorldPos(sel,controls.target);camera.position.add(tmpV.subVectors(controls.target,prevT));controls.update();
   }else if(controls.enabled)controls.update();
-  if(treasureHit&&!pilotBee&&!fly&&camera.position.distanceTo(treasure.position)<7)treasureFound();
+  if(treasureHit&&!EV.on&&!pilotBee&&!fly&&camera.position.distanceTo(treasure.position)<7)treasureFound();
   if(sel){beeWorldPos(sel,ring.position);ring.position.y-=.2;ring.rotation.x=Math.PI/2;const s=beeScale(sel)*(1+Math.sin(t*5)*.08);ring.scale.setScalar(s);ring.lookAt(camera.position)}
-  if(frame++%12===0)pickLabels();placeLabels();
+  if(EV.form&&EV.form.k>.05){pool.forEach(s=>s.visible=false);EV.relabel=true}else{if(frame++%12===0||EV.relabel){EV.relabel=false;pickLabels()}placeLabels()}
   renderer.render(hive,camera);
 }
 
