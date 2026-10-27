@@ -9,6 +9,7 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 - Voix : ElevenLabs, TOUJOURS James (voice_id `EkK5I93UQWFDigLMpZcX`, model `eleven_v3`, flow `aQELt3ILFku8anM2IK25`), 1 seule génération (generations_count 1). Télécharger le MP3 (content_url) avec curl. Si le téléchargement est bloqué : reel sans voix (musique + gros textes + bruitages) et le signaler à Shlomo une seule fois.
 
 ## Objectif éditorial (le plus important)
+- RÈGLE N°1 de Shlomo (27.10.2026) : carte blanche, MAIS jamais de spam et toujours du contenu de qualité, comme un professionnel. Moins mais mieux : 1 reel/jour max, ~4 stories/jour max, pas de contenu dépassé (chiffres et joueurs à jour), pas de doublon. Dans le doute, ne pas publier.
 - CHOQUER : chaque reel commence par un hook fou dans la 1re seconde (« יש משחק שמחלק כסף אמיתי… », « מישהו לקח 20 ₪ תוך 3 דקות », « דבורה ענקית פלשה לכוורת הלילה 😱 »…). Il se passe chaque jour un truc dingue dans la ruche, annoncé au début (« חכו לסוף 😱 ») et révélé à la fin.
 - Vidéos dynamiques et énergiques : plans de 1–2 s, zooms rapides, secousses de caméra, flashs, textes qui claquent, musique rythmée, whoosh/boom sur les coupes. Voix James plus rapide/excitée (tags v3 comme [excited], [shouting]). 20–30 s max.
 - Toujours les vrais joueurs (vrais @ de la table bees), jamais de chiffres inventés.
