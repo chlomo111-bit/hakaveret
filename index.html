@@ -48,6 +48,7 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--ink);color:var(-
 .btn:focus-visible{outline:3px solid var(--cream);outline-offset:2px}
 .btn.ghost{background:var(--glass);color:var(--cream);border:1.5px solid var(--line);box-shadow:none;font-weight:700}
 .sheet{position:absolute;bottom:0;left:0;right:0;margin-inline:auto;max-width:520px;background:linear-gradient(180deg,#3A2410,#22150A);border-top:2px solid var(--honey);border-radius:22px 22px 0 0;padding:18px max(18px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 18px) max(18px,env(safe-area-inset-left,0px));box-sizing:border-box;transition:transform .35s cubic-bezier(.2,.9,.3,1.1);box-shadow:0 -12px 40px rgba(0,0,0,.5)}
+.sheet{max-height:78vh;overflow-y:auto;overscroll-behavior:contain}
 .sheet.closed{transform:translateY(110%)}
 .sheet .x{all:unset;cursor:pointer;position:absolute;top:12px;left:14px;font-size:22px;color:var(--muted);padding:4px 8px}
 .handle{font:900 30px var(--display);direction:ltr;text-align:right;margin:2px 0 4px;word-break:break-all}
@@ -98,6 +99,16 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
 .fcard .code{white-space:pre-line;line-height:1.25;font:900 30px var(--display);letter-spacing:.08em;background:var(--honey);color:var(--ink);border-radius:14px;padding:12px 8px;margin-bottom:8px}
 .fcard .when{color:var(--muted);font-size:14px;margin-bottom:16px;font-variant-numeric:tabular-nums}
 .bottom{pointer-events:none!important}.bottom>*{pointer-events:auto}
+.goal{display:inline-flex;align-items:center;gap:6px}
+.gbar{display:inline-block;width:44px;height:6px;border-radius:3px;background:rgba(255,255,255,.15);overflow:hidden}
+.gbar i{display:block;height:100%;width:0;background:var(--honey);border-radius:3px;transition:width .6s}
+.mybox{margin:2px 0 14px;padding:12px;border-radius:14px;background:rgba(255,194,75,.1);border:1px solid var(--line);font-size:14px;line-height:1.55}
+.mybox b{color:var(--honey)}
+.mybox .btn{display:block;margin-top:10px;width:100%;box-sizing:border-box}
+#newsModal{position:fixed;inset:0;z-index:21;display:flex;align-items:center;justify-content:center;background:rgba(10,6,2,.8);padding-inline:max(16px,env(safe-area-inset-left,0px));direction:rtl}
+.toprow{display:flex;justify-content:space-between;gap:8px;padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.04);cursor:pointer}
+.toprow b{direction:ltr;unicode-bidi:isolate}
+.sec{font-weight:900;color:var(--honey);margin:6px 2px 2px;font-size:14px}
 .hint{font-size:13px;color:var(--muted);margin:-6px 0 12px;line-height:1.4}
 .chatfab{all:unset;pointer-events:auto;cursor:pointer;position:absolute;right:calc(env(safe-area-inset-right,0px) + 14px);bottom:calc(env(safe-area-inset-bottom,0px) + 18px);width:54px;height:54px;border-radius:50%;background:var(--glass);border:1.5px solid var(--line);font-size:24px;text-align:center;line-height:54px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:opacity .4s}
 .chatfab span{position:absolute;top:-2px;left:-2px;min-width:20px;height:20px;border-radius:10px;background:#E5484D;color:#fff;font:900 12px/20px var(--display);padding:0 5px}
@@ -141,7 +152,7 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
     </div>
     <div class="stats">
       <span class="pill" id="dayPill" hidden></span>
-      <span class="pill">🐝 <b id="nBees">0</b> דבורים</span>
+      <span class="pill goal" title="היעד הבא של הכוורת">🐝 <b id="nBees">0</b> / <b id="nGoal">10</b><span class="gbar"><i id="gFill"></i></span></span>
       <span class="pill">👑 <b id="nQueens">0</b> מלכות</span>
       <button class="pill" id="muteBtn" aria-label="צליל" style="cursor:pointer;font:inherit;color:inherit">🔊</button>
       <span class="pill demo" id="demoPill" hidden>הדגמה</span>
@@ -154,6 +165,7 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
     <button class="x" data-close aria-label="סגירה">✕</button>
     <div class="handle" id="sHandle"></div>
     <div class="meta" id="sMeta"></div>
+    <div id="myBox"></div>
     <div class="row">
       <button class="btn" id="flyBtn">✈️ זאת הדבורה שלי – להטיס</button>
     </div>
@@ -188,6 +200,10 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
     <textarea class="field" id="adminList" placeholder="@dana_k עוקב&#10;@yossi22 תגובה&#10;@noa.levi עוקב משקפיים כובע&#10;@old_user הסר" aria-label="רשימת שמות"></textarea>
     <div class="err" id="adminErr"></div>
     <div class="row"><button class="btn" id="adminGo">הוספה / עדכון</button></div>
+    <h2 style="margin-top:18px;font-size:20px">📰 חדשות לשחקנים</h2>
+    <input class="field" id="newsT" placeholder="כותרת (למשל: הפתעה בכוורת!)" style="direction:rtl" aria-label="כותרת">
+    <textarea class="field" id="newsB" placeholder="מה חדש? כל השחקנים יראו את זה בכניסה הבאה" style="min-height:90px" aria-label="תוכן"></textarea>
+    <div class="row"><button class="btn ghost" id="newsGo">פרסום לכל השחקנים</button></div>
   </div>
 
   <div class="pilot" id="pilot" hidden>
@@ -199,11 +215,12 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
   <button id="chatBtn" class="chatfab hide" aria-label="צ'אט">💬<span id="chatBadge" hidden></span></button>
   <aside id="side" class="side closed" aria-label="צ'אט וחדשים">
     <div class="sidehead">
-      <div class="tabs"><button data-tab="chat" class="on">💬 צ'אט</button><button data-tab="new">🐝 חדשים</button></div>
+      <div class="tabs"><button data-tab="chat" class="on">💬 צ'אט</button><button data-tab="new">🐝 חדשים</button><button data-tab="top">🏆 שיאים</button></div>
       <button class="x" id="sideX" aria-label="סגירה">✕</button>
     </div>
     <div id="chatList" class="list"></div>
     <div id="newList" class="list" hidden></div>
+    <div id="topList" class="list" hidden></div>
     <form id="chatForm" class="chatform">
       <input id="chatIn" maxlength="140" autocomplete="off" placeholder="כתבו משהו לכוורת…" aria-label="הודעה">
       <button class="btn" id="chatSend" type="submit">שלח</button>
@@ -211,6 +228,11 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
   </aside>
   <div id="toast" role="status"></div>
 </div>
+<div id="newsModal" hidden><div class="fcard">
+  <div class="big" id="newsTitle" style="font-size:34px"></div>
+  <div class="sub" id="newsBody" style="white-space:pre-line;text-align:right"></div>
+  <button class="btn" id="newsOk" style="width:100%">יאללה! 🐝</button>
+</div></div>
 <div id="found" hidden>
   <div class="fcard">
     <div id="fAsk">
@@ -289,6 +311,7 @@ function parseLine(line){
     else if(HATS.includes(key))style.hat=key; else if(key==="scarf")style.neck="scarf"; else style.tint=key; } }
   return {handle,queen,style,remove};
 }
+const royal=r=>!!r.is_queen||(r.refs||0)>=10||(r.best_streak||0)>=30;
 function styleFor(b){
   const R=rng(hashStr(b.handle)+7);
   const s={hat:R()<.55?HATS[Math.floor(R()*HATS.length)]:"none",
@@ -296,7 +319,10 @@ function styleFor(b){
            neck:R()<.22?"scarf":"none",
            tint:R()<.7?"yellow":Object.keys(TINTS)[1+Math.floor(R()*6)],
            accent:ACCENTS[Math.floor(R()*ACCENTS.length)]};
-  return Object.assign(s,b.style||{});
+  Object.assign(s,b.style||{});
+  if(!(b.style&&b.style.hat)){if((b.refs||0)>=1)s.hat="tophat";else if((b.best||0)>=3)s.hat="flower"}
+  s.gold=(b.refs||0)>=3||(b.best||0)>=7;
+  return s;
 }
 
 /* ================= data ================= */
@@ -304,9 +330,11 @@ let bees=[]; const byHandle=new Map();
 async function sb(path,opts={}){
   return fetch(CONFIG.SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/"+path,{...opts,headers:{apikey:CONFIG.SUPABASE_KEY,"Content-Type":"application/json",...(opts.headers||{})}});
 }
+let BEE_FIELDS="id,handle,is_queen,style,created_at,refs,streak,best_streak";
 async function loadAll(){
   const all=[];let from=0;
-  for(;;){const r=await sb("bees?select=id,handle,is_queen,style,created_at&order=id.asc",{headers:{"Range-Unit":"items",Range:`${from}-${from+999}`}});
+  for(;;){let r=await sb("bees?select="+BEE_FIELDS+"&order=id.asc",{headers:{"Range-Unit":"items",Range:`${from}-${from+999}`}});
+    if(r.status===400&&BEE_FIELDS.includes("refs")){BEE_FIELDS="id,handle,is_queen,style,created_at";continue}
     if(!r.ok)throw new Error("load");const rows=await r.json();all.push(...rows);if(rows.length<1000)break;from+=1000}
   return all;
 }
@@ -321,8 +349,8 @@ function ingest(rows,announce){
   let changed=false;
   for(const r of rows){
     const h=r.handle; const ex=byHandle.get(h);
-    if(ex){ if(ex.queen!==!!r.is_queen||JSON.stringify(ex.style)!==JSON.stringify(r.style||{})){if(announce&&!ex.queen&&r.is_queen)notify("👑 @"+h+" הפכה למלכה!");ex.queen=!!r.is_queen;ex.style=r.style||{};ex.look=styleFor(ex);changed=true} continue; }
-    const b={id:r.id,handle:h,queen:!!r.is_queen,style:r.style||{},created:r.created_at?new Date(r.created_at):new Date(),i:bees.length};
+    if(ex){ if(ex.queen!==royal(r)||JSON.stringify(ex.style)!==JSON.stringify(r.style||{})||(ex.refs||0)!==(r.refs||0)||(ex.streak||0)!==(r.streak||0)||(ex.best||0)!==(r.best_streak||0)){if(announce&&!ex.queen&&royal(r))notify("👑 @"+h+" הפכה למלכה!");ex.queen=royal(r);ex.refs=r.refs||0;ex.streak=r.streak||0;ex.best=r.best_streak||0;ex.style=r.style||{};ex.look=styleFor(ex);changed=true} continue; }
+    const b={id:r.id,handle:h,queen:royal(r),refs:r.refs||0,streak:r.streak||0,best:r.best_streak||0,style:r.style||{},created:r.created_at?new Date(r.created_at):new Date(),i:bees.length};
     b.look=styleFor(b);
     const R=rng(hashStr(h));
     b.r=5+R()*24; b.h=1+R()*31; b.w=(R()<.5?-1:1)*(.08+R()*.22); b.ph=R()*Math.PI*2;
@@ -512,13 +540,14 @@ function rebuildBees(){
     beeMesh=new THREE.InstancedMesh(beeGeo,beeMat,cap);wingL=new THREE.InstancedMesh(wingGeo,wingMat,cap);wingR=new THREE.InstancedMesh(wingGeo,wingMat,cap);
     [beeMesh,wingL,wingR].forEach(m=>{m.frustumCulled=false;m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);beeGroup.add(m)});
     acc={};const white=new THREE.Color(1,1,1);for(const k in ACC){acc[k]=new THREE.InstancedMesh(ACC[k],accMat,cap);acc[k].frustumCulled=false;acc[k].instanceMatrix.setUsage(THREE.DynamicDrawUsage);acc[k].setColorAt(0,white);beeGroup.add(acc[k])}
-    beeMesh.setColorAt(0,white);
+    beeMesh.setColorAt(0,white);wingL.setColorAt(0,white);wingR.setColorAt(0,white);
   }
   beeMesh.count=wingL.count=wingR.count=n;
   const c=new THREE.Color();
   for(const k in acc)accSlots[k]=[];
   bees.forEach(b=>{
     const t=TINTS[b.look.tint]||TINTS.yellow;c.setRGB(t[0],t[1],t[2]);beeMesh.setColorAt(b.i,c);
+    if(b.look.gold)c.setRGB(1,.72,.15);else c.setRGB(1,1,1);wingL.setColorAt(b.i,c);wingR.setColorAt(b.i,c);
     if(b.queen)accSlots.crown.push(b);
     if(b.look.hat&&b.look.hat!=="none"&&!(b.queen&&b.look.hat!=="flower"&&b.look.hat!=="bow"))accSlots[b.look.hat].push(b);
     if(b.look.eyes&&b.look.eyes!=="none")accSlots[b.look.eyes].push(b);
@@ -531,6 +560,8 @@ function rebuildBees(){
       m.setColorAt(j,c)});
     if(m.instanceColor)m.instanceColor.needsUpdate=true}
   if(beeMesh.instanceColor)beeMesh.instanceColor.needsUpdate=true;
+  [wingL,wingR].forEach(w=>{if(w.instanceColor)w.instanceColor.needsUpdate=true});
+  updateLevel();
   posArr=new Float32Array(n*3);yawArr=new Float32Array(n);
 }
 let posArr=new Float32Array(0),yawArr=new Float32Array(0);
@@ -665,16 +696,19 @@ function select(b,{fly:doFly=true}={}){
   [L.hat,L.eyes,L.neck].forEach(x=>{if(names[x])tags.push(names[x])});
   const day=Math.floor((b.created-new Date(CONFIG.DAY_START+"T00:00:00"))/864e5)+1;
   if(day>=1)tags.push("הצטרפה ביום "+day);
+  if((b.streak||0)>1)tags.push("🔥 "+b.streak+" ימים ברצף");
+  if((b.refs||0)>0)tags.push("📣 "+b.refs+" חברים");
   $("#sMeta").innerHTML=tags.map(t=>`<span class="tag">${t}</span>`).join("");
+  const mine=lstore("kaveret_my_bee")===b.handle;
+  $("#myBox").innerHTML=mine?myProgress(b):"";
+  const ib=$("#inviteBtn");if(ib)ib.onclick=()=>invite(b.handle);
   openSheet("#beeSheet");
   if(doFly)flyTo(b);
   pickLabels();
-  loadMsgs();if(LIVE)setInterval(loadMsgs,8000);
-  if(LIVE)setInterval(async()=>{try{const all=await loadAll(),keep=new Set(all.map(r=>r.handle));bees.filter(b=>!keep.has(b.handle)).map(b=>b.handle).forEach(removeBee);ingest(all,true)}catch(e){}},60000);
 }
 function deselect(){sel=null;ring.visible=false;follow=false;closeSheets()}
-function openSheet(id){closeSheets(id);$(id).classList.remove("closed");$("#bottom").classList.add("hide")}
-function closeSheets(except){document.querySelectorAll(".sheet").forEach(s=>{if("#"+s.id!==except)s.classList.add("closed")});if(!except&&mode==="hive"&&!REEL)$("#bottom").classList.remove("hide")}
+function openSheet(id){closeSheets(id);$(id).classList.remove("closed");$("#bottom").classList.add("hide");const f=document.getElementById("chatBtn");if(f)f.style.visibility="hidden"}
+function closeSheets(except){document.querySelectorAll(".sheet").forEach(s=>{if("#"+s.id!==except)s.classList.add("closed")});if(!except){const f=document.getElementById("chatBtn");if(f)f.style.visibility=""}if(!except&&mode==="hive"&&!REEL)$("#bottom").classList.remove("hide")}
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>{if(b.closest("#beeSheet"))deselect();else closeSheets()});
 
 /* search */
@@ -694,6 +728,7 @@ q.addEventListener("blur",()=>setTimeout(()=>sugg.hidden=true,200));
 
 /* join */
 const myKey="kaveret_my_bee";
+try{const f=new URLSearchParams(location.search).get("from");if(f&&HANDLE_RE.test(cleanHandle(f)))lstore("kaveret_ref",cleanHandle(f))}catch(e){}
 $("#joinBtn").onclick=()=>{
   const mine=lstore(myKey),b=mine&&byHandle.get(mine);
   if(b){toast("כבר יש לך דבורה בכוורת 🐝");select(b);return}
@@ -707,11 +742,12 @@ $("#joinGo").onclick=async()=>{
   const ex=byHandle.get(h);if(ex){lstore(myKey,h);closeSheets();toast("כבר בכוורת! טסים אליך 🐝");select(ex);return}
   $("#joinGo").disabled=true;
   try{
-    if(LIVE){const r=await sb("bees",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify({handle:h})});
-      if(r.status===409){const rr=await sb("bees?select=id,handle,is_queen,style,created_at&handle=eq."+encodeURIComponent(h));ingest(await rr.json())}
-      else if(!r.ok)throw new Error();else ingest(await r.json())}
+    if(LIVE){let r=await sb("rpc/join_bee",{method:"POST",body:JSON.stringify({h,ref:lstore("kaveret_ref")||null})});
+      if(r.status===404){r=await sb("bees",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify({handle:h})});
+        if(r.status===409)r=await sb("bees?select="+BEE_FIELDS+"&handle=eq."+encodeURIComponent(h))}
+      if(!r.ok)throw new Error();ingest(await r.json(),false)}
     else ingest([{id:Date.now(),handle:h,is_queen:false,style:{},created_at:new Date().toISOString()}]);
-    lstore(myKey,h);closeSheets();$("#joinIn").value="";toast("ברוכה הבאה לכוורת! 🐝");
+    lstore(myKey,h);closeSheets();$("#joinIn").value="";toast("ברוכה הבאה לכוורת! 🐝");setTimeout(dailyCheckIn,1500);
     setTimeout(()=>select(byHandle.get(h)),60);
   }catch(e){err.textContent="משהו לא עבד. בדקו את החיבור ונסו שוב."}
   $("#joinGo").disabled=false;
@@ -757,7 +793,7 @@ function updBadge(){const b=$("#chatBadge");b.hidden=!unread||sideOpen();b.textC
 $("#chatBtn").onclick=()=>openSide(!sideOpen());$("#sideX").onclick=()=>openSide(false);
 let tab="chat";
 side.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;side.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));
-  $("#chatList").hidden=tab!=="chat";$("#newList").hidden=tab!=="new";$("#chatForm").hidden=tab!=="chat";if(tab==="new")renderNew();else renderChat(true)});
+  $("#chatList").hidden=tab!=="chat";$("#newList").hidden=tab!=="new";$("#topList").hidden=tab!=="top";$("#chatForm").hidden=tab!=="chat";if(tab==="new")renderNew();else if(tab==="top")renderTop();else renderChat(true)});
 function ago(d){const m=Math.floor((Date.now()-new Date(d))/6e4);if(m<1)return"עכשיו";if(m<60)return"לפני "+m+" דק׳";const h=Math.floor(m/60);if(h<24)return"לפני "+h+" שע׳";return"לפני "+Math.floor(h/24)+" ימים"}
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function renderChat(scroll){
@@ -798,6 +834,80 @@ $("#chatForm").addEventListener("submit",async e=>{
   $("#chatSend").disabled=false;
 });
 setInterval(()=>{if(sideOpen()&&tab==="new")renderNew();if(sideOpen()&&tab==="chat")renderChat()},30000);
+
+
+/* ================= V2 : série, parrainage, objectif, actualités ================= */
+const SITE="https://hakaveret.online/";
+const MILESTONES=[10,25,50,100,250,500,1000,2500,5000,10000,25000,50000,100000];
+function goalInfo(n){let prev=0;for(const m of MILESTONES){if(n<m)return{next:m,prev,level:MILESTONES.indexOf(m)};prev=m}return{next:n+1,prev,level:MILESTONES.length}}
+let hiveLevel=-1;
+const orbs=new THREE.Group();hive.add(orbs);
+{const oc=document.createElement("canvas");oc.width=oc.height=64;const og=oc.getContext("2d"),gr=og.createRadialGradient(32,32,2,32,32,32);
+ gr.addColorStop(0,"rgba(255,245,190,1)");gr.addColorStop(.4,"rgba(255,190,60,.6)");gr.addColorStop(1,"rgba(255,170,30,0)");og.fillStyle=gr;og.fillRect(0,0,64,64);
+ var orbMat=new THREE.SpriteMaterial({map:new THREE.CanvasTexture(oc),blending:THREE.AdditiveBlending,transparent:true,depthWrite:false})}
+function updateLevel(){
+  const g=goalInfo(bees.length);
+  try{$("#nGoal").textContent=g.next.toLocaleString("he-IL");$("#gFill").style.width=Math.min(100,Math.round((bees.length-g.prev)/Math.max(1,g.next-g.prev)*100))+"%"}catch(e){}
+  if(g.level!==hiveLevel){
+    if(hiveLevel>=0&&g.level>hiveLevel&&mode==="hive")notify("🎉 הכוורת גדלה! הגענו ל־"+g.prev.toLocaleString("he-IL")+" דבורים");
+    hiveLevel=g.level;orbs.clear();const R=rng(99);
+    for(let i=0;i<g.level*14;i++){const sp=new THREE.Sprite(orbMat);const a=R()*6.28,r=8+R()*22;sp.position.set(r*Math.cos(a),R()*34-3,r*Math.sin(a));const sc=1.2+R()*1.6;sp.scale.set(sc,sc,1);orbs.add(sp)}
+    core.intensity=1.5+g.level*.08;
+  }
+}
+function nextReward(cur,steps){for(const [n,label] of steps)if(cur<n)return{n,label};return null}
+function myProgress(b){
+  const st=b.streak||0,rf=b.refs||0;
+  const ns=nextReward(b.best||0,[[3,"פרח 🌸"],[7,"כנפי זהב ✨"],[30,"כתר 👑"]]);
+  const nr=nextReward(rf,[[1,"מגבעת 🎩"],[3,"כנפי זהב ✨"],[10,"כתר 👑"]]);
+  return `<div class="mybox">
+    <div>🔥 <b>${st}</b> ${st===1?"יום":"ימים"} ברצף${ns?` · עוד ${Math.max(1,ns.n-(b.best||0))} ל${ns.label}`:" · כל הפרסים נפתחו!"}</div>
+    <div>📣 <b>${rf}</b> חברים הצטרפו דרכך${nr?` · עוד ${nr.n-rf} ל${nr.label}`:""}</div>
+    <button class="btn" id="inviteBtn">📣 הזמינו חברים לכוורת</button>
+  </div>`;
+}
+async function invite(h){
+  const url=SITE+"?from="+encodeURIComponent(h);
+  const text="בואו לכוורת שלנו 🐝 כל אחד מקבל דבורה עם השם שלו! תיכנסו דרך הקישור שלי:";
+  try{if(navigator.share){await navigator.share({title:"הכוורת שלנו",text,url});return}}catch(e){if(e&&e.name==="AbortError")return}
+  try{await navigator.clipboard.writeText(text+" "+url);toast("הקישור הועתק! שלחו לחברים 📣")}catch(e){prompt("העתיקו את הקישור:",url)}
+}
+async function dailyCheckIn(){
+  const me=lstore("kaveret_my_bee"),b=me&&byHandle.get(me);if(!b)return;
+  const key="kaveret_ci_"+todayKey;if(lstore(key))return;
+  let st=null,best=null;
+  try{
+    if(LIVE){const r=await sb("rpc/check_in",{method:"POST",body:JSON.stringify({h:me})});if(!r.ok)return;const j=await r.json();if(!j[0])return;st=j[0].streak;best=j[0].best_streak}
+    else{const last=lstore("kaveret_last"),y=new Date(Date.now()-864e5);const yk=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
+      st=last===yk?(b.streak||0)+1:1;best=Math.max(b.best||0,st);lstore("kaveret_last",todayKey)}
+  }catch(e){return}
+  lstore(key,"1");const before=b.best||0;b.streak=st;b.best=best;b.look=styleFor(b);rebuildBees();
+  if(sel===b&&!$("#beeSheet").classList.contains("closed"))select(b,{fly:false});
+  notify(st>1?"🔥 "+st+" ימים ברצף! המשיכו מחר":"🐝 ברוכים השבים! יום ראשון ברצף");
+  for(const [n,label] of [[3,"פרח 🌸"],[7,"כנפי זהב ✨"],[30,"כתר 👑"]])if(before<n&&best>=n)notify("🎁 קיבלתם "+label+"!");
+}
+function renderTop(){
+  const el=$("#topList");
+  const rec=bees.filter(b=>(b.refs||0)>0).sort((a,b)=>b.refs-a.refs).slice(0,10);
+  const str=bees.filter(b=>(b.streak||0)>1).sort((a,b)=>b.streak-a.streak).slice(0,10);
+  const row=(b,v)=>`<div class="toprow" data-h="${esc(b.handle)}"><b>${b.queen?"👑":"🐝"} @${esc(b.handle)}</b><span>${v}</span></div>`;
+  el.innerHTML=`<div class="sec">📣 מגייסים מובילים</div>`+(rec.length?rec.map((b,i)=>row(b,(i<3?["🥇","🥈","🥉"][i]+" ":"")+b.refs+" חברים")).join(""):`<div class="empty">עוד אף אחד לא הזמין חברים. תהיו הראשונים!</div>`)
+    +`<div class="sec">🔥 הכי הרבה ימים ברצף</div>`+(str.length?str.map(b=>row(b,b.streak+" ימים")).join(""):`<div class="empty">חוזרים כל יום ונכנסים לרשימה 🔥</div>`);
+  el.querySelectorAll(".toprow").forEach(r=>r.onclick=()=>{const b=byHandle.get(r.dataset.h);if(b){if(innerWidth<900)openSide(false);select(b)}});
+}
+const DEFAULT_NEWS={id:"local-v2",title:"חדש בכוורת! 🐝",body:"🔥 בואו כל יום: הדבורה שלכם צוברת ימים ברצף ומקבלת פרסים.\n📣 הזמינו חברים עם הקישור האישי שלכם וקבלו מגבעת, כנפי זהב וכתר.\n🎯 כשהכוורת מגיעה ליעד, היא גדלה לכולם!"};
+async function showNews(){
+  let n=null;
+  try{if(LIVE){const r=await sb("news?select=id,title,body&order=id.desc&limit=1");if(r.ok){const j=await r.json();n=j[0]||null}}else n=DEFAULT_NEWS}catch(e){}
+  if(!n)return;const key="kaveret_news_seen";if(String(lstore(key))===String(n.id))return;
+  $("#newsTitle").textContent=n.title;$("#newsBody").textContent=n.body;$("#newsModal").hidden=false;
+  $("#newsOk").onclick=()=>{$("#newsModal").hidden=true;lstore(key,String(n.id))};
+}
+$("#newsGo").onclick=async()=>{
+  const t=$("#newsT").value.trim(),bd=$("#newsB").value.trim(),err=$("#adminErr");if(!t||!bd){err.textContent="צריך כותרת ותוכן";return}
+  try{if(LIVE){const r=await sb("rpc/admin_post_news",{method:"POST",body:JSON.stringify({pass:$("#adminPass").value,title:t,body:bd})});if(!r.ok){err.textContent="סיסמה שגויה או שגיאה";return}}
+    $("#newsT").value="";$("#newsB").value="";err.textContent="";toast("📰 פורסם! כל השחקנים יראו את זה")}catch(e){err.textContent="שגיאה, נסו שוב"}
+};
 
 /* pilot */
 $("#flyBtn").onclick=()=>{if(!sel)return;startPilot(sel)};
@@ -940,6 +1050,7 @@ function endIntro(){
   if(REEL){caption("");startReel();return}
   setTimeout(()=>caption(""),1400);
   controls.enabled=true;$("#top").classList.remove("hide");$("#bottom").classList.remove("hide");$("#chatBtn").classList.remove("hide");if(innerWidth>=900)openSide(true);
+  setTimeout(()=>{dailyCheckIn();showNews()},1800);
 }
 
 /* ================= reel mode ================= */
@@ -1031,8 +1142,10 @@ function frameBody(){
   if(CONFIG.TREASURE.on){$("#huntPill").hidden=false;$("#prizeTxt").textContent=CONFIG.TREASURE.prize;checkWinner();if(LIVE)setInterval(checkWinner,30000)}
   try{ingest(LIVE?await withTimeout(loadAll(),10000):demoData())}catch(e){toast("לא הצלחנו לטעון את הכוורת, נסו לרענן");ingest([])}
   updateStats();
-  if(LIVE)setInterval(async()=>{try{const last=bees.reduce((m,b)=>Math.max(m,b.id||0),0);const r=await sb("bees?select=id,handle,is_queen,style,created_at&id=gt."+last+"&order=id.asc");if(r.ok){const rows=await r.json();if(rows.length)ingest(rows,true)}}catch(e){}},30000);
+  if(LIVE)setInterval(async()=>{try{const last=bees.reduce((m,b)=>Math.max(m,b.id||0),0);const r=await sb("bees?select="+BEE_FIELDS+"&id=gt."+last+"&order=id.asc");if(r.ok){const rows=await r.json();if(rows.length)ingest(rows,true)}}catch(e){}},30000);
   pickLabels();
+  loadMsgs();if(LIVE)setInterval(loadMsgs,8000);
+  if(LIVE)setInterval(async()=>{try{const all=await loadAll(),keep=new Set(all.map(r=>r.handle));bees.filter(b=>!keep.has(b.handle)).map(b=>b.handle).forEach(removeBee);ingest(all,true)}catch(e){}},60000);
 })();
 </script>
 
