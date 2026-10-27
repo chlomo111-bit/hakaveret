@@ -45,6 +45,8 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 - Dans le jeu (index.html, bloc ÉVÉNEMENT 50 ABEILLES) : dès 50 abeilles, chaque joueur voit une fois l'événement (alarme rouge → מלכת־העל géante → les abeilles forment « 50 » → explosion d'or) puis la ruche reste dorée avec pluie d'or et la Super-Reine qui tourne. hakaveret.online/#ev50 le rejoue (aperçu / capture reel).
 - Avant 50 : le compteur affiche « 50 🤯 » et un toast tease « ב־50 דבורים יקרה בכוורת משהו מטורף… ». À utiliser dans les stories/reels pour pousser le parrainage.
 - Le jour où bees >= 50 : reel spécial capturé avec #ev50 (vrais @ de la table bees) + story « 🤯 50 דבורים! הכוורת הפכה לכוורת הזהב ».
+- PALIER ATTEINT le 27.10 vers 15:00 (61 abeilles). Le reel « יום 1 » de 19:30 a été annulé (contenu dépassé, et déjà un reel publié ce jour-là). → Le reel du 28.10 au matin = le reel « כוורת הזהב / 50 דבורים » (capture #ev50 avec les vrais @), en racontant aussi la journée folle d'hier (Ron, billet doublé).
+- ANTI-SPAM : maximum 1 reel et ~4 stories par jour. Avant toute publication, vérifier avec INSTAGRAM_GET_IG_USER_MEDIA et INSTAGRAM_GET_IG_USER_STORIES qu'un contenu identique ou très proche n'est pas déjà en ligne.
 
 ## Débrief du matin (demande de Shlomo, 27.10.2026)
 - Au tout début de la production du matin, envoyer à Shlomo un débrief des 24 dernières heures (SendUserMessage + PushNotification, en français, court) :
