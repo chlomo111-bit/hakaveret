@@ -97,7 +97,32 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
 .fcard .sub b{color:var(--honey)}
 .fcard .code{white-space:pre-line;line-height:1.25;font:900 30px var(--display);letter-spacing:.08em;background:var(--honey);color:var(--ink);border-radius:14px;padding:12px 8px;margin-bottom:8px}
 .fcard .when{color:var(--muted);font-size:14px;margin-bottom:16px;font-variant-numeric:tabular-nums}
-@media (prefers-reduced-motion:reduce){.sheet,#toast,.top,.bottom{transition:none}}
+.bottom{pointer-events:none!important}.bottom>*{pointer-events:auto}
+.hint{font-size:13px;color:var(--muted);margin:-6px 0 12px;line-height:1.4}
+.chatfab{all:unset;pointer-events:auto;cursor:pointer;position:absolute;right:calc(env(safe-area-inset-right,0px) + 14px);bottom:calc(env(safe-area-inset-bottom,0px) + 18px);width:54px;height:54px;border-radius:50%;background:var(--glass);border:1.5px solid var(--line);font-size:24px;text-align:center;line-height:54px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:opacity .4s}
+.chatfab span{position:absolute;top:-2px;left:-2px;min-width:20px;height:20px;border-radius:10px;background:#E5484D;color:#fff;font:900 12px/20px var(--display);padding:0 5px}
+.side{position:absolute;top:0;bottom:0;right:0;width:min(340px,88vw);background:linear-gradient(180deg,rgba(43,26,11,.94),rgba(26,17,8,.96));border-left:1.5px solid var(--line);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 12px) max(12px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 12px) 12px;box-sizing:border-box;transition:transform .35s cubic-bezier(.2,.9,.3,1);z-index:6;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.side.closed{transform:translateX(105%);pointer-events:none!important}
+.sidehead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.tabs{display:flex;gap:6px}
+.tabs button{all:unset;cursor:pointer;padding:8px 12px;border-radius:999px;font:700 14px var(--display);color:var(--muted);border:1px solid var(--line)}
+.tabs button.on{background:var(--honey);color:var(--ink);border-color:var(--honey)}
+.side .x{all:unset;cursor:pointer;font-size:20px;color:var(--muted);padding:4px 8px}
+.list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-inline-end:2px;min-height:0}
+.msg{background:rgba(255,194,75,.07);border:1px solid rgba(255,194,75,.14);border-radius:14px;padding:8px 11px;font-size:15px;line-height:1.45;word-break:break-word}
+.msg .who{font-weight:900;color:var(--honey);direction:ltr;unicode-bidi:isolate;font-size:13px;cursor:pointer}
+.msg .when{color:var(--muted);font-size:11px;margin-inline-start:6px}
+.msg .del{all:unset;cursor:pointer;float:left;font-size:13px;opacity:.7}
+.msg.mine{background:rgba(255,194,75,.18)}
+.newrow{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.04)}
+.newrow b{direction:ltr;unicode-bidi:isolate}
+.newrow span{color:var(--muted);font-size:12px;white-space:nowrap}
+.empty{color:var(--muted);text-align:center;padding:24px 8px;font-size:14px}
+.chatform{display:flex;gap:8px;margin-top:10px}
+.chatform input{flex:1;min-width:0;font:700 15px var(--display);padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);background:rgba(0,0,0,.3);color:var(--cream);outline:none}
+.chatform input:focus{border-color:var(--honey)}
+.chatform .btn{padding:10px 16px;font-size:15px;box-shadow:0 4px 0 #B86E0A}
+@media (prefers-reduced-motion:reduce){.sheet,#toast,.top,.bottom,.side{transition:none}}
 </style>
 
 <div id="stage"></div>
@@ -145,7 +170,8 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
     <button class="x" data-close aria-label="סגירה">✕</button>
     <h2>הצטרפו לכוורת 🐝</h2>
     <p>כתבו את שם המשתמש שלכם באינסטגרם, והדבורה שלכם תצא לעוף עם השם על הראש.</p>
-    <input class="field" id="joinIn" placeholder="@your_name" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="שם משתמש">
+    <input class="field" id="joinIn" type="text" lang="en" inputmode="email" enterkeyhint="go" placeholder="@your_name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="שם משתמש">
+    <div class="hint">🌐 כותבים באנגלית בלבד, בדיוק כמו באינסטגרם (אפשר גם להדביק קישור לפרופיל)</div>
     <div class="err" id="joinErr"></div>
     <div class="row"><button class="btn" id="joinGo">שלחו אותי לכוורת</button></div>
     <div class="bonus">
@@ -170,6 +196,19 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
     <div id="joy"><div id="knob"></div></div>
     <div class="ud"><button id="upB" aria-label="למעלה">▲</button><button id="dnB" aria-label="למטה">▼</button></div>
   </div>
+  <button id="chatBtn" class="chatfab hide" aria-label="צ'אט">💬<span id="chatBadge" hidden></span></button>
+  <aside id="side" class="side closed" aria-label="צ'אט וחדשים">
+    <div class="sidehead">
+      <div class="tabs"><button data-tab="chat" class="on">💬 צ'אט</button><button data-tab="new">🐝 חדשים</button></div>
+      <button class="x" id="sideX" aria-label="סגירה">✕</button>
+    </div>
+    <div id="chatList" class="list"></div>
+    <div id="newList" class="list" hidden></div>
+    <form id="chatForm" class="chatform">
+      <input id="chatIn" maxlength="140" autocomplete="off" placeholder="כתבו משהו לכוורת…" aria-label="הודעה">
+      <button class="btn" id="chatSend" type="submit">שלח</button>
+    </form>
+  </aside>
   <div id="toast" role="status"></div>
 </div>
 <div id="found" hidden>
@@ -220,7 +259,7 @@ const ease = t => t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
 const prog = (t,a,b)=>clamp((t-a)/(b-a),0,1);
 function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-function cleanHandle(s){return (s||"").trim().replace(/^@+/,"").toLowerCase()}
+function cleanHandle(s){s=(s||"").trim();const m=s.match(/instagram\.com\/([A-Za-z0-9._]+)/i);if(m)s=m[1];return s.replace(/^@+/,"").replace(/\s+/g,"").replace(/\/$/,"").toLowerCase()}
 const HANDLE_RE=/^[a-z0-9._]{1,30}$/;
 function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("on"),2600)}
 function dayNumber(){const s=new Date(CONFIG.DAY_START+"T00:00:00");return Math.floor((Date.now()-s)/864e5)+1}
@@ -290,7 +329,8 @@ function ingest(rows){
   if(changed){ rebuildBees(); updateStats(); }
 }
 function removeBee(h){const b=byHandle.get(h);if(!b)return;bees.splice(b.i,1);byHandle.delete(h);bees.forEach((x,i)=>x.i=i);if(sel===b)deselect();rebuildBees();updateStats()}
-function updateStats(){
+function updateStats(){try{if(sideOpen()&&tab==="new")renderNew()}catch(e){}
+
   $("#nBees").textContent=bees.length.toLocaleString("he-IL");
   $("#nQueens").textContent=bees.filter(b=>b.queen).length.toLocaleString("he-IL");
   const d=dayNumber(); if(d>=1){$("#dayPill").hidden=false;$("#dayPill").innerHTML="יום <b>"+d+"</b>"}
@@ -625,6 +665,7 @@ function select(b,{fly:doFly=true}={}){
   openSheet("#beeSheet");
   if(doFly)flyTo(b);
   pickLabels();
+  loadMsgs();if(LIVE)setInterval(loadMsgs,8000);
 }
 function deselect(){sel=null;ring.visible=false;follow=false;closeSheets()}
 function openSheet(id){closeSheets(id);$(id).classList.remove("closed");$("#bottom").classList.add("hide")}
@@ -652,8 +693,10 @@ $("#joinBtn").onclick=()=>{
   const mine=lstore(myKey),b=mine&&byHandle.get(mine);
   if(b){toast("כבר יש לך דבורה בכוורת 🐝");select(b);return}
   $("#joinErr").textContent="";openSheet("#joinSheet");setTimeout(()=>$("#joinIn").focus(),300)};
+$("#joinIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("#joinGo").click()});
 $("#joinGo").onclick=async()=>{
   const h=cleanHandle($("#joinIn").value),err=$("#joinErr");
+  if(/[\u0590-\u05FF]/.test($("#joinIn").value)){err.textContent="המקלדת בעברית 🙂 החליפו לאנגלית (🌐) וכתבו את השם כמו באינסטגרם";return}
   if(!HANDLE_RE.test(h)){err.textContent="שם משתמש באינסטגרם: אותיות באנגלית, מספרים, נקודה או קו תחתון";return}
   const mine=lstore(myKey);if(mine&&mine!==h&&byHandle.get(mine)){err.textContent="אפשר רק דבורה אחת לכל משתמש. הדבורה שלך: @"+mine;return}
   const ex=byHandle.get(h);if(ex){lstore(myKey,h);closeSheets();toast("כבר בכוורת! טסים אליך 🐝");select(ex);return}
@@ -674,7 +717,7 @@ function openAdmin(){introT=END;started=true;const g=document.getElementById("ga
 if(ADMIN)setTimeout(openAdmin,50);
 addEventListener("hashchange",()=>{if(location.hash==="#admin")openAdmin()});
 $("#adminGo").onclick=async()=>{
-  const items=$("#adminList").value.split(/\n|,/).map(parseLine).filter(Boolean),err=$("#adminErr");
+  const items=$("#adminList").value.split(/\n|,/).map(parseLine).filter(Boolean),err=$("#adminErr");adminPass=$("#adminPass").value;
   if(!items.length){err.textContent="לא נמצאו שמות ברשימה";return}
   try{
     if(LIVE){const r=await sb("rpc/admin_upsert",{method:"POST",body:JSON.stringify({pass:$("#adminPass").value,items})});
@@ -698,6 +741,58 @@ renderer.domElement.addEventListener("pointerup",e=>{
   if(best)select(best);
 });
 controls.addEventListener("start",()=>{if(fly)fly=null});
+
+
+/* ================= CHAT + DERNIERS INSCRITS ================= */
+let msgs=[],adminPass="",unread=0,lastSeenMsg=0;
+const side=$("#side");
+function sideOpen(){return !side.classList.contains("closed")}
+function openSide(o){side.classList.toggle("closed",!o);if(o){unread=0;updBadge();renderChat(true);renderNew()}}
+function updBadge(){const b=$("#chatBadge");b.hidden=!unread||sideOpen();b.textContent=unread>9?"9+":unread}
+$("#chatBtn").onclick=()=>openSide(!sideOpen());$("#sideX").onclick=()=>openSide(false);
+let tab="chat";
+side.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;side.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));
+  $("#chatList").hidden=tab!=="chat";$("#newList").hidden=tab!=="new";$("#chatForm").hidden=tab!=="chat";if(tab==="new")renderNew();else renderChat(true)});
+function ago(d){const m=Math.floor((Date.now()-new Date(d))/6e4);if(m<1)return"עכשיו";if(m<60)return"לפני "+m+" דק׳";const h=Math.floor(m/60);if(h<24)return"לפני "+h+" שע׳";return"לפני "+Math.floor(h/24)+" ימים"}
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function renderChat(scroll){
+  const el=$("#chatList"),me=lstore("kaveret_my_bee"),atBottom=el.scrollTop+el.clientHeight>=el.scrollHeight-40;
+  if(!msgs.length){el.innerHTML='<div class="empty">עוד אין הודעות. תהיו הראשונים לכתוב 🐝</div>';return}
+  el.innerHTML=msgs.map(m=>{const b=byHandle.get(m.handle);return `<div class="msg${m.handle===me?" mine":""}">${adminPass?`<button class="del" data-id="${m.id}" aria-label="מחיקה">🗑</button>`:""}<span class="who" data-h="${esc(m.handle)}">${b&&b.queen?"👑":"🐝"} @${esc(m.handle)}</span><span class="when">${ago(m.created_at)}</span><div>${esc(m.body)}</div></div>`}).join("");
+  el.querySelectorAll(".who").forEach(w=>w.onclick=()=>{const b=byHandle.get(w.dataset.h);if(b){if(innerWidth<900)openSide(false);select(b)}});
+  el.querySelectorAll(".del").forEach(d=>d.onclick=async()=>{try{const r=await sb("rpc/admin_delete_message",{method:"POST",body:JSON.stringify({pass:adminPass,mid:+d.dataset.id})});if(!r.ok)throw 0;msgs=msgs.filter(m=>m.id!==+d.dataset.id);renderChat()}catch(e){toast("המחיקה לא עבדה")}});
+  if(scroll||atBottom)el.scrollTop=el.scrollHeight;
+}
+function renderNew(){
+  const el=$("#newList");const list=bees.slice().sort((a,b)=>b.created-a.created).slice(0,25);
+  if(!list.length){el.innerHTML='<div class="empty">הכוורת מחכה לדבורה הראשונה 🐝</div>';return}
+  el.innerHTML=list.map(b=>`<button class="newrow" data-h="${esc(b.handle)}"><b>${b.queen?"👑":"🐝"} @${esc(b.handle)}</b><span>${ago(b.created)}</span></button>`).join("");
+  el.querySelectorAll(".newrow").forEach(r=>r.onclick=()=>{const b=byHandle.get(r.dataset.h);if(b){if(innerWidth<900)openSide(false);select(b)}});
+}
+async function loadMsgs(){
+  if(!LIVE)return;
+  try{const r=await sb("messages?select=id,handle,body,created_at&order=id.desc&limit=60");if(!r.ok)return;
+    const rows=(await r.json()).reverse();const newest=rows.length?rows[rows.length-1].id:0;
+    if(lastSeenMsg&&newest>lastSeenMsg&&!sideOpen()){unread+=rows.filter(m=>m.id>lastSeenMsg).length;updBadge()}
+    lastSeenMsg=newest;msgs=rows;if(sideOpen()&&tab==="chat")renderChat()}catch(e){}
+}
+$("#chatForm").addEventListener("submit",async e=>{
+  e.preventDefault();const inp=$("#chatIn"),body=inp.value.trim();if(!body)return;
+  const me=lstore("kaveret_my_bee");
+  if(!me||!byHandle.get(me)){toast("הצטרפו לכוורת קודם כדי לכתוב 🐝");openSide(false);openSheet("#joinSheet");return}
+  if(/(https?:\/\/|www\.)/i.test(body)){toast("אי אפשר לשלוח קישורים בצ'אט");return}
+  $("#chatSend").disabled=true;
+  try{
+    if(LIVE){const r=await sb("rpc/post_message",{method:"POST",body:JSON.stringify({h:me,body})});
+      if(!r.ok){const j=await r.json().catch(()=>({}));const m=String(j.message||"");
+        toast(m.includes("too_fast")?"רגע 🙂 אפשר לשלוח הודעה כל 10 שניות":m.includes("not_a_bee")?"הצטרפו לכוורת קודם 🐝":"ההודעה לא נשלחה");throw 0}
+      await loadMsgs()}
+    else{msgs.push({id:Date.now(),handle:me,body,created_at:new Date().toISOString()})}
+    inp.value="";renderChat(true);
+  }catch(e){}
+  $("#chatSend").disabled=false;
+});
+setInterval(()=>{if(sideOpen()&&tab==="new")renderNew();if(sideOpen()&&tab==="chat")renderChat()},30000);
 
 /* pilot */
 $("#flyBtn").onclick=()=>{if(!sel)return;startPilot(sel)};
@@ -839,7 +934,7 @@ function endIntro(){
   camera.position.set(0,14,24);controls.target.set(0,14,0);controls.update();
   if(REEL){caption("");startReel();return}
   setTimeout(()=>caption(""),1400);
-  controls.enabled=true;$("#top").classList.remove("hide");$("#bottom").classList.remove("hide");
+  controls.enabled=true;$("#top").classList.remove("hide");$("#bottom").classList.remove("hide");$("#chatBtn").classList.remove("hide");if(innerWidth>=900)openSide(true);
 }
 
 /* ================= reel mode ================= */
