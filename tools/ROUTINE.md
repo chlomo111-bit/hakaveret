@@ -40,6 +40,9 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 ## Soir (tâche ~21:15)
 - Lire les gagnants du jour (requête ci-dessus) après le 3e billet. Story résultat : liste des gagnants « 🏆 היום זכו: @… @… » ; billets non trouvés → « 😱 שטר אחד לא נמצא… מחר 3 שטרות חדשים ». Publier directement. (La tâche du soir doit tourner APRÈS l'ouverture du 3e billet : si le 3e billet n'est pas encore trouvé, le dire.)
 
+## Profil Instagram toujours à jour (demande de Shlomo, 27.10.2026)
+- Carrousel « איך משחקים? » (media/regles/, 5 slides 1080×1350) publié le 27.10.2026 : Shlomo l'épingle. Dès qu'une règle change (montants, horaires, nouvelle mécanique), regénérer les slides concernées et republier un nouveau carrousel des règles, puis envoyer à Shlomo (message court) : « épingle le nouveau carrousel » + la bio mise à jour à coller (l'API ne permet ni d'épingler, ni de modifier la bio, ni de créer des highlights).
+
 ## Règles
 - Économe : une seule génération de voix, pas de rendus inutiles.
 - Ne jamais toucher aux autres projets/automatisations de Shlomo.
