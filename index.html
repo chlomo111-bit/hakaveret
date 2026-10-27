@@ -261,6 +261,9 @@ function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt
 function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function cleanHandle(s){s=(s||"").trim();const m=s.match(/instagram\.com\/([A-Za-z0-9._]+)/i);if(m)s=m[1];return s.replace(/^@+/,"").replace(/\s+/g,"").replace(/\/$/,"").toLowerCase()}
 const HANDLE_RE=/^[a-z0-9._]{1,30}$/;
+const NQ=[];let nqBusy=false;
+function notify(msg){NQ.push(msg);if(NQ.length>6)NQ.splice(0,NQ.length-6);pumpN()}
+function pumpN(){if(nqBusy||!NQ.length||mode!=="hive")return;nqBusy=true;toast(NQ.shift());setTimeout(()=>{nqBusy=false;pumpN()},3000)}
 function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("on"),2600)}
 function dayNumber(){const s=new Date(CONFIG.DAY_START+"T00:00:00");return Math.floor((Date.now()-s)/864e5)+1}
 const store={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}};
@@ -314,17 +317,18 @@ function demoData(){
   out[159].style={eyes:"sunglasses",hat:"tophat"};out[158].is_queen=true;
   return out;
 }
-function ingest(rows){
+function ingest(rows,announce){
   let changed=false;
   for(const r of rows){
     const h=r.handle; const ex=byHandle.get(h);
-    if(ex){ if(ex.queen!==!!r.is_queen||JSON.stringify(ex.style)!==JSON.stringify(r.style||{})){ex.queen=!!r.is_queen;ex.style=r.style||{};ex.look=styleFor(ex);changed=true} continue; }
+    if(ex){ if(ex.queen!==!!r.is_queen||JSON.stringify(ex.style)!==JSON.stringify(r.style||{})){if(announce&&!ex.queen&&r.is_queen)notify("👑 @"+h+" הפכה למלכה!");ex.queen=!!r.is_queen;ex.style=r.style||{};ex.look=styleFor(ex);changed=true} continue; }
     const b={id:r.id,handle:h,queen:!!r.is_queen,style:r.style||{},created:r.created_at?new Date(r.created_at):new Date(),i:bees.length};
     b.look=styleFor(b);
     const R=rng(hashStr(h));
     b.r=5+R()*24; b.h=1+R()*31; b.w=(R()<.5?-1:1)*(.08+R()*.22); b.ph=R()*Math.PI*2;
     b.bob=.4+R()*1.2; b.bf=.6+R()*1.4; b.bp=R()*6.28; b.wob=R()*1.6;
     bees.push(b); byHandle.set(h,b); changed=true;
+    if(announce)notify((b.queen?"👑 @":"🐝 @")+h+" הצטרפה לכוורת!");
   }
   if(changed){ rebuildBees(); updateStats(); }
 }
@@ -666,6 +670,7 @@ function select(b,{fly:doFly=true}={}){
   if(doFly)flyTo(b);
   pickLabels();
   loadMsgs();if(LIVE)setInterval(loadMsgs,8000);
+  if(LIVE)setInterval(async()=>{try{const all=await loadAll(),keep=new Set(all.map(r=>r.handle));bees.filter(b=>!keep.has(b.handle)).map(b=>b.handle).forEach(removeBee);ingest(all,true)}catch(e){}},60000);
 }
 function deselect(){sel=null;ring.visible=false;follow=false;closeSheets()}
 function openSheet(id){closeSheets(id);$(id).classList.remove("closed");$("#bottom").classList.add("hide")}
@@ -773,7 +778,7 @@ async function loadMsgs(){
   if(!LIVE)return;
   try{const r=await sb("messages?select=id,handle,body,created_at&order=id.desc&limit=60");if(!r.ok)return;
     const rows=(await r.json()).reverse();const newest=rows.length?rows[rows.length-1].id:0;
-    if(lastSeenMsg&&newest>lastSeenMsg&&!sideOpen()){unread+=rows.filter(m=>m.id>lastSeenMsg).length;updBadge()}
+    if(lastSeenMsg&&newest>lastSeenMsg&&!sideOpen()){const fresh=rows.filter(m=>m.id>lastSeenMsg);unread+=fresh.length;updBadge();const me=lstore("kaveret_my_bee");fresh.forEach(m=>{if(me&&m.handle!==me&&m.body.toLowerCase().includes("@"+me))notify("💬 @"+m.handle+" כתב/ה לך בצ'אט")})}
     lastSeenMsg=newest;msgs=rows;if(sideOpen()&&tab==="chat")renderChat()}catch(e){}
 }
 $("#chatForm").addEventListener("submit",async e=>{
@@ -1026,7 +1031,7 @@ function frameBody(){
   if(CONFIG.TREASURE.on){$("#huntPill").hidden=false;$("#prizeTxt").textContent=CONFIG.TREASURE.prize;checkWinner();if(LIVE)setInterval(checkWinner,30000)}
   try{ingest(LIVE?await withTimeout(loadAll(),10000):demoData())}catch(e){toast("לא הצלחנו לטעון את הכוורת, נסו לרענן");ingest([])}
   updateStats();
-  if(LIVE)setInterval(async()=>{try{const last=bees.reduce((m,b)=>Math.max(m,b.id||0),0);const r=await sb("bees?select=id,handle,is_queen,style,created_at&id=gt."+last+"&order=id.asc");if(r.ok){const rows=await r.json();if(rows.length){ingest(rows);if(mode==="hive")toast("🐝 "+rows.length+" דבורים חדשות הצטרפו")}}}catch(e){}},30000);
+  if(LIVE)setInterval(async()=>{try{const last=bees.reduce((m,b)=>Math.max(m,b.id||0),0);const r=await sb("bees?select=id,handle,is_queen,style,created_at&id=gt."+last+"&order=id.asc");if(r.ok){const rows=await r.json();if(rows.length)ingest(rows,true)}}catch(e){}},30000);
   pickLabels();
 })();
 </script>
