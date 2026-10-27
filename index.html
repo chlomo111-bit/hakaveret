@@ -273,7 +273,7 @@ const CONFIG = {
   SUPABASE_KEY: "sb_publishable_kQz8LnmhYbK-8m79fAPe8Q_51MAcYgz",
   DAY_START: "2026-10-27",   // jour 1 de la ruche
   ACCOUNT: "@hakaveret_shelanu",
-  TREASURE: { on: true, prize: "50 ₪", secret: "change-me-kaveret" } // billet caché, nouvel endroit chaque jour
+  TREASURE: { on: true, prize: "20 ₪", secret: "change-me-kaveret" } // billet caché, nouvel endroit chaque jour
 };
 const LIVE = !!(CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY);
 
@@ -627,9 +627,9 @@ const keyOf=ms=>{const d=new Date(ms);return d.getUTCFullYear()+"-"+String(d.get
 const TREASURE_HOUR=9;
 function treasureDayKey(){return keyOf(ilWall()-TREASURE_HOUR*36e5)}
 function calKey(){return keyOf(ilWall())}
-function secsToNextTreasure(){const w=ilWall(),d=new Date(w);let n=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),TREASURE_HOUR,0,0);if(w>=n)n+=864e5;return Math.max(0,Math.round((n-w)/1000))}
+function secsToNextTreasure(){if(LIVE&&billet&&billet.next_at)return Math.max(0,Math.round((Date.parse(billet.next_at)-(Date.now()+(billet._skew||0)))/1000));const w=ilWall(),d=new Date(w);let n=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),TREASURE_HOUR,0,0);if(w>=n)n+=864e5;return Math.max(0,Math.round((n-w)/1000))}
 const fmtCountdown=t=>[Math.floor(t/3600),Math.floor(t%3600/60),t%60].map(x=>String(x).padStart(2,"0")).join(":");
-let todayKey=treasureDayKey();
+let todayKey=treasureDayKey(),billet=null;
 const treasure=new THREE.Group();let treasureHit=null,billetLocked=false;
 if(CONFIG.TREASURE.on){
   const cv=document.createElement("canvas");cv.width=256;cv.height=128;const g=cv.getContext("2d");
@@ -658,29 +658,46 @@ function placeTreasure(){
   treasure.visible=true;treasureHit=treasure.userData.hit;
 }
 let winKey="kaveret_win_"+todayKey,currentWinner=null;
-async function checkAccess(){if(!LIVE||!CONFIG.TREASURE.on)return;try{const h=lstore("kaveret_my_bee")||"";const r=await sb("rpc/billet_access",{method:"POST",body:JSON.stringify({h})});if(!r.ok)return;const ok=await r.json();const was=billetLocked;billetLocked=ok===false;if(billetLocked){treasure.visible=false;treasureHit=null}else if(was&&!currentWinner){placeTreasure()}renderHunt()}catch(e){}}
-setInterval(checkAccess,60000);
+async function checkAccess(){billetBusy=0;return refreshBillet()}
+
 function lstore(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
 function setWinner(w){ // w = {handle, found_at}
   if(!w)return;treasure.visible=false;treasureHit=null;currentWinner=w;renderHunt();
 }
 function renderHunt(){
-  const p=$("#huntPill");if(!p||!CONFIG.TREASURE.on)return;
-  if(currentWinner)p.innerHTML=`🏆 נמצא ע״י <b dir="ltr">@${esc(currentWinner.handle)}</b> · שטר חדש בעוד <b style="font-variant-numeric:tabular-nums">${fmtCountdown(secsToNextTreasure())}</b>`;
-  else if(billetLocked)p.innerHTML=`🔒 השטר של היום גלוי רק למי שהגיב/ה על הפוסט של הבוקר באינסטגרם · הבא בעוד <b style="font-variant-numeric:tabular-nums">${fmtCountdown(secsToNextTreasure())}</b>`;
-  else p.innerHTML=`💸 שטר של <b>${CONFIG.TREASURE.prize}</b> מחכה בכוורת! · הבא בעוד <b style="font-variant-numeric:tabular-nums">${fmtCountdown(secsToNextTreasure())}</b>`;
+  const p=$("#huntPill");if(!p||!CONFIG.TREASURE.on)return;const T=`<b style="font-variant-numeric:tabular-nums">${fmtCountdown(secsToNextTreasure())}</b>`;
+  if(LIVE&&billet&&!billet.slot)p.innerHTML=`💸 השטר הבא יוסתר בכוורת בעוד ${T} · 3 שטרות של 20 ₪ ביום`;
+  else if(currentWinner)p.innerHTML=`🏆 נמצא ע״י <b dir="ltr">@${esc(currentWinner.handle)}</b> · השטר הבא בעוד ${T}`;
+  else if(billetLocked)p.innerHTML=`🔒 השטר גלוי רק למי שהגיב/ה על הפוסט של הבוקר באינסטגרם · הבא בעוד ${T}`;
+  else p.innerHTML=`💸 שטר של <b>${CONFIG.TREASURE.prize}</b> מחכה בכוורת! · הבא בעוד ${T}`;
 }
+function applyBillet(st){
+  const first=!billet;billet=st;billet._skew=Date.parse(st.now)-Date.now();billetLocked=st.access===false;
+  CONFIG.TREASURE.prize=(st.prize||20)+" ₪";
+  const k=st.slot?st.day+"#"+st.slot:"none";
+  if(k!==todayKey){todayKey=k;winKey="kaveret_win_"+k;currentWinner=null;foundShown=false;
+    if(st.slot)placeTreasure();else{treasure.visible=false;treasureHit=null}
+    if(!first&&st.slot&&mode==="hive")notify("💸 שטר חדש של "+CONFIG.TREASURE.prize+" הוסתר בכוורת! מי ימצא ראשון?")}
+  else if(billetLocked){treasure.visible=false;treasureHit=null}
+  else if(st.slot&&!st.winner&&!currentWinner&&!treasure.visible)placeTreasure();
+  if(st.winner)setWinner({handle:st.winner,found_at:st.found_at});
+  renderHunt();
+}
+let billetBusy=0;
+async function refreshBillet(){if(!LIVE||!CONFIG.TREASURE.on||Date.now()<billetBusy)return;billetBusy=Date.now()+4000;
+  try{const h=lstore("kaveret_my_bee")||"";const r=await sb("rpc/billet_state",{method:"POST",body:JSON.stringify({h})});if(r.ok)applyBillet(await r.json())}catch(e){}}
 setInterval(()=>{
   if(!CONFIG.TREASURE.on)return;
+  if(LIVE){if(billet&&billet.next_at&&secsToNextTreasure()===0)refreshBillet();renderHunt();return}
   const k=treasureDayKey();
-  if(k!==todayKey){todayKey=k;winKey="kaveret_win_"+todayKey;currentWinner=null;foundShown=false;placeTreasure();renderHunt();checkAccess();
-    if(mode==="hive")notify("💸 שטר חדש של "+CONFIG.TREASURE.prize+" הוסתר בכוורת! מי ימצא ראשון?");checkWinner()}
+  if(k!==todayKey){todayKey=k;winKey="kaveret_win_"+todayKey;currentWinner=null;foundShown=false;placeTreasure();renderHunt()}
   else renderHunt();
 },1000);
+setInterval(refreshBillet,20000);
 async function checkWinner(){
   if(!CONFIG.TREASURE.on)return;
   try{
-    if(LIVE){const r=await sb("treasure_wins?select=handle,found_at&day=eq."+todayKey);if(r.ok){const rows=await r.json();if(rows[0])setWinner(rows[0]);else renderHunt()}}
+    if(LIVE){billetBusy=0;await refreshBillet()}
     else{const w=lstore(winKey);if(w)setWinner(JSON.parse(w))}
   }catch(e){}
 }
@@ -696,13 +713,13 @@ $("#fClaim").onclick=async()=>{
   const h=cleanHandle($("#fHandle").value);if(!HANDLE_RE.test(h)){$("#fErr").textContent="כתבו שם משתמש של אינסטגרם";return}
   $("#fClaim").disabled=true;let w=null,me=false;
   try{
-    if(LIVE){const r=await sb("rpc/claim_treasure",{method:"POST",body:JSON.stringify({h})});const rows=await r.json();if(!r.ok){$("#fErr").textContent=String(rows&&rows.message||"").includes("not_eligible")?"🔒 רק מי שהגיב/ה על הפוסט של הבוקר יכול/ה לזכות היום":"משהו לא עבד, נסו שוב";$("#fClaim").disabled=false;return}w=rows[0];me=!!(w&&w.is_me)}
+    if(LIVE){const r=await sb("rpc/claim_treasure",{method:"POST",body:JSON.stringify({h})});const rows=await r.json();if(!r.ok){$("#fErr").textContent=String(rows&&rows.message||"").includes("not_eligible")?"🔒 רק מי שהגיב/ה על הפוסט של הבוקר יכול/ה לזכות היום":String(rows&&rows.message||"").includes("no_billet")?"השטר הבא עוד לא הוסתר… חכו לספירה לאחור 💸":"משהו לא עבד, נסו שוב";$("#fClaim").disabled=false;return}w=rows[0];me=!!(w&&w.is_me)}
     else{const ex=lstore(winKey);if(ex){w=JSON.parse(ex)}else{w={handle:h,found_at:new Date().toISOString()};lstore(winKey,JSON.stringify(w));me=true}}
   }catch(e){$("#fErr").textContent="משהו לא עבד, נסו שוב";$("#fClaim").disabled=false;return}
   $("#fClaim").disabled=false;$("#fAsk").hidden=true;
   if(me){$("#fPrize").textContent=CONFIG.TREASURE.prize;$("#fCode").textContent=treasureCode()+"\n@"+h;
     $("#fWhen").textContent=new Date(w.found_at).toLocaleString("he-IL",{dateStyle:"short",timeStyle:"medium"});$("#fWin").hidden=false}
-  else{$("#fLateTxt").innerHTML=`<b dir="ltr">@${w.handle}</b> מצא את השטר ראשון ב־${new Date(w.found_at).toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})}.<br>מחר ב־09:00 שטר חדש מוסתר במקום אחר 🐝`;$("#fLate").hidden=false}
+  else{$("#fLateTxt").innerHTML=`<b dir="ltr">@${w.handle}</b> מצא את השטר ראשון ב־${new Date(w.found_at).toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})}.<br>השטר הבא יוסתר בקרוב במקום אחר… 3 שטרות ביום 🐝`;$("#fLate").hidden=false}
   setWinner(w);loadWins();
 };
 let foundCool=0;
@@ -1193,7 +1210,7 @@ function frameBody(){
   if(!window.CAP)loop();else window.loop=loop;            // le jeu démarre tout de suite, sans attendre les données
   const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),ms))]);
   try{await withTimeout(document.fonts.load("800 44px Heebo"),3000)}catch(e){}
-  if(CONFIG.TREASURE.on){$("#huntPill").hidden=false;renderHunt();checkWinner();checkAccess();if(LIVE)setInterval(checkWinner,30000)}
+  if(CONFIG.TREASURE.on){$("#huntPill").hidden=false;renderHunt();checkWinner()}
   try{ingest(LIVE?await withTimeout(loadAll(),10000):demoData())}catch(e){toast("לא הצלחנו לטעון את הכוורת, נסו לרענן");ingest([])}
   updateStats();
   if(LIVE)setInterval(async()=>{try{const last=bees.reduce((m,b)=>Math.max(m,b.id||0),0);const r=await sb("bees?select="+BEE_FIELDS+"&id=gt."+last+"&order=id.asc");if(r.ok){const rows=await r.json();if(rows.length)ingest(rows,true)}}catch(e){}},30000);
