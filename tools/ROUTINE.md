@@ -49,6 +49,9 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 - PALIER ATTEINT le 27.10 vers 15:00 (61 abeilles). Le reel « יום 1 » de 19:30 a été annulé (contenu dépassé, et déjà un reel publié ce jour-là). → Le reel du 28.10 au matin = le reel « כוורת הזהב / 50 דבורים » (capture #ev50 avec les vrais @), en racontant aussi la journée folle d'hier (Ron, billet doublé).
 - ANTI-SPAM : maximum 1 reel et ~4 stories par jour. Avant toute publication, vérifier avec INSTAGRAM_GET_IG_USER_MEDIA et INSTAGRAM_GET_IG_USER_STORIES qu'un contenu identique ou très proche n'est pas déjà en ligne.
 
+## Reel du 28.10 : voix fournie par Shlomo
+- Shlomo a envoyé la voix du reel « 50 abeilles / récap » : media/2026-10-28/voix_reel_50.mp3 → l'utiliser TELLE QUELLE (ne pas regénérer de voix pour ce reel). Caler les plans sur ses pauses (silencedetect).
+
 ## Débrief du matin (demande de Shlomo, 27.10.2026)
 - TOUT D'ABORD tester l'accès à la voix : `curl -sS -o /dev/null -w "%{http_code}" https://storage.googleapis.com/` (200/400 = OK, 000/403 du proxy = bloqué). Shlomo a ajouté storage.googleapis.com aux domaines autorisés le 27.10 : dire dans le débrief si la voix James est utilisable aujourd'hui ou toujours bloquée.
 - Au tout début de la production du matin, envoyer à Shlomo un débrief des 24 dernières heures (SendUserMessage + PushNotification, en français, court) :
