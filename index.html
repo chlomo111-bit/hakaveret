@@ -683,10 +683,11 @@ function setWinner(w){ // w = {handle, found_at}
 function renderHunt(){
   const p=$("#huntPill");if(!p||!CONFIG.TREASURE.on)return;const T=`<b style="font-variant-numeric:tabular-nums">${fmtCountdown(secsToNextTreasure())}</b>`;
   const NG=LIVE&&billet&&billet.next_gift_from?`🎁 השטר הבא: <b>${billet.next_prize} ₪</b> מתנה מ־<b dir="ltr">@${esc(billet.next_gift_from)}</b> · בעוד ${T}`:"";
-  if(LIVE&&billet&&!billet.slot)p.innerHTML=NG||`💸 השטר הבא יוסתר בכוורת בעוד ${T} · 3 שטרות של 20 ₪ ביום`;
+  const LW=(typeof lastWin!=="undefined"&&lastWin)?`🏆 הזוכה האחרון: <b dir="ltr">@${esc(lastWin.handle)}</b> · `:"";
+  if(LIVE&&billet&&!billet.slot)p.innerHTML=LW+(NG||`💸 השטר הבא יוסתר בכוורת בעוד ${T} · 3 שטרות של 20 ₪ ביום`);
   else if(currentWinner)p.innerHTML=`🏆 נמצא ע״י <b dir="ltr">@${esc(currentWinner.handle)}</b> · `+(NG||`השטר הבא בעוד ${T}`);
   else if(CONFIG.TREASURE.gift&&!billetLocked)p.innerHTML=`🎁 שטר מתנה של <b>${CONFIG.TREASURE.prize}</b> מ־<b dir="ltr">@${esc(CONFIG.TREASURE.gift)}</b> מחכה בכוורת!`;
-  else if(billetLocked)p.innerHTML=`🔒 השטר גלוי רק למי שהגיב/ה על הפוסט של הבוקר באינסטגרם · הבא בעוד ${T}`;
+  else if(billetLocked)p.innerHTML=LW+`🔒 השטר גלוי רק למי שהגיב/ה על הפוסט של הבוקר באינסטגרם · הבא בעוד ${T}`;
   else p.innerHTML=`💸 שטר של <b>${CONFIG.TREASURE.prize}</b> מחכה בכוורת! · הבא בעוד ${T}`;
 }
 function applyBillet(st){
@@ -1146,7 +1147,7 @@ function metFrame(t,dt){
 }
 
 let winsBy={};
-async function loadWins(){try{if(LIVE){const r=await sb("treasure_wins?select=handle");if(r.ok){winsBy={};(await r.json()).forEach(w=>winsBy[w.handle]=(winsBy[w.handle]||0)+1)}}}catch(e){}}
+let lastWin=null;async function loadWins(){try{if(LIVE){const r=await sb("treasure_wins?select=handle,found_at&order=found_at.desc");if(r.ok){winsBy={};const a=await r.json();lastWin=a[0]||null;a.forEach(w=>winsBy[w.handle]=(winsBy[w.handle]||0)+1);renderHunt()}}}catch(e){}}
 function profileBox(b){
   const w=winsBy[b.handle]||0;
   return `<div class="mybox">
