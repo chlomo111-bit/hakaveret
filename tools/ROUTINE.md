@@ -8,6 +8,20 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 - Site : dépôt GitHub `chlomo111-bit/hakaveret` (GitHub Pages, domaine hakaveret.online). S'il n'est pas dans la session : add_repo (owner chlomo111-bit, repo hakaveret, access push) puis git clone. Commits signés : user.name "chlomo111-bit", user.email "chlomo111-bit@users.noreply.github.com".
 - Voix (changement demandé par Shlomo le 27.10 au soir : « plus dynamique et énergique ») : ElevenLabs **Liam – Energetic, Social Media Creator** (voice_id `TX3LPaxmHKxFdv7VOQHJ`), model `eleven_v3`, avec tags [excited]/[shouting]/[fast]. Ancienne voix (si Shlomo veut revenir) : James (voice_id `EkK5I93UQWFDigLMpZcX`, model `eleven_v3`, flow `aQELt3ILFku8anM2IK25`), 1 seule génération (generations_count 1). Télécharger le MP3 (content_url) avec curl. Si le téléchargement est bloqué : reel sans voix (musique + gros textes + bruitages) et le signaler à Shlomo une seule fois.
 
+## CROISSANCE — objectif n°1 (Shlomo, 28.10 14:33) — AUTONOMIE TOTALE
+Objectif : un maximum d'abonnés, de commentaires et d'interactions. Agir sans demander (Shlomo l'a dit), en gardant l'usage léger. Argument massue : « אין עוד משחק שנותן כסף כל יום — 60 ₪ ביום, 3 שטרות של 20 ₪ ».
+Leviers à utiliser CHAQUE jour :
+1. « תייגו חבר » (depuis le 28.10) : un ami tagué dans un commentaire = une abeille à son nom (bees.referred_by) ; le tagueur gagne +1 refs (1 = chapeau 🎩, 3 = abeille dorée ✨). Le passage commentaires le gère et répond en mentionnant l'ami (qui reçoit une notif → nouvel abonné). Le rappeler dans CHAQUE légende et dans le commentaire du post de 07:00.
+2. Post de 07:00 : légende qui demande un commentaire ET un tag (« תייגו חבר שצריך 20 ₪ »).
+3. Story « בעוד 10 דקות שטר חדש בכוורת » ~10 min avant chaque billet (heures dans billet_slots) : la production du matin les génère et les programme (create_trigger run_once, une par billet).
+4. Story gagnant le soir en mentionnant @gagnant (il repartage → ses abonnés découvrent le jeu).
+5. Reel quotidien : hook choc 1re seconde, l'événement voté « מה יקרה מחר », fin = CTA commentaire + tag.
+6. Commentaire CTA sous chaque reel (« מה יקרה מחר? »), l'idée la plus likée devient l'événement du lendemain (nommer l'auteur dans le reel).
+7. Réponses rapides et variées (5 passages/jour : 8:52, 11:52, 14:52, 17:52, 20:52) — toujours en hébreu, sans URL.
+8. Paliers d'abonnés/abeilles (100, 150, 200…) = événement spécial + reel (comme כוורת הזהב à 50).
+9. Hashtags : 5, en hébreu, liés à l'Israël/jeu/argent (#משחק #זכייה #ישראל …), varier un peu chaque jour.
+Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, giveaway trompeur (le règlement reste exact : 3×20 ₪ par jour).
+
 ## NOUVELLE MÉTHODE VIDÉO (Shlomo, 28.10 08:45) — OBLIGATOIRE
 1. D'abord écrire les PAROLES (texte voix hébreu, avec tags ElevenLabs v3 [excited] etc., + tableau moment/image/voix, durée visée) et les ENVOYER à Shlomo.
 2. Shlomo génère la voix lui-même (voix Juniper) et envoie le MP3.
