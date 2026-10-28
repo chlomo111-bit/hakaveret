@@ -77,6 +77,7 @@ Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, 
 7. Programmer la publication avec create_trigger (run_once_at, initiation own_followup, notifications {}) : stories 09:00 / 13:00 / 17:00 (si l'heure est passée, publier tout de suite) et reel 19:30 Israël (+ commentaire CTA). Chaque tâche : créer le conteneur (media_type STORIES ou REELS, share_to_feed true), publier une seule fois (vérifier avant tout nouvel essai qu'il n'est pas déjà publié).
 
 ## Soir (tâche ~21:15)
+- 28.10 : story résultat PUBLIÉE à 22:17 (media/2026-10-28/story_resultat.jpg : @saardano11 ×2, @zoharkoresh_ + teaser tirage 20:00). Ne pas republier.
 - Lire les gagnants du jour (requête ci-dessus) après le 3e billet. Story résultat : liste des gagnants « 🏆 היום זכו: @… @… » ; billets non trouvés → « 😱 שטר אחד לא נמצא… מחר 3 שטרות חדשים ». Publier directement. (La tâche du soir doit tourner APRÈS l'ouverture du 3e billet : si le 3e billet n'est pas encore trouvé, le dire.)
 
 ## Palier 50 abeilles : « כוורת הזהב » (demande de Shlomo, 27.10.2026)
