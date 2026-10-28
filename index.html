@@ -793,6 +793,16 @@ async function flushHoney(){
 }
 setInterval(flushHoney,3000);
 let honeyTop=[];
+/* ---------- TIRAGE AU SORT de 20:00 (depuis le 29.10) : 200 pollens = 1 ticket, 1 gagnant de 20 ₪ ---------- */
+let lot=null,lotSkew=0,lotNotified=false;
+async function lotteryTick(){try{const h=lstore("kaveret_my_bee")||"";const r=await sb("rpc/lottery_state",{method:"POST",body:JSON.stringify({h})});if(r.ok){lot=await r.json();lotSkew=Date.parse(lot.now)-Date.now();renderLottery()}}catch(e){}}
+function renderLottery(){const p=$("#huntPill");if(!p||!lot)return;
+  const mine=Math.max(lot.mine||0,honeyToday||0),left=Math.max(0,Math.floor((Date.parse(lot.draw_at)-(Date.now()+lotSkew))/1000));
+  const T=`<b style="font-variant-numeric:tabular-nums">${fmtCountdown(left)}</b>`;
+  if(lot.drawn_today)p.innerHTML=lot.last_winner&&lot.last_day===lot.day?`🎉 הזוכה בהגרלה של היום: <b dir="ltr">@${esc(lot.last_winner)}</b> · מחר הגרלה חדשה ב־20:00 🎟️`:`🎟️ ההגרלה של היום הסתיימה · מחר הגרלה חדשה ב־20:00`;
+  else if(mine>=200){p.innerHTML=`✅ אתם בהגרלה! 🎟️ 20 ₪ ב־20:00 · בעוד ${T}`;if(!lotNotified){lotNotified=true;notify("🎟️ הגעתם ל־200 אבקות! אתם בהגרלה של 20:00 על 20 ₪ 🍀")}}
+  else p.innerHTML=`🎟️ אספו <b>200</b> אבקות → הגרלה על <b>20 ₪</b> ב־20:00 · יש לכם <b>${mine}</b>/200 · בעוד ${T}`;
+}
 async function loadHoney(){try{if(!LIVE)return;const r=await sb("honey?select=handle,today,total&day=eq."+calKey()+"&today=gt.0&order=today.desc&limit=10");if(r.ok){honeyTop=await r.json();const me=lstore("kaveret_my_bee");const mine=honeyTop.find(x=>x.handle===me);if(mine&&mine.today>honeyToday){honeyToday=mine.today;const el=$("#honeyToday");if(el)el.textContent=honeyToday}}}catch(e){}}
 
 /* ---------- CONTROLS ---------- */
@@ -1466,7 +1476,8 @@ function frameBody(){
   if(!window.CAP)loop();else window.loop=loop;            // le jeu démarre tout de suite, sans attendre les données
   const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),ms))]);
   try{await withTimeout(document.fonts.load("800 44px Heebo"),3000)}catch(e){}
-  if(CONFIG.TREASURE.on){$("#huntPill").hidden=false;renderHunt();checkWinner()}
+  if(LIVE&&calKey()>="2026-10-29"){CONFIG.TREASURE.on=false;try{treasure.visible=false;treasureHit=null}catch(e){}$("#huntPill").hidden=false;lotteryTick();setInterval(lotteryTick,30000);setInterval(renderLottery,1000)}
+  else if(CONFIG.TREASURE.on){$("#huntPill").hidden=false;renderHunt();checkWinner()}
   try{ingest(LIVE?await withTimeout(loadAll(),10000):demoData())}catch(e){toast("לא הצלחנו לטעון את הכוורת, נסו לרענן");ingest([])}
   updateStats();
   if(LIVE)setInterval(async()=>{try{const last=bees.reduce((m,b)=>Math.max(m,b.id||0),0);const r=await sb("bees?select="+BEE_FIELDS+"&id=gt."+last+"&order=id.asc");if(r.ok){const rows=await r.json();if(rows.length)ingest(rows,true)}}catch(e){}},30000);

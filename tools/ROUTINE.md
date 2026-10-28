@@ -22,6 +22,14 @@ Leviers à utiliser CHAQUE jour :
 9. Hashtags : 5, en hébreu, liés à l'Israël/jeu/argent (#משחק #זכייה #ישראל …), varier un peu chaque jour.
 Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, giveaway trompeur (le règlement reste exact : 3×20 ₪ par jour).
 
+## TIRAGE AU SORT 20:00 (décision de Shlomo, 28.10 soir) — REMPLACE LES 3 BILLETS dès le 29.10
+- Fini les 3 billets (ensure_slots ne crée plus rien à partir du 29.10). Nouvelle règle : 200 pollens récoltés dans la journée = 1 ticket ; chaque soir à 20:00, UN gagnant tiré au sort parmi les tickets du jour gagne 20 ₪.
+- Seuil 200 choisi d'après le record du 28.10 (140, @yakov_malka4193), arrondi au-dessus.
+- DB : honey(today, day) ; lottery_state(h) (pour le jeu) ; run_lottery(d) (tirage, une seule fois par jour, table lottery_draws).
+- Tâche programmée 20:01 : run_lottery(aujourd'hui) → story gagnant (mentionner @gagnant) + message à Shlomo (gagnant à payer). 0 ticket → story « אף אחד לא הגיע ל־200… מחר? ».
+- Annonce : reel « נגמר הקל » (media/2026-10-29/reel_tirage.mp4, voix Juniper de Shlomo) + post/story de 07:00 du 29.10.
+- Le post de 07:00 garde la question animal 24 h + tag d'ami (plus de billet_gate nécessaire pour le tirage).
+
 ## 29.10 : « חיה ל־24 שעות » (idée de Shlomo, 28.10)
 - Story teaser publiée le 28.10 ~20:30 (media/2026-10-28/story_animal.jpg).
 - Post de 07:00 du 29.10 : question « איזו חיה הייתם רוצים להיות ל־24 שעות? 🐱🐶🦁🐸🐼🐷🦄🐰 כתבו חיה + תייגו חבר → הדבורה שלכם הופכת לחיה! ». Ce post reste le post billet (billet_gate).
