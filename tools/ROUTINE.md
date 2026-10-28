@@ -22,6 +22,12 @@ Leviers à utiliser CHAQUE jour :
 9. Hashtags : 5, en hébreu, liés à l'Israël/jeu/argent (#משחק #זכייה #ישראל …), varier un peu chaque jour.
 Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, giveaway trompeur (le règlement reste exact : 3×20 ₪ par jour).
 
+## 29.10 : « חיה ל־24 שעות » (idée de Shlomo, 28.10)
+- Story teaser publiée le 28.10 ~20:30 (media/2026-10-28/story_animal.jpg).
+- Post de 07:00 du 29.10 : question « איזו חיה הייתם רוצים להיות ל־24 שעות? 🐱🐶🦁🐸🐼🐷🦄🐰 כתבו חיה + תייגו חבר → הדבורה שלכם הופכת לחיה! ». Ce post reste le post billet (billet_gate).
+- Le passage commentaires transforme la dabora : animaux supportés par le jeu = cat חתול, dog כלב, lion אריה, frog צפרדע, panda פנדה, pig חזיר, unicorn חד־קרן/חד קרן, bunny ארנב/ארנבת. SQL : update bees set style = coalesce(style,'{}'::jsonb) || jsonb_build_object('animal','<clé>','animal_until','<date du commentaire + 1 jour>') where handle='<handle>';
+- Reel du 29.10 : montrer la ruche remplie d'animaux (vraies abeilles transformées) = l'événement fou du jour.
+
 ## NOUVELLE MÉTHODE VIDÉO (Shlomo, 28.10 08:45) — OBLIGATOIRE
 1. D'abord écrire les PAROLES (texte voix hébreu, avec tags ElevenLabs v3 [excited] etc., + tableau moment/image/voix, durée visée) et les ENVOYER à Shlomo.
 2. Shlomo génère la voix lui-même (voix Juniper) et envoie le MP3.
