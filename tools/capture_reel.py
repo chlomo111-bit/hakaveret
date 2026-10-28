@@ -26,7 +26,7 @@ with sync_playwright() as p:
         elif "supabase.co" in u: r.fulfill(status=200,body="[]",content_type="application/json")
         elif u.startswith("http://test/"): r.fulfill(body=page_html,content_type="text/html")
         else: r.abort()
-    pg.route("**/*",route); pg.goto("http://test/"); time.sleep(3)
+    pg.route("**/*",route); pg.goto("http://test/"+os.environ.get("URLHASH","")); time.sleep(3)
     pg.evaluate(open(os.environ["HOOK"]).read())
 
 

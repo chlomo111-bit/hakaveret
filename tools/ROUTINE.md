@@ -49,7 +49,9 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 - PALIER ATTEINT le 27.10 vers 15:00 (61 abeilles). Le reel « יום 1 » de 19:30 a été annulé (contenu dépassé, et déjà un reel publié ce jour-là). → Le reel du 28.10 au matin = le reel « כוורת הזהב / 50 דבורים » (capture #ev50 avec les vrais @), en racontant aussi la journée folle d'hier (Ron, billet doublé).
 - ANTI-SPAM : maximum 1 reel et ~4 stories par jour. Avant toute publication, vérifier avec INSTAGRAM_GET_IG_USER_MEDIA et INSTAGRAM_GET_IG_USER_STORIES qu'un contenu identique ou très proche n'est pas déjà en ligne.
 
-## Reel du 28.10 : voix fournie par Shlomo
+## Reel du 28.10 : DÉJÀ PUBLIÉ à 08:38 (session principale, voix Juniper) → https://www.instagram.com/reel/DfBzhIgjcgV/ — NE PAS publier d'autre reel le 28.10.
+
+## (ancien) Reel du 28.10 : voix fournie par Shlomo
 - Shlomo a envoyé la voix du reel « 50 abeilles / récap » : media/2026-10-28/voix_reel_50.mp3 → l'utiliser TELLE QUELLE (ne pas regénérer de voix pour ce reel). Caler les plans sur ses pauses (silencedetect).
 
 ## Débrief du matin (demande de Shlomo, 27.10.2026)
