@@ -2,6 +2,9 @@
 
 Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories + reel + nouveautés, et modifier le jeu, SANS lui demander de confirmation. Le prévenir UNIQUEMENT en cas de problème grave (connexion cassée, mauvais compte, publication impossible), par un message court en français.
 
+## ⚠️ RÈGLE INSTAGRAM OBLIGATOIRE (Shlomo, 28.10 21:40)
+Toute action Instagram via Composio (publier, lire les commentaires, statistiques) : UNIQUEMENT account="instagram_recoup-katar" (@hakaveret_shelanu). JAMAIS instagram_unhave-raband (= @chlomo_assouline malgré son nom), JAMAIS le compte par défaut. Avant CHAQUE publication : INSTAGRAM_GET_USER_INFO / GET_IG_USER_MEDIA → username doit être exactement hakaveret_shelanu ; sinon ne rien publier et prévenir Shlomo.
+
 ## Identifiants
 - Instagram (Composio) : account `instagram_recoup-katar` UNIQUEMENT (username hakaveret_shelanu), ig_user_id `39647208548257780`. Vérifier le username avant toute action ; jamais @chlomo_assouline.
 - Supabase (Composio, SUPABASE_BETA_RUN_SQL_QUERY) : account `supabase_restow-lise`, ref `ohvmnaymozoxfirkbntt`.
