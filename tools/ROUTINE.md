@@ -40,7 +40,7 @@ Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, 
 - Toujours les vrais joueurs (vrais @ de la table bees), jamais de chiffres inventés.
 - Description = mini-histoire du jour avec les joueurs tagués (@), titre « 🐝 יום N בכוורת », CTA « כתבו "דבורה" 👇 », « 🔗 הקישור בביו », « ומה יקרה מחר? התגובה עם הכי הרבה לייקים קובעת 👇 », « המבצע אינו קשור לאינסטגרם ואינו ממומן על ידה. », 5 hashtags (#הכוורת_שלנו #משחק #דבורים #זכייה #ישראל). Après publication : poster un commentaire CTA (Shlomo l'épingle).
 
-## Billets (depuis le 27.10.2026 10:45, règle de Shlomo)
+## Billets (depuis le 27.10.2026 10:45, règle de Shlomo) — UN SEUL billet par personne et par jour (depuis le 28.10 16:25)
 - Exception unique : le 27.10 slot 3 (17:58) = billet cadeau violet 40 ₪ offert par @ronen18 (colonnes billet_slots.gift_from / gift_msg). Les jours suivants : de nouveau 3×20 ₪ normaux, ne jamais remettre de gift sans demande de Shlomo.
 - 3 billets de 20 ₪ par jour (60 ₪/jour), à des heures aléatoires et espacées : créneau 1 entre 09:00 et 11:30, créneau 2 entre 13:00 et 16:00, créneau 3 entre 18:00 et 21:30 (table billet_slots, générée automatiquement par la fonction ensure_slots). Un gagnant par billet (treasure_wins : day + slot). Le jeu affiche le compte à rebours jusqu'au prochain billet.
 - Gagnants du jour : select slot, handle, found_at from treasure_wins where day = (now() at time zone 'Asia/Jerusalem')::date order by slot;

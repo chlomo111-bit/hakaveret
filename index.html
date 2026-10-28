@@ -701,6 +701,7 @@ function renderHunt(){
   if(LIVE&&billet&&!billet.slot)p.innerHTML=LW+(NG||`💸 השטר הבא יוסתר בכוורת בעוד ${T} · 3 שטרות של 20 ₪ ביום`);
   else if(currentWinner)p.innerHTML=`🏆 נמצא ע״י <b dir="ltr">@${esc(currentWinner.handle)}</b> · `+(NG||`השטר הבא בעוד ${T}`);
   else if(CONFIG.TREASURE.gift&&!billetLocked)p.innerHTML=`🎁 שטר מתנה של <b>${CONFIG.TREASURE.prize}</b> מ־<b dir="ltr">@${esc(CONFIG.TREASURE.gift)}</b> מחכה בכוורת!`;
+  else if(billetLocked&&billet&&billet.won_today)p.innerHTML=`🏆 כבר זכית בשטר היום! שטר אחד לאדם ביום · מחר עוד 3 שטרות 💸`;
   else if(billetLocked)p.innerHTML=LW+`🔒 השטרות גלויים רק למי שהגיב/ה על הפוסט של 07:00 · <u>לחצו כדי להגיב</u> 💬 · הבא בעוד ${T}`;
   else p.innerHTML=`💸 שטר של <b>${CONFIG.TREASURE.prize}</b> מחכה בכוורת! · הבא בעוד ${T}`;
 }
@@ -715,8 +716,8 @@ function applyBillet(st){
   else if(billetLocked){treasure.visible=false;treasureHit=null}
   else if(st.slot&&!st.winner&&!currentWinner&&!treasure.visible)placeTreasure();
   if(st.winner)setWinner({handle:st.winner,found_at:st.found_at});
-  if(billetLocked&&!lstore("kaveret_lockmsg_"+st.day)){lstore("kaveret_lockmsg_"+st.day,"1");setTimeout(()=>notify("🔒 רוצים לראות את השטרות של היום? תגיבו על הפוסט של 07:00 באינסטגרם ותייגו חבר 💬 (לחצו על הפס למעלה)"),2500)}
-  const hp=$("#huntPill");if(hp){hp.style.cursor=billetLocked?"pointer":"";hp.onclick=billetLocked?()=>window.open("https://www.instagram.com/hakaveret_shelanu/","_blank"):null}
+  if(billetLocked&&!st.won_today&&!lstore("kaveret_lockmsg_"+st.day)){lstore("kaveret_lockmsg_"+st.day,"1");setTimeout(()=>notify("🔒 רוצים לראות את השטרות של היום? תגיבו על הפוסט של 07:00 באינסטגרם ותייגו חבר 💬 (לחצו על הפס למעלה)"),2500)}
+  const hp=$("#huntPill");if(hp){hp.style.cursor=billetLocked&&!st.won_today?"pointer":"";hp.onclick=billetLocked&&!st.won_today?()=>window.open("https://www.instagram.com/hakaveret_shelanu/","_blank"):null}
   renderHunt();
 }
 let billetBusy=0;
@@ -749,7 +750,7 @@ $("#fClaim").onclick=async()=>{
   const h=cleanHandle($("#fHandle").value);if(!HANDLE_RE.test(h)){$("#fErr").textContent="כתבו שם משתמש של אינסטגרם";return}
   $("#fClaim").disabled=true;let w=null,me=false;
   try{
-    if(LIVE){const r=await sb("rpc/claim_treasure",{method:"POST",body:JSON.stringify({h})});const rows=await r.json();if(!r.ok){$("#fErr").textContent=String(rows&&rows.message||"").includes("not_eligible")?"🔒 רק מי שהגיב/ה על הפוסט של הבוקר יכול/ה לזכות היום":String(rows&&rows.message||"").includes("no_billet")?"השטר הבא עוד לא הוסתר… חכו לספירה לאחור 💸":"משהו לא עבד, נסו שוב";$("#fClaim").disabled=false;return}w=rows[0];me=!!(w&&w.is_me)}
+    if(LIVE){const r=await sb("rpc/claim_treasure",{method:"POST",body:JSON.stringify({h})});const rows=await r.json();if(!r.ok){$("#fErr").textContent=String(rows&&rows.message||"").includes("already_won")?"🏆 כבר זכית היום – שטר אחד לאדם ביום. נתראה מחר!":String(rows&&rows.message||"").includes("not_eligible")?"🔒 רק מי שהגיב/ה על הפוסט של הבוקר יכול/ה לזכות היום":String(rows&&rows.message||"").includes("no_billet")?"השטר הבא עוד לא הוסתר… חכו לספירה לאחור 💸":"משהו לא עבד, נסו שוב";$("#fClaim").disabled=false;return}w=rows[0];me=!!(w&&w.is_me)}
     else{const ex=lstore(winKey);if(ex){w=JSON.parse(ex)}else{w={handle:h,found_at:new Date().toISOString()};lstore(winKey,JSON.stringify(w));me=true}}
   }catch(e){$("#fErr").textContent="משהו לא עבד, נסו שוב";$("#fClaim").disabled=false;return}
   $("#fClaim").disabled=false;$("#fAsk").hidden=true;
