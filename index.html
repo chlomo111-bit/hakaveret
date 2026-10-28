@@ -331,6 +331,7 @@ function styleFor(b){
   if(!(b.style&&b.style.hat)){if((b.refs||0)>=1)s.hat="tophat";else if((b.best||0)>=3)s.hat="flower"}
   s.gold=(b.refs||0)>=3||(b.best||0)>=7;
   if(b.handle==="hakaveret_shelanu"){s.hat="none";s.gold=true;s.eyes="none";s.tint="yellow"}
+  s.animal=null;try{const st=b.style||{};if(st.animal&&ANIMALS[st.animal]&&(!st.animal_until||new Date().toISOString().slice(0,10)<=st.animal_until)){s.animal=st.animal;s.tint=ANIMALS[st.animal].tint;if(s.hat!=="flower"&&s.hat!=="bow")s.hat="none"}}catch(e){}
   return s;
 }
 
@@ -526,14 +527,26 @@ const ACC={
   bow:merge([boxGeo(.06,.06,.06,0,0,0,W),boxGeo(.04,.12,.12,0,0,.09,W),boxGeo(.04,.12,.12,0,0,-.09,W)]),
   glasses:merge([boxGeo(.03,.13,.14,0,0,.1,"#151515"),boxGeo(.03,.13,.14,0,0,-.1,"#151515"),boxGeo(.03,.03,.08,0,.02,0,"#151515"),boxGeo(.02,.09,.1,.005,0,.1,"#BFE8FF"),boxGeo(.02,.09,.1,.005,0,-.1,"#BFE8FF")]),
   sunglasses:merge([boxGeo(.03,.11,.16,0,0,.1,"#101010"),boxGeo(.03,.11,.16,0,0,-.1,"#101010"),boxGeo(.03,.04,.08,0,.02,0,"#101010")]),
-  scarf:merge([boxGeo(.12,.46,.46,0,0,0,W),boxGeo(.08,.24,.1,-.02,-.3,.18,W)])
+  scarf:merge([boxGeo(.12,.46,.46,0,0,0,W),boxGeo(.08,.24,.1,-.02,-.3,.18,W)]),
+  an_cat:merge([boxGeo(.1,.14,.1,0,0,.13,W),boxGeo(.1,.14,.1,0,0,-.13,W),boxGeo(.06,.07,.06,0,.09,.13,W),boxGeo(.06,.07,.06,0,.09,-.13,W)]),
+  an_dog:merge([boxGeo(.14,.24,.08,-.02,-.08,.24,W),boxGeo(.14,.24,.08,-.02,-.08,-.24,W),boxGeo(.08,.08,.1,.2,-.1,0,"#1B1B1B")]),
+  an_lion:merge([boxGeo(.1,.56,.56,0,0,0,W),boxGeo(.1,.12,.66,0,.28,0,W),boxGeo(.1,.12,.66,0,-.28,0,W)]),
+  an_frog:merge([boxGeo(.14,.14,.14,0,0,.12,W),boxGeo(.14,.14,.14,0,0,-.12,W),boxGeo(.05,.07,.07,.06,.01,.12,"#1B1B1B"),boxGeo(.05,.07,.07,.06,.01,-.12,"#1B1B1B")]),
+  an_panda:merge([boxGeo(.1,.12,.12,0,0,.15,"#1B1B1B"),boxGeo(.1,.12,.12,0,0,-.15,"#1B1B1B"),boxGeo(.03,.13,.13,.15,-.18,.1,"#1B1B1B"),boxGeo(.03,.13,.13,.15,-.18,-.1,"#1B1B1B")]),
+  an_pig:merge([boxGeo(.08,.12,.16,.2,-.12,0,W),boxGeo(.02,.04,.04,.25,-.12,.04,"#7A2E45"),boxGeo(.02,.04,.04,.25,-.12,-.04,"#7A2E45"),boxGeo(.12,.06,.1,-.02,0,.15,W),boxGeo(.12,.06,.1,-.02,0,-.15,W)]),
+  an_unicorn:merge([boxGeo(.08,.08,.08,0,0,0,W),boxGeo(.06,.1,.06,.02,.08,0,W),boxGeo(.04,.1,.04,.04,.17,0,W),boxGeo(.02,.06,.02,.05,.24,0,W)]),
+  an_bunny:merge([boxGeo(.08,.34,.08,-.03,.12,.09,W),boxGeo(.08,.34,.08,-.03,.12,-.09,W),boxGeo(.04,.24,.04,-.0,.12,.09,"#FFB6C8"),boxGeo(.04,.24,.04,0,.12,-.09,"#FFB6C8")])
 };
+const ANIMALS={cat:{tint:"orange",col:"#FF9A3C",he:"חתול 🐱"},dog:{tint:"orange",col:"#8B5A2B",he:"כלב 🐶"},lion:{tint:"orange",col:"#C8741A",he:"אריה 🦁"},frog:{tint:"green",col:"#5FD35A",he:"צפרדע 🐸"},panda:{tint:"yellow",col:"#FFFFFF",he:"פנדה 🐼"},pig:{tint:"pink",col:"#FF9FC0",he:"חזיר 🐷"},unicorn:{tint:"purple",col:"#FFFFFF",he:"חד־קרן 🦄"},bunny:{tint:"pink",col:"#FFFFFF",he:"ארנב 🐰"}};
 const ACC_LOCAL={
   crown:new THREE.Matrix4().makeTranslation(.47,.29,0), cap:new THREE.Matrix4().makeTranslation(.47,.27,0),
   tophat:new THREE.Matrix4().makeTranslation(.47,.23,0), beanie:new THREE.Matrix4().makeTranslation(.47,.2,0),
   flower:new THREE.Matrix4().makeTranslation(.47,.26,.08), bow:new THREE.Matrix4().makeTranslation(.42,.25,.12),
   glasses:new THREE.Matrix4().makeTranslation(.63,.08,0), sunglasses:new THREE.Matrix4().makeTranslation(.63,.08,0),
-  scarf:new THREE.Matrix4().makeTranslation(.33,0,0)
+  scarf:new THREE.Matrix4().makeTranslation(.33,0,0),
+  an_cat:new THREE.Matrix4().makeTranslation(.47,.24,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_dog:new THREE.Matrix4().makeTranslation(.47,.1,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_lion:new THREE.Matrix4().makeTranslation(.4,.02,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),
+  an_frog:new THREE.Matrix4().makeTranslation(.5,.25,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_panda:new THREE.Matrix4().makeTranslation(.47,.22,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_pig:new THREE.Matrix4().makeTranslation(.47,.05,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),
+  an_unicorn:new THREE.Matrix4().makeTranslation(.5,.24,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_bunny:new THREE.Matrix4().makeTranslation(.47,.24,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5))
 };
 const BEE_S=1.6;
 let beeMesh=null,wingL=null,wingR=null,acc={},cap=0,accSlots={};
@@ -557,15 +570,16 @@ function rebuildBees(){
   bees.forEach(b=>{
     const t=TINTS[b.look.tint]||TINTS.yellow;c.setRGB(t[0],t[1],t[2]);beeMesh.setColorAt(b.i,c);
     if(b.look.gold)c.setRGB(1,.72,.15);else c.setRGB(1,1,1);wingL.setColorAt(b.i,c);wingR.setColorAt(b.i,c);
-    if(b.queen)accSlots.crown.push(b);
+    if(b.queen&&!b.look.animal)accSlots.crown.push(b);
     if(b.look.hat&&b.look.hat!=="none"&&!(b.queen&&b.look.hat!=="flower"&&b.look.hat!=="bow"))accSlots[b.look.hat].push(b);
     if(b.look.eyes&&b.look.eyes!=="none")accSlots[b.look.eyes].push(b);
     if(b.look.neck==="scarf")accSlots.scarf.push(b);
+    if(b.look.animal)accSlots["an_"+b.look.animal].push(b);
   });
   for(const k in acc){const m=acc[k];m.count=accSlots[k].length;
     accSlots[k].forEach((b,j)=>{
       if(k==="crown")c.set("#FFC93C");else if(k==="glasses"||k==="sunglasses")c.set(b.look.eyes==="sunglasses"&&(hashStr(b.handle)%3===0)?"#FF4FA0":"#FFFFFF");
-      else if(k==="tophat")c.set(b.look.accent);else c.set(b.look.accent);
+      else if(k.startsWith("an_"))c.set(ANIMALS[k.slice(3)].col);else if(k==="tophat")c.set(b.look.accent);else c.set(b.look.accent);
       m.setColorAt(j,c)});
     if(m.instanceColor)m.instanceColor.needsUpdate=true}
   if(beeMesh.instanceColor)beeMesh.instanceColor.needsUpdate=true;
