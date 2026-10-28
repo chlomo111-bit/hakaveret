@@ -64,6 +64,7 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 - Carrousel « איך משחקים? » (media/regles/, 5 slides 1080×1350) publié le 27.10.2026 : Shlomo l'épingle. Dès qu'une règle change (montants, horaires, nouvelle mécanique), regénérer les slides concernées et republier un nouveau carrousel des règles, puis envoyer à Shlomo (message court) : « épingle le nouveau carrousel » + la bio mise à jour à coller (l'API ne permet ni d'épingler, ni de modifier la bio, ni de créer des highlights).
 
 ## Réponses aux commentaires (27.10 au soir, Shlomo)
+- TOUJOURS en hébreu, quelle que soit la langue du commentaire ou du message (règle de Shlomo, 28.10).
 - Jamais de copier-coller : chaque réponse est unique, courte, sympa, en hébreu, et réagit au commentaire. Pas d'URL dans les réponses : « הקישור בביו 🔗 » suffit.
 - DM : l'API refuse souvent d'écrire hors de la fenêtre de 24 h (erreur 2534022) — dans ce cas, donner à Shlomo le texte à envoyer lui-même.
 
