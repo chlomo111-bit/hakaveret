@@ -701,7 +701,7 @@ function renderHunt(){
   if(LIVE&&billet&&!billet.slot)p.innerHTML=LW+(NG||`💸 השטר הבא יוסתר בכוורת בעוד ${T} · 3 שטרות של 20 ₪ ביום`);
   else if(currentWinner)p.innerHTML=`🏆 נמצא ע״י <b dir="ltr">@${esc(currentWinner.handle)}</b> · `+(NG||`השטר הבא בעוד ${T}`);
   else if(CONFIG.TREASURE.gift&&!billetLocked)p.innerHTML=`🎁 שטר מתנה של <b>${CONFIG.TREASURE.prize}</b> מ־<b dir="ltr">@${esc(CONFIG.TREASURE.gift)}</b> מחכה בכוורת!`;
-  else if(billetLocked)p.innerHTML=LW+`🔒 השטר גלוי רק למי שהגיב/ה על הפוסט של הבוקר באינסטגרם · הבא בעוד ${T}`;
+  else if(billetLocked)p.innerHTML=LW+`🔒 השטרות גלויים רק למי שהגיב/ה על הפוסט של 07:00 · <u>לחצו כדי להגיב</u> 💬 · הבא בעוד ${T}`;
   else p.innerHTML=`💸 שטר של <b>${CONFIG.TREASURE.prize}</b> מחכה בכוורת! · הבא בעוד ${T}`;
 }
 function applyBillet(st){
@@ -715,6 +715,8 @@ function applyBillet(st){
   else if(billetLocked){treasure.visible=false;treasureHit=null}
   else if(st.slot&&!st.winner&&!currentWinner&&!treasure.visible)placeTreasure();
   if(st.winner)setWinner({handle:st.winner,found_at:st.found_at});
+  if(billetLocked&&!lstore("kaveret_lockmsg_"+st.day)){lstore("kaveret_lockmsg_"+st.day,"1");setTimeout(()=>notify("🔒 רוצים לראות את השטרות של היום? תגיבו על הפוסט של 07:00 באינסטגרם ותייגו חבר 💬 (לחצו על הפס למעלה)"),2500)}
+  const hp=$("#huntPill");if(hp){hp.style.cursor=billetLocked?"pointer":"";hp.onclick=billetLocked?()=>window.open("https://www.instagram.com/hakaveret_shelanu/","_blank"):null}
   renderHunt();
 }
 let billetBusy=0;
