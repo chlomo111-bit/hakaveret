@@ -8,6 +8,11 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 - Site : dépôt GitHub `chlomo111-bit/hakaveret` (GitHub Pages, domaine hakaveret.online). S'il n'est pas dans la session : add_repo (owner chlomo111-bit, repo hakaveret, access push) puis git clone. Commits signés : user.name "chlomo111-bit", user.email "chlomo111-bit@users.noreply.github.com".
 - Voix (changement demandé par Shlomo le 27.10 au soir : « plus dynamique et énergique ») : ElevenLabs **Liam – Energetic, Social Media Creator** (voice_id `TX3LPaxmHKxFdv7VOQHJ`), model `eleven_v3`, avec tags [excited]/[shouting]/[fast]. Ancienne voix (si Shlomo veut revenir) : James (voice_id `EkK5I93UQWFDigLMpZcX`, model `eleven_v3`, flow `aQELt3ILFku8anM2IK25`), 1 seule génération (generations_count 1). Télécharger le MP3 (content_url) avec curl. Si le téléchargement est bloqué : reel sans voix (musique + gros textes + bruitages) et le signaler à Shlomo une seule fois.
 
+## NOUVELLE MÉTHODE VIDÉO (Shlomo, 28.10 08:45) — OBLIGATOIRE
+1. D'abord écrire les PAROLES (texte voix hébreu, avec tags ElevenLabs v3 [excited] etc., + tableau moment/image/voix, durée visée) et les ENVOYER à Shlomo.
+2. Shlomo génère la voix lui-même (voix Juniper) et envoie le MP3.
+3. Ensuite seulement : créer la vidéo calée sur SA voix (silencedetect pour les pauses), puis publier. Ne jamais générer la voix soi-même ni monter la vidéo avant d'avoir son MP3.
+
 ## Objectif éditorial (le plus important)
 - RÈGLE N°1 de Shlomo (27.10.2026) : carte blanche, MAIS jamais de spam et toujours du contenu de qualité, comme un professionnel. Moins mais mieux : 1 reel/jour max, ~4 stories/jour max, pas de contenu dépassé (chiffres et joueurs à jour), pas de doublon. Dans le doute, ne pas publier.
 - CHOQUER : chaque reel commence par un hook fou dans la 1re seconde (« יש משחק שמחלק כסף אמיתי… », « מישהו לקח 20 ₪ תוך 3 דקות », « דבורה ענקית פלשה לכוורת הלילה 😱 »…). Il se passe chaque jour un truc dingue dans la ruche, annoncé au début (« חכו לסוף 😱 ») et révélé à la fin.
