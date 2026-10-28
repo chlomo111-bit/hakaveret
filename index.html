@@ -1062,6 +1062,89 @@ function evFrame(t,dt){
 }
 function evRain(dt){if(!rain.visible)return;const a=rain.geometry.attributes.position.array;for(let i=0;i<RAIN_N;i++){a[i*3+1]-=rainV[i]*dt;if(a[i*3+1]<-6)a[i*3+1]=36}rain.geometry.attributes.position.needsUpdate=true}
 
+/* ================= ÉVÉNEMENT DU 28.10 : « ☄️ מטאור » (commentaire le plus liké) =================
+   Une fois par appareil à partir du 28.10 (#meteor pour le forcer) : alarme → un météore traverse le plafond
+   → impact, flash, secousse, gerbe de feu → le cratère et le trou dans le plafond restent dans la ruche. */
+const MET_KEY="kaveret_meteor",MET_FORCE=location.hash==="#meteor",MET_DAY="2026-10-28";
+const MET={on:false,done:false,t0:0,step:0,since:0,landed:false,hud:null};
+const MET_A=new THREE.Vector3(-3,64,-30),MET_B=new THREE.Vector3(7,-5.2,-4);
+const MET_HOLE=MET_A.clone().lerp(MET_B,(MET_A.y-36.6)/(MET_A.y-MET_B.y));
+const metRock=new THREE.Group();
+{const g=new THREE.IcosahedronGeometry(1.6,1),pa=g.attributes.position,R=rng(28);for(let i=0;i<pa.count;i++){const s=.8+R()*.4;pa.setXYZ(i,pa.getX(i)*s,pa.getY(i)*s,pa.getZ(i)*s)}g.computeVertexNormals();
+ const rock=new THREE.Mesh(g,new THREE.MeshLambertMaterial({color:0x3a2a22,emissive:0xff4a00,emissiveIntensity:.9,flatShading:true}));
+ const fire=new THREE.Sprite(new THREE.SpriteMaterial({map:pollenGlowTex,color:0xff3a0a,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));fire.scale.set(9,9,1);
+ const light=new THREE.PointLight(0xff6a1a,3,60,1.4);metRock.add(rock,fire,light);metRock.scale.setScalar(1.5);metRock.userData={rock,fire,light};metRock.visible=false;hive.add(metRock)}
+const MT_N=320,metTrail=evPoints(MT_N,2.6,1);metTrail.material.color.set(0xff4a10);const metTrailLife=new Float32Array(MT_N);let metTrailI=0;
+const MS_N=420,metSpark=evPoints(MS_N,1.2,1);metSpark.material.color.set(0xff5a10);const metSparkV=new Float32Array(MS_N*3);
+const ME_N=90,metEmber=evPoints(ME_N,.45,.9);metEmber.material.color.set(0xff7a20);
+{const a=metEmber.geometry.attributes.position.array;for(let i=0;i<ME_N;i++){a[i*3]=MET_B.x+(Math.random()-.5)*5;a[i*3+1]=MET_B.y+Math.random()*8;a[i*3+2]=MET_B.z+(Math.random()-.5)*5}}
+const metCrater=new THREE.Group();
+{const ring=new THREE.Mesh(new THREE.CylinderGeometry(6,6.8,.5,24,1),new THREE.MeshBasicMaterial({color:0x140a06}));ring.position.y=-.1;
+ const lava=new THREE.Mesh(new THREE.CylinderGeometry(4.2,4.2,.56,24,1),new THREE.MeshBasicMaterial({color:0xff5a10}));
+ metCrater.add(ring,lava);metCrater.userData={lava};metCrater.position.set(MET_B.x,-5.7,MET_B.z);metCrater.visible=false;hive.add(metCrater)}
+const metHole=new THREE.Group();
+{const c=document.createElement("canvas");c.width=c.height=256;const g=c.getContext("2d");const gr=g.createRadialGradient(128,128,10,128,128,128);
+ gr.addColorStop(0,"#0b1840");gr.addColorStop(.72,"#16245a");gr.addColorStop(.86,"#ff7a1a");gr.addColorStop(1,"rgba(255,120,30,0)");g.fillStyle=gr;g.fillRect(0,0,256,256);
+ g.fillStyle="#fff";const R=rng(5);for(let i=0;i<70;i++){const a=R()*6.28,r=R()*85;g.globalAlpha=.4+R()*.6;g.fillRect(128+r*Math.cos(a),128+r*Math.sin(a),2,2)}
+ const m=new THREE.Mesh(new THREE.CircleGeometry(5.5,40),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),transparent:true,side:THREE.DoubleSide,fog:false}));
+ m.rotation.x=Math.PI/2;metHole.add(m);metHole.position.set(MET_HOLE.x,36.2,MET_HOLE.z);metHole.visible=false;hive.add(metHole)}
+function metLanded(){MET.landed=true;metRock.visible=true;metRock.scale.setScalar(1.8);metRock.position.copy(MET_B).setY(-4.6);metRock.userData.fire.scale.set(5,5,1);metRock.userData.light.intensity=1.6;metCrater.visible=true;metHole.visible=true;metEmber.visible=true}
+function metIdle(t){if(!MET.landed||MET.on)return;const k=.75+.25*Math.sin(t*2.2);metRock.userData.light.intensity=1.3*k;metRock.userData.rock.material.emissiveIntensity=.55*k;metCrater.userData.lava.material.color.setRGB(1,.3*k+.05,.05);metRock.rotation.y=t*.05;
+  const a=metEmber.geometry.attributes.position.array;for(let i=0;i<ME_N;i++){a[i*3+1]+=(.8+(i%5)*.3)/60;a[i*3]+=Math.sin(t+i)*.004;if(a[i*3+1]>MET_B.y+10){a[i*3+1]=MET_B.y+.3;a[i*3]=MET_B.x+(Math.random()-.5)*5;a[i*3+2]=MET_B.z+(Math.random()-.5)*5}}metEmber.geometry.attributes.position.needsUpdate=true}
+function metSound(kind){try{if(!SND.ac||SND.muted)return;const ac=SND.ac,t=ac.currentTime;
+  if(kind==="whoosh"){const len=ac.sampleRate*1.6,buf=ac.createBuffer(1,len,ac.sampleRate),ch=buf.getChannelData(0);for(let i=0;i<len;i++)ch[i]=(Math.random()*2-1)*Math.pow(i/len,1.5);
+    const s=ac.createBufferSource(),bp=ac.createBiquadFilter(),g=ac.createGain();s.buffer=buf;bp.type="bandpass";bp.Q.value=1.2;bp.frequency.setValueAtTime(2400,t);bp.frequency.exponentialRampToValueAtTime(180,t+1.5);g.gain.value=.7;s.connect(bp);bp.connect(g);g.connect(SND.master);s.start(t)}
+  else evSound(kind)}catch(e){}}
+function metDue(){const d=new Date(Date.now()+3*36e5).toISOString().slice(0,10);return d>=MET_DAY}
+function metStart(t){
+  MET.on=true;MET.done=true;MET.t0=t;MET.step=0;lstore(MET_KEY,"1");
+  if(!window.CAP){if(sel)deselect();follow=false;fly=null;controls.enabled=false;closeSheets();MET.side=sideOpen();if(MET.side)openSide(false);
+    MET.hud=["#top","#bottom","#chatBtn"].map(s=>{const e=$(s);if(e&&!e.classList.contains("hide")){e.classList.add("hide");return e}}).filter(Boolean)}
+  metRock.visible=false;metCrater.visible=false;metHole.visible=false;metEmber.visible=false;MET.landed=false;
+  metSound("alarm");
+}
+window.metStart=metStart;
+function metEnd(t){
+  MET.on=false;evOverlay.style.opacity=0;caption("");metSpark.visible=false;metTrail.visible=false;
+  if(!window.CAP){camera.position.set(0,14,26);controls.target.set(0,14,0);controls.enabled=true;controls.update();
+    (MET.hud||[]).forEach(e=>e.classList.remove("hide"));if(MET.side)openSide(true);
+    notify("☄️ מטאור פגע בכוורת! המכתש נשאר כאן 🔥");notify("💬 ביקשתם בתגובות, וזה קרה 🤯")}
+}
+function metCheck(t){
+  if(MET.on)return;
+  if(!MET.landed&&(lstore(MET_KEY)||window.CAP)&&metDue()&&!MET_FORCE&&!window.CAP)metLanded();
+  if(window.CAP||REEL||EV.on||MET.done||!(metDue()||MET_FORCE)||!bees.length)return;
+  if(lstore(MET_KEY)&&!MET_FORCE){MET.done=true;return}
+  if(!MET.since)MET.since=t;
+  if(t-MET.since<3||pilotBee||fly||document.querySelector(".sheet:not(.closed)")||(bees.length>=EV_N&&!EV.done))return;
+  metStart(t);
+}
+function metFrame(t,dt){
+  const e=t-MET.t0,TF=2.2,TI=3.6;   // alarme → chute → impact
+  let shake=e<TF?.25:0;if(e>=TF&&e<TI)shake=.5;if(e>=TI)shake+=2.2*Math.exp(-(e-TI)*2.4);
+  const look=new THREE.Vector3(0,14,0);
+  if(e>=TF&&e<TI){const u=Math.pow((e-TF)/(TI-TF),1.6),p=MET_A.clone().lerp(MET_B,u);metRock.visible=true;metRock.position.copy(p);metRock.scale.setScalar(3.2);metRock.rotation.x+=dt*6;metRock.rotation.z+=dt*4;metRock.userData.fire.scale.setScalar(6+Math.sin(t*40));metRock.userData.light.intensity=4;
+    look.lerp(p,.8);metTrail.visible=true;
+    const a=metTrail.geometry.attributes.position.array;for(let k=0;k<6;k++){const i=metTrailI++%MT_N;a[i*3]=p.x+(Math.random()-.5)*1.4;a[i*3+1]=p.y+(Math.random()-.5)*1.4+k*.6;a[i*3+2]=p.z+(Math.random()-.5)*1.4;metTrailLife[i]=1}
+    if(p.y<36.6&&!metHole.visible)metHole.visible=true}
+  if(metTrail.visible){const a=metTrail.geometry.attributes.position.array;for(let i=0;i<MT_N;i++){metTrailLife[i]=Math.max(0,metTrailLife[i]-dt*.9);if(!metTrailLife[i])a[i*3+1]=-999;else a[i*3+1]+=dt*1.5}metTrail.geometry.attributes.position.needsUpdate=true;metTrail.material.opacity=e<TI+2?1:Math.max(0,1-(e-TI-2)/2)}
+  const kc=ease(prog(e,TI,TI+1.6))*(1-ease(prog(e,TI+5.2,TI+7.2)));
+  if(e>=TI)look.lerp(MET_B.clone().setY(-3.5),.9*kc);
+  const cp=new THREE.Vector3(0,14+3*prog(e,TF,TI),26).lerp(new THREE.Vector3(MET_B.x-3,MET_B.y+8,MET_B.z+15),kc);
+  camera.position.set(cp.x+Math.sin(t*37)*shake*.7,cp.y+Math.cos(t*29)*shake*.6,cp.z);camera.lookAt(look);
+  if(e<TF){evOverlay.style.background="#ff2a00";evOverlay.style.opacity=Math.sin(e*12)>0?.3:.06}
+  else if(e<TI){evOverlay.style.background="#ff3a00";evOverlay.style.opacity=.28*prog(e,TF,TI)}
+  else{evOverlay.style.background=e<TI+.12?"#fff":"#ff5a00";evOverlay.style.opacity=.95*Math.exp(-(e-TI)*2.6)}
+  if(MET.step===0&&e>=TF-.1){MET.step=1;metSound("whoosh")}
+  if(MET.step===1&&e>=TI){MET.step=2;metSound("boom");metLanded();
+    const a=metSpark.geometry.attributes.position.array;for(let i=0;i<MS_N;i++){a[i*3]=MET_B.x;a[i*3+1]=MET_B.y+.5;a[i*3+2]=MET_B.z;const th=Math.random()*6.283,ph=Math.acos(Math.random()),v=8+Math.random()*20;metSparkV[i*3]=v*Math.sin(ph)*Math.cos(th);metSparkV[i*3+1]=v*Math.cos(ph)*1.3;metSparkV[i*3+2]=v*Math.sin(ph)*Math.sin(th)}
+    metSpark.visible=true}
+  if(metSpark.visible){const a=metSpark.geometry.attributes.position.array;for(let i=0;i<MS_N*3;i++){a[i]+=metSparkV[i]*dt;metSparkV[i]*=.975}for(let i=0;i<MS_N;i++){metSparkV[i*3+1]-=9*dt;if(a[i*3+1]<-5.6){a[i*3+1]=-5.6;metSparkV[i*3+1]*=-.3}}metSpark.geometry.attributes.position.needsUpdate=true;metSpark.material.opacity=1-prog(e,TI+1.5,TI+4)}
+  if(MET.landed&&e>=TI){const k=.75+.25*Math.sin(t*2.2);metCrater.userData.lava.material.color.setRGB(1,.3*k+.05,.05)}
+  caption(e<TF?"🚨 משהו מתקרב לכוורת…":e<TI?"☄️ <em>מטאור!!!</em>":e<TI+4?"💥 המטאור <em>פגע בכוורת</em>!":e<TI+7?"🔥 ביקשתם בתגובות… <em>וזה קרה</em>":"");
+  if(e>=TI+7.5)metEnd(t);
+}
+
 let winsBy={};
 async function loadWins(){try{if(LIVE){const r=await sb("treasure_wins?select=handle");if(r.ok){winsBy={};(await r.json()).forEach(w=>winsBy[w.handle]=(winsBy[w.handle]||0)+1)}}}catch(e){}}
 function profileBox(b){
@@ -1330,8 +1413,9 @@ function frameBody(){
   {const ab=byHandle.get(ADMIN_HANDLE);if(ab&&posArr.length>ab.i*3+2){angelHalo.visible=true;const sc=beeScale(ab)*BEE_S;angelHalo.position.set(posArr[ab.i*3]+.45*sc*Math.cos(yawArr[ab.i]),posArr[ab.i*3+1]+.62*sc+Math.sin(t*2)*.05,posArr[ab.i*3+2]-.45*sc*Math.sin(yawArr[ab.i]));angelHalo.scale.setScalar(sc*.55)}else angelHalo.visible=false}
   if(mode==="intro"){runIntro(dt);return}
   pollen.rotation.y+=dt*.02;if(treasureHit){treasure.children[0].position.z=Math.sin(t*2)*.08;const hs=6+Math.sin(t*3)*1.5;treasure.userData.halo.scale.set(hs,hs,1)}core.intensity=1.5+Math.sin(t*1.3)*.15;
-  evCheck(t);evRain(dt);
+  evCheck(t);evRain(dt);metCheck(t);metIdle(t);
   if(EV.on){evFrame(t,dt)}
+  else if(MET.on){metFrame(t,dt)}
   else if(pilotBee){
     const k=pilot.keys;let jx=pilot.jx,jy=pilot.jy;
     if(k["arrowleft"]||k["a"])jx=-1;if(k["arrowright"]||k["d"])jx=1;if(k["arrowup"]||k["w"])jy=1;if(k["arrowdown"]||k["s"])jy=-.6;
