@@ -24,7 +24,7 @@ Leviers à utiliser CHAQUE jour :
 4. Story gagnant le soir en mentionnant @gagnant (il repartage → ses abonnés découvrent le jeu).
 5. Reel quotidien : hook choc 1re seconde, l'événement voté « מה יקרה מחר », fin = CTA commentaire + tag.
 6. Commentaire CTA sous chaque reel (« מה יקרה מחר? »), l'idée la plus likée devient l'événement du lendemain (nommer l'auteur dans le reel).
-7. Réponses rapides et variées (5 passages/jour : 8:52, 11:52, 14:52, 17:52, 20:52) — toujours en hébreu, sans URL.
+7. Réponses rapides et variées (5 passages/jour : 8:52, 11:52, 14:52, 17:52, 20:52) — toujours en hébreu, sans URL. À CHAQUE passage : enregistrer les commentateurs du post du jour dans daily_commenters (voir « RÈGLE COMMENTAIRE DU JOUR »).
 8. Paliers d'abonnés/abeilles (100, 150, 200…) = événement spécial + reel (comme כוורת הזהב à 50).
 9. Hashtags : 5, en hébreu, liés à l'Israël/jeu/argent (#משחק #זכייה #ישראל …), varier un peu chaque jour.
 Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, giveaway trompeur (le règlement reste exact : 3×20 ₪ par jour).
@@ -41,12 +41,26 @@ Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, 
 
 ## TIRAGE AU SORT 20:00 (décision de Shlomo, 28.10 soir) — REMPLACE LES 3 BILLETS dès le 29.10
 - Fini les 3 billets (ensure_slots ne crée plus rien à partir du 29.10). Nouvelle règle : 200 pollens récoltés dans la journée = 1 ticket ; chaque soir à 20:00, UN gagnant tiré au sort parmi les tickets du jour gagne 20 ₪.
+- Depuis le 30.10 : il faut AUSSI avoir commenté le post du jour (voir « RÈGLE COMMENTAIRE DU JOUR » ci-dessus).
 - Seuil 200 choisi d'après le record du 28.10 (140, @yakov_malka4193), arrondi au-dessus.
 - DB : honey(today, day) ; lottery_state(h) (pour le jeu) ; run_lottery(d) (tirage, une seule fois par jour, table lottery_draws).
 - TIRAGE EN DIRECT (29.10) : à 20:00 pile, chaque joueur dans le jeu voit le show « 🔴 LIVE » (roulette des participants → révélation du gagnant + caméra sur son abeille). Le premier client à 20:00 déclenche le tirage via lottery_live() (une seule fois/jour). La tâche de 20:01 ne fait que lire le résultat. Annonce « 🔴 שידור חי ב־20:00 » dans les stories. Contenu : le lendemain, recréer le show en capture (hook avec LIVE_CLOCK) avec le VRAI gagnant pour le reel récap — seulement APRÈS le tirage (règle de Shlomo).
 - Tâche programmée 20:01 : run_lottery(aujourd'hui) → story gagnant (mentionner @gagnant) + message à Shlomo (gagnant à payer). 0 ticket → story « אף אחד לא הגיע ל־200… מחר? ».
 - Annonce : reel « נגמר הקל » (media/2026-10-29/reel_tirage.mp4, voix Juniper de Shlomo) + post/story de 07:00 du 29.10.
 - Le post de 07:00 garde la question animal 24 h + tag d'ami (plus de billet_gate nécessaire pour le tirage).
+
+## 💬 RÈGLE « COMMENTAIRE DU JOUR » POUR LE TIRAGE (Shlomo, 29.10 — en vigueur dès le 30.10)
+- Pour participer au tirage de 20:00 il faut, LE MÊME JOUR : 200 pollens ET un commentaire sur le « post du jour » de @hakaveret_shelanu. Sans commentaire = pas de tirage, même avec 200 pollens. (Le tirage du 29.10 reste à l'ancienne règle.)
+- « Post du jour » = le dernier post publié ce jour-là (heure d'Israël) sur le compte (post ou reel du feed). Le commentaire compte jusqu'à minuit (en pratique : avant le tirage de 20:00).
+- DB : table `daily_commenters(day, username, post_id)` ; `lottery_eligible(d)` = honey.today ≥ 200 ET présent dans daily_commenters (à partir du 30.10) ; run_lottery / lottery_live / lottery_state l'utilisent (lottery_state renvoie aussi `comment_rule` et `commented` → le jeu affiche à chaque joueur 200 אבקות ✓/✗ et תגובה ✓/✗).
+- ÉTAPE OBLIGATOIRE À CHAQUE PASSAGE COMMENTAIRES (8:52, 11:52, 14:52, 17:52, 20:52). ⚠️ Le dernier passage AVANT le tirage est celui de 17:52 : les commentaires postés entre ~18:00 et 20:00 ne sont pas enregistrés à temps (le jeu dit « תגיבו מוקדם »). Une tâche légère à 19:47 (enregistrement seul, sans réponse) comblerait ce trou : sa création a été refusée par les permissions le 29.10, à proposer à Shlomo :
+  1. INSTAGRAM_GET_IG_USER_MEDIA (fields id,timestamp,caption, limit 5) → post du jour = le plus récent dont la date (Asia/Jerusalem) = aujourd'hui. S'il n'y en a pas encore aujourd'hui : rien à enregistrer.
+  2. INSTAGRAM_GET_IG_MEDIA_COMMENTS sur ce post (fields id,text,from,timestamp ; toutes les pages) → pour chaque commentaire d'un joueur (≠ hakaveret_shelanu) daté d'aujourd'hui (Israël) :
+     `insert into public.daily_commenters(day, username, post_id) values ((now() at time zone 'Asia/Jerusalem')::date, lower('<username>'), '<media_id>') on conflict do nothing;`
+     (on enregistre TOUS les commentateurs, même ceux déjà dans ig_seen_comments — ig_seen_comments ne sert qu'à ne pas répondre deux fois.)
+  3. Si un nouveau post est publié dans la journée, les commentateurs déjà enregistrés du post précédent restent valables (la table ne fait qu'ajouter).
+- Communication : le rappeler dans le post/story de 07:00, les stories du jour et la story 19:00 (« 🎟️ 200 אבקות + תגובה על הפוסט של היום = כרטיס להגרלה »). Dans les réponses aux commentaires du post du jour, on peut confirmer « ✅ אתם ברשימה של ההגרלה (אם תגיעו ל־200 אבקות) ».
+- 30.10 07:00 (production du matin) : le post et la story de 07:00 DOIVENT annoncer la nouvelle règle : « 🆕 מהיום: כדי להיכנס להגרלה של 20:00 צריך 200 אבקות + תגובה על הפוסט הזה 💬 » ; légende avec CTA « הגיבו כאן 👇 = כרטיס להגרלה של הערב (עם 200 אבקות) + תייגו חבר ». Ensuite, chaque jour, rappeler la règle dans le post de 07:00 (plus court).
 
 ## 29.10 : « חיה ל־24 שעות » (idée de Shlomo, 28.10)
 - Story teaser publiée le 28.10 ~20:30 (media/2026-10-28/story_animal.jpg).

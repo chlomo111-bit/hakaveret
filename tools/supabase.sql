@@ -205,3 +205,48 @@ alter table public.ig_seen_comments enable row level security;
 alter table public.ig_welcomed enable row level security;
 revoke all on public.ig_seen_comments from anon, authenticated;
 revoke all on public.ig_welcomed from anon, authenticated;
+
+-- 29.10 : règle « commentaire du jour » pour le tirage (en vigueur dès le 30.10)
+create table if not exists public.daily_commenters (day date not null, username text not null, post_id text, created_at timestamptz not null default now(), primary key (day, username));
+alter table public.daily_commenters enable row level security;
+revoke all on public.daily_commenters from anon, authenticated;
+
+create or replace function public.lottery_eligible(d date) returns table(handle text) language sql stable security definer set search_path to 'public' as $f$
+  select x.handle from honey x where x.day = d and x.today >= 200
+    and (d < date '2026-10-30' or exists (select 1 from daily_commenters c where c.day = d and c.username = x.handle));
+$f$;
+revoke all on function public.lottery_eligible(date) from public, anon, authenticated;
+
+create or replace function public.run_lottery(d date) returns json language plpgsql security definer set search_path to 'public' as $function$
+declare w text; n int; r record;
+begin
+  select * into r from lottery_draws where day = d; if found then return json_build_object('already', true, 'winner', r.winner, 'entrants', r.entrants); end if;
+  select count(*) into n from lottery_eligible(d);
+  select e.handle into w from lottery_eligible(d) e order by random() limit 1;
+  insert into lottery_draws(day, winner, entrants) values (d, w, n);
+  return json_build_object('winner', w, 'entrants', n);
+end $function$;
+
+create or replace function public.lottery_live() returns json language plpgsql security definer set search_path to 'public' as $function$
+declare d date := (now() at time zone 'Asia/Jerusalem')::date; draw_at timestamptz := ((d::text||' 20:00')::timestamp at time zone 'Asia/Jerusalem'); r record; ents json;
+begin
+  select coalesce(json_agg(e.handle order by e.handle),'[]'::json) into ents from lottery_eligible(d) e;
+  if now() < draw_at then return json_build_object('state','waiting','draw_at',draw_at,'entrants',ents,'now',now()); end if;
+  if d < date '2026-10-29' then return json_build_object('state','off'); end if;
+  perform run_lottery(d);
+  select * into r from lottery_draws where day = d;
+  return json_build_object('state','drawn','winner',r.winner,'n',r.entrants,'drawn_at',r.drawn_at,'entrants',ents,'now',now());
+end $function$;
+
+create or replace function public.lottery_state(h text default '') returns json language plpgsql security definer set search_path to 'public' as $function$
+declare d date := (now() at time zone 'Asia/Jerusalem')::date; hh text := lower(btrim(coalesce(h,''),' @')); my int; n int; lw record; rule boolean := d >= date '2026-10-30'; com boolean;
+begin
+  select case when x.day = d then x.today else 0 end into my from honey x where x.handle = hh;
+  com := exists(select 1 from daily_commenters c where c.day = d and c.username = hh);
+  select count(*) into n from lottery_eligible(d);
+  select * into lw from lottery_draws l where l.winner is not null order by l.day desc limit 1;
+  return json_build_object('day', d, 'threshold', 200, 'mine', coalesce(my,0), 'comment_rule', rule, 'commented', com,
+    'entered', coalesce(my,0) >= 200 and (com or not rule), 'entrants', n,
+    'draw_at', ((d::text||' 20:00')::timestamp at time zone 'Asia/Jerusalem'),
+    'drawn_today', exists(select 1 from lottery_draws l where l.day = d), 'last_winner', lw.winner, 'last_day', lw.day, 'now', now());
+end $function$;
