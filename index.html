@@ -778,7 +778,7 @@ function updatePollen(t){
   for(let i=0;i<POLLEN_N;i++){const p=pollenPos[i];const y=p.y+Math.sin(t*1.6+pollenPh[i])*.35;
     pDummy.position.set(p.x,y,p.z);pDummy.rotation.set(t*.8+pollenPh[i],t*1.1,0);pDummy.scale.setScalar(1+Math.sin(t*4+pollenPh[i])*.12);pDummy.updateMatrix();pollenMesh.setMatrixAt(i,pDummy.matrix);
     pollenGlow[i].position.set(p.x,y,p.z);
-    if(pilotBee&&pilot.pos.distanceTo(pDummy.position)<2.4){pollenSpot(p);honeyPending++;honeyToday++;
+    if(pilotBee&&pilot.pos.distanceTo(pDummy.position)<2.4){pollenSpot(p);{const m2=calKey()==="2026-10-29"?2:1;honeyPending+=m2;honeyToday+=m2}
       const el=$("#honeyToday");if(el)el.textContent=honeyToday;const hp=$("#honeyPill");if(hp){hp.classList.add("pop");setTimeout(()=>hp.classList.remove("pop"),150)}
       pollenBlip()}}
   pollenMesh.instanceMatrix.needsUpdate=true;
@@ -798,7 +798,7 @@ let lot=null,lotSkew=0,lotNotified=false;
 async function lotteryTick(){try{const h=lstore("kaveret_my_bee")||"";const r=await sb("rpc/lottery_state",{method:"POST",body:JSON.stringify({h})});if(r.ok){lot=await r.json();lotSkew=Date.parse(lot.now)-Date.now();renderLottery()}}catch(e){}}
 function renderLottery(){const p=$("#huntPill");if(!p||!lot)return;
   const mine=Math.max(lot.mine||0,honeyToday||0),left=Math.max(0,Math.floor((Date.parse(lot.draw_at)-(Date.now()+lotSkew))/1000));
-  const T=`<b style="font-variant-numeric:tabular-nums">${fmtCountdown(left)}</b>`;
+  const T=isFinite(left)?`<b style="font-variant-numeric:tabular-nums">${fmtCountdown(left)}</b>`:"20:00";
   if(lot.drawn_today)p.innerHTML=lot.last_winner&&lot.last_day===lot.day?`🎉 הזוכה בהגרלה של היום: <b dir="ltr">@${esc(lot.last_winner)}</b> · מחר הגרלה חדשה ב־20:00 🎟️`:`🎟️ ההגרלה של היום הסתיימה · מחר הגרלה חדשה ב־20:00`;
   else if(mine>=200){p.innerHTML=`✅ אתם בהגרלה! 🎟️ 20 ₪ ב־20:00 · בעוד ${T}`;if(!lotNotified){lotNotified=true;notify("🎟️ הגעתם ל־200 אבקות! אתם בהגרלה של 20:00 על 20 ₪ 🍀")}}
   else p.innerHTML=`🎟️ אספו <b>200</b> אבקות → הגרלה על <b>20 ₪</b> ב־20:00 · יש לכם <b>${mine}</b>/200 · בעוד ${T}`;
@@ -1015,10 +1015,10 @@ const RAIN_N=420,rain=evPoints(RAIN_N,.55,.85),rainV=new Float32Array(RAIN_N);
 {const a=rain.geometry.attributes.position.array;for(let i=0;i<RAIN_N;i++){const r=4+Math.random()*28,q=Math.random()*6.283;a[i*3]=r*Math.cos(q);a[i*3+1]=Math.random()*42-6;a[i*3+2]=r*Math.sin(q);rainV[i]=1.5+Math.random()*2.5}}
 const digits=evPoints(1,.9,0);digits.material.color.set(0xFFC93C);
 const BURST_N=360,burst=evPoints(BURST_N,1.1,1),burstV=new Float32Array(BURST_N*3);
-function formTargets(n){
+function formTargets(n,txt){txt=txt||"50";
   const portrait=innerWidth<innerHeight,W=portrait?170:300,H=portrait?300:170,c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d");
   g.fillStyle="#fff";g.textAlign="center";g.textBaseline="middle";g.font="900 "+(portrait?150:160)+"px Heebo, Arial, sans-serif";
-  if(portrait){g.fillText("5",W/2,H*.27);g.fillText("0",W/2,H*.76)}else g.fillText("50",W/2,H*.55);
+  if(txt.length===2&&portrait){g.fillText(txt[0],W/2,H*.27);g.fillText(txt[1],W/2,H*.76)}else{if(portrait)g.font="900 70px Heebo, Arial, sans-serif";g.fillText(txt,W/2,H*.55)}
   const d=g.getImageData(0,0,W,H).data,P=[];for(let y=0;y<H;y+=3)for(let x=0;x<W;x+=3)if(d[(y*W+x)*4+3]>128)P.push([x,y]);
   const sc=(portrait?23:27)/(portrait?H:W),R=rng(50);
   {const a=new Float32Array(P.length*3);P.forEach((q,j)=>{a[j*3]=(q[0]-W/2)*sc+(Math.random()-.5)*.3;a[j*3+1]=14-(q[1]-H/2)*sc+(Math.random()-.5)*.3;a[j*3+2]=1.2+(Math.random()-.5)*.6});
@@ -1088,6 +1088,61 @@ function evFrame(t,dt){
   caption(e<2.5?"😱 מה קורה בכוורת?!":e<6.2?"👑 <em>מלכת־העל</em> הגיעה!":e<11?"<em>50</em> דבורים!!! 🐝":e<15?"✨ הכוורת הפכה ל<em>כוורת הזהב</em> ✨":"");
   if(e>=15.5)evEnd(t);
 }
+/* ---------- ÉVÉNEMENT 100 ABEILLES : « הכוורת ממריאה לחלל » (#ev100 pour forcer) ----------
+   Alarme → compte à rebours 3-2-1 → décollage (flammes, secousse, étoiles en warp) → les abeilles forment « 100 » → la ruche reste dans l'espace. Bonus : pollen ×2 le 29.10. */
+const E2_N=100,E2_FORCE=location.hash==="#ev100",E2_KEY="kaveret_ev100";
+const E2={on:false,done:false,t0:0,since:0,step:0,space:0};
+const SPACE_BG=new THREE.Color("#04051A");
+const STAR_N=900,stars=evPoints(STAR_N,.35,1),starV=new Float32Array(STAR_N);stars.material.color.set(0xFFFFFF);
+{const a=stars.geometry.attributes.position.array;for(let i=0;i<STAR_N;i++){const r=3+Math.random()*30,q=Math.random()*6.283;a[i*3]=r*Math.cos(q);a[i*3+1]=Math.random()*46-4;a[i*3+2]=r*Math.sin(q);starV[i]=.6+Math.random()}}
+const FL_N=500,flames=evPoints(FL_N,1.4,1),flV=new Float32Array(FL_N*3);flames.material.color.set(0xFF7A1A);
+const planet=new THREE.Group();{const sp=new THREE.Mesh(new THREE.IcosahedronGeometry(9,2),new THREE.MeshLambertMaterial({color:0x7B5CFF,flatShading:true}));
+ const ring=new THREE.Mesh(new THREE.RingGeometry(12,17,48),new THREE.MeshBasicMaterial({color:0xFFC93C,side:THREE.DoubleSide,transparent:true,opacity:.75}));ring.rotation.x=1.2;
+ planet.add(sp,ring);planet.position.set(-34,48,-70);planet.visible=false;hive.add(planet)}
+let spaceMeshes=null;const SPACE_TINT=new THREE.Color("#3B3F9E"),WHITE=new THREE.Color(1,1,1);
+function applySpace(k){E2.space=k;if(k<=0)return;if(!spaceMeshes)spaceMeshes=hive.children.filter(o=>o.isInstancedMesh&&o!==pollenMesh&&o.material&&o.material.isMeshLambertMaterial&&!o.material.vertexColors);spaceMeshes.forEach(m=>m.material.color.copy(WHITE).lerp(SPACE_TINT,.85*k));
+  if(!applySpace.L){applySpace.L=hive.children.filter(o=>o.isHemisphereLight)[0];applySpace.c0=core.color.clone();applySpace.h0=applySpace.L&&applySpace.L.color.clone()}
+  core.color.copy(applySpace.c0).lerp(new THREE.Color("#8C7BFF"),k);if(applySpace.L)applySpace.L.color.copy(applySpace.h0).lerp(new THREE.Color("#9FB4FF"),k);hive.background.copy(EV.gold>0?GOLD_BG:BASE_BG).lerp(SPACE_BG,k);hive.fog.color.copy(hive.background);hive.fog.far=82+120*k;stars.visible=true;stars.material.opacity=k;planet.visible=k>.5}
+function e2Check(t){
+  if(REEL||EV.on||E2.on)return;
+  if(!E2.since)E2.since=t;
+  const reached=bees.length>=E2_N;
+  if(reached&&!EV.done){EV.done=true;lstore(EV_KEY,"1");applyGold(1)}           // les nouveaux venus sautent l'événement des 50
+  if(!E2.done&&reached&&lstore(E2_KEY)&&!E2_FORCE){E2.done=true;applySpace(1)}
+  if(E2.done||!(reached||E2_FORCE)||!bees.length)return;
+  if(t-E2.since<2.5||pilotBee||fly||document.querySelector(".sheet:not(.closed)"))return;
+  E2.on=true;E2.done=true;E2.t0=t;E2.step=0;lstore(E2_KEY,"1");
+  if(sel)deselect();follow=false;fly=null;controls.enabled=false;closeSheets();E2.side=sideOpen();if(E2.side)openSide(false);
+  E2.hud=["#top","#bottom","#chatBtn"].map(s=>{const e=$(s);if(e&&!e.classList.contains("hide")){e.classList.add("hide");return e}}).filter(Boolean);
+  EV.form={k:0,tg:formTargets(bees.length,"100")};evSound("alarm");
+}
+function e2Frame(t,dt){
+  const e=t-E2.t0;
+  let shake=e<2.5?.3:e<5.5?.4+1.2*prog(e,2.5,5.5):e<9?1.8*Math.exp(-(e-5.5)*.7)+.25:0;
+  camera.position.set(Math.sin(t*37)*shake*.6,14-6*ease(prog(e,2.5,5.5))*(1-prog(e,6,9))+Math.cos(t*29)*shake*.5,28);camera.lookAt(0,14-4*(1-prog(e,6,9))*prog(e,2.5,5.5),0);
+  // flammes sous la ruche
+  if(e>=2.5&&e<10){flames.visible=true;const a=flames.geometry.attributes.position.array,pw=e<5.5?.4+.6*prog(e,2.5,5.5):1-prog(e,8,10);
+    for(let i=0;i<FL_N;i++){if(a[i*3+1]>40||flV[i*3+1]===0||Math.random()<.02){const q=Math.random()*6.283,r=6+Math.random()*20;a[i*3]=r*Math.cos(q);a[i*3+1]=-3;a[i*3+2]=r*Math.sin(q);flV[i*3]=(Math.random()-.5)*3;flV[i*3+1]=(12+Math.random()*28)*pw;flV[i*3+2]=(Math.random()-.5)*3}
+      a[i*3]+=flV[i*3]*dt;a[i*3+1]+=flV[i*3+1]*dt;a[i*3+2]+=flV[i*3+2]*dt}
+    flames.geometry.attributes.position.needsUpdate=true;flames.material.opacity=pw}else flames.visible=false;
+  // espace + warp des étoiles
+  applySpace(ease(prog(e,5.5,8.5)));
+  if(e>=5.5&&e<11){const a=stars.geometry.attributes.position.array,v=60*(1-prog(e,9,11));for(let i=0;i<STAR_N;i++){a[i*3+1]-=v*starV[i]*dt;if(a[i*3+1]<-4)a[i*3+1]+=46}stars.geometry.attributes.position.needsUpdate=true}
+  // formation « 100 »
+  EV.form.k=ease(prog(e,9,11))*(1-ease(prog(e,14,15.4)));
+  digits.visible=EV.form.k>0;digits.material.opacity=.9*ease(prog(e,9.6,11))*(1-prog(e,14,14.3))*(.85+.15*Math.sin(t*8));
+  // overlay
+  if(e<2.5){evOverlay.style.background="#ff2a00";evOverlay.style.opacity=Math.sin(e*12)>0?.3:.05}
+  else{evOverlay.style.background="#fff";evOverlay.style.opacity=Math.max(e>=5.5?.9*Math.exp(-(e-5.5)*3):0,e>=14?.6*Math.exp(-(e-14)*3):0)}
+  if(E2.step===0&&e>=5.5){E2.step=1;evSound("boom")}
+  if(E2.step===1&&e>=14){E2.step=2;evSound("fanfare")}
+  const cd=e<3.5?"3":e<4.5?"2":"1";
+  caption(e<2.5?"🚨 <em>100</em> דבורים!!! ביקשתם <em>טיל</em>…":e<5.5?`🚀 <em>${cd}</em>…`:e<9?"🚀 הכוורת <em>ממריאה</em>!!!":e<14?"<em>100</em> דבורים בחלל! 🌌":e<17?"🌼 היום: אבקה <em>×2</em> לכולם!":"");
+  if(e>=17.5){E2.on=false;EV.form=null;digits.visible=false;evOverlay.style.opacity=0;caption("");flames.visible=false;
+    camera.position.set(0,14,28);controls.target.set(0,14,0);controls.enabled=true;controls.update();
+    (E2.hud||[]).forEach(x=>x.classList.remove("hide"));if(E2.side)openSide(true);
+    notify("🚀 100 דבורים! הכוורת עפה לחלל 🌌");notify("🌼 היום כל אבקה שווה ×2 – 200 אבקות = כרטיס להגרלה של 20:00 🎟️")}
+}
 function evRain(dt){if(!rain.visible)return;const a=rain.geometry.attributes.position.array;for(let i=0;i<RAIN_N;i++){a[i*3+1]-=rainV[i]*dt;if(a[i*3+1]<-6)a[i*3+1]=36}rain.geometry.attributes.position.needsUpdate=true}
 
 /* ================= ÉVÉNEMENT DU 28.10 : « ☄️ מטאור » (commentaire le plus liké) =================
@@ -1141,7 +1196,7 @@ function metEnd(t){
 function metCheck(t){
   if(MET.on)return;
   if(!MET.landed&&(lstore(MET_KEY)||window.CAP)&&metDue()&&!MET_FORCE&&!window.CAP)metLanded();
-  if(window.CAP||REEL||EV.on||MET.done||!(metDue()||MET_FORCE)||!bees.length)return;
+  if(window.CAP||REEL||EV.on||E2.on||MET.done||!(metDue()||MET_FORCE)||!bees.length)return;
   if(lstore(MET_KEY)&&!MET_FORCE){MET.done=true;return}
   if(!MET.since)MET.since=t;
   if(t-MET.since<3||pilotBee||fly||document.querySelector(".sheet:not(.closed)")||(bees.length>=EV_N&&!EV.done))return;
@@ -1441,8 +1496,9 @@ function frameBody(){
   {const ab=byHandle.get(ADMIN_HANDLE);if(ab&&posArr.length>ab.i*3+2){angelHalo.visible=true;const sc=beeScale(ab)*BEE_S;angelHalo.position.set(posArr[ab.i*3]+.45*sc*Math.cos(yawArr[ab.i]),posArr[ab.i*3+1]+.62*sc+Math.sin(t*2)*.05,posArr[ab.i*3+2]-.45*sc*Math.sin(yawArr[ab.i]));angelHalo.scale.setScalar(sc*.55)}else angelHalo.visible=false}
   if(mode==="intro"){runIntro(dt);return}
   pollen.rotation.y+=dt*.02;if(treasureHit){treasure.children[0].position.z=Math.sin(t*2)*.08;const hs=6+Math.sin(t*3)*1.5;treasure.userData.halo.scale.set(hs,hs,1)}core.intensity=1.5+Math.sin(t*1.3)*.15;
-  evCheck(t);evRain(dt);metCheck(t);metIdle(t);
+  e2Check(t);evCheck(t);evRain(dt);metCheck(t);metIdle(t);
   if(EV.on){evFrame(t,dt)}
+  if(E2.on){e2Frame(t,dt)}else if(E2.space>0&&stars.visible){stars.rotation.y+=dt*.01}
   else if(MET.on){metFrame(t,dt)}
   else if(pilotBee){
     const k=pilot.keys;let jx=pilot.jx,jy=pilot.jy;
