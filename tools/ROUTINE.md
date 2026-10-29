@@ -36,7 +36,7 @@ Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, 
 
 ## 📸 BONUS STORY +1000 (Shlomo, 29.10 13:15)
 - Un joueur qui partage en story en taguant @hakaveret_shelanu reçoit +1000 pollens, UNE fois par jour : SQL `select public.award_story_bonus('<handle>')` (table story_bonus ; renvoie already=true si déjà reçu aujourd'hui). Affiché dans le jeu (fiche de son abeille).
-- Détection : l'API ne donne pas le contenu des mentions de story, elles arrivent comme des messages privés SANS texte. À chaque passage commentaires : lister les conversations mises à jour depuis le dernier passage ; pour chaque message reçu d'un joueur, sans texte, de moins de 24 h → award_story_bonus + réponse en DM (fenêtre 24 h ouverte) en hébreu : « 🎉 קיבלת 1000 אבקות על הסטורי! תודה ששיתפת 🐝 ». Si Shlomo signale une story à la main → créditer aussi.
+- Détection : l'API ne donne pas le contenu des mentions de story, elles arrivent comme des messages privés SANS texte. À chaque passage commentaires : lister les conversations mises à jour depuis le dernier passage ; pour chaque message reçu d'un joueur, sans texte, de moins de 24 h → award_story_bonus (pas de DM : l'API refuse l'envoi, erreur 2534022 ; le joueur voit les pollens dans le jeu). Si Shlomo signale une story à la main → créditer aussi.
 - À rappeler dans les légendes et les stories : « שתפו בסטורי + תייגו אותנו = +1000 אבקות 🌼 ».
 
 ## TIRAGE AU SORT 20:00 (décision de Shlomo, 28.10 soir) — REMPLACE LES 3 BILLETS dès le 29.10
