@@ -34,6 +34,11 @@ Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, 
 - 29.10 : post 100 abeilles PUBLIÉ à 07:43 (https://www.instagram.com/p/DfESH-olaR7/, id 18051801353815835, + commentaire d'appel animal) + story 07:00 publiée (media/2026-10-29/post_0700.jpg, story_0700.jpg). Reel tirage programmé à 08:30 (tâche trig_014oviy5gM2EkGN7jva3pxu6). Ne pas republier.
 - À annoncer dans le post/story de 07:00 (« 💯 100 דבורים! הכוורת עפה לחלל 🚀 · היום אבקה ×2 ») et dans la légende du reel de 08:30. Prochain palier : 150.
 
+## 📸 BONUS STORY +1000 (Shlomo, 29.10 13:15)
+- Un joueur qui partage en story en taguant @hakaveret_shelanu reçoit +1000 pollens, UNE fois par jour : SQL `select public.award_story_bonus('<handle>')` (table story_bonus ; renvoie already=true si déjà reçu aujourd'hui). Affiché dans le jeu (fiche de son abeille).
+- Détection : l'API ne donne pas le contenu des mentions de story, elles arrivent comme des messages privés SANS texte. À chaque passage commentaires : lister les conversations mises à jour depuis le dernier passage ; pour chaque message reçu d'un joueur, sans texte, de moins de 24 h → award_story_bonus + réponse en DM (fenêtre 24 h ouverte) en hébreu : « 🎉 קיבלת 1000 אבקות על הסטורי! תודה ששיתפת 🐝 ». Si Shlomo signale une story à la main → créditer aussi.
+- À rappeler dans les légendes et les stories : « שתפו בסטורי + תייגו אותנו = +1000 אבקות 🌼 ».
+
 ## TIRAGE AU SORT 20:00 (décision de Shlomo, 28.10 soir) — REMPLACE LES 3 BILLETS dès le 29.10
 - Fini les 3 billets (ensure_slots ne crée plus rien à partir du 29.10). Nouvelle règle : 200 pollens récoltés dans la journée = 1 ticket ; chaque soir à 20:00, UN gagnant tiré au sort parmi les tickets du jour gagne 20 ₪.
 - Seuil 200 choisi d'après le record du 28.10 (140, @yakov_malka4193), arrondi au-dessus.

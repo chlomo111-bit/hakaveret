@@ -178,6 +178,7 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
     <div class="row" id="shareRow" style="margin-top:10px">
       <button class="btn ghost" id="shareBtn">📸 שיתוף לסטורי</button>
     </div>
+    <div class="bonus" id="storyBonus" style="margin-top:8px"><div><b>🎁 +1000 אבקות ביום!</b> שתפו את הדבורה שלכם בסטורי ו<b>תייגו את <span dir="ltr">@hakaveret_shelanu</span></b> – הבונוס נכנס אוטומטית תוך כמה שעות 🌼</div></div>
     <div class="bonus" id="bonusBox">
       <div><b>🎁 בונוס:</b> עקבו אחרי הכוורת וכתבו <b>"דבורה"</b> בתגובות לרילס של היום, והדבורה שלכם תקבל כתר או אביזר מיוחד ✨</div>
       <a class="btn ghost igbtn" href="https://www.instagram.com/hakaveret_shelanu/" target="_blank" rel="noopener">לעקוב באינסטגרם</a>
@@ -874,7 +875,7 @@ function select(b,{fly:doFly=true}={}){
   $("#sMeta").innerHTML=tags.map(t=>`<span class="tag">${t}</span>`).join("");
   const me=lstore("kaveret_my_bee"),registered=!!(me&&byHandle.get(me)),mine=me===b.handle;
   $("#myBox").innerHTML=mine?myProgress(b):profileBox(b);
-  $("#flyRow").hidden=!mine;$("#shareRow").hidden=!mine;$("#bonusBox").hidden=!mine&&registered;$("#joinRow").hidden=registered;
+  $("#flyRow").hidden=!mine;$("#shareRow").hidden=!mine;{const sb=$("#storyBonus");if(sb)sb.hidden=!mine}$("#bonusBox").hidden=!mine&&registered;$("#joinRow").hidden=registered;
   const ib=$("#inviteBtn");if(ib)ib.onclick=()=>invite(b.handle);
   openSheet("#beeSheet");
   if(doFly)flyTo(b);
