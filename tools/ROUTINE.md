@@ -25,6 +25,9 @@ Leviers à utiliser CHAQUE jour :
 9. Hashtags : 5, en hébreu, liés à l'Israël/jeu/argent (#משחק #זכייה #ישראל …), varier un peu chaque jour.
 Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, giveaway trompeur (le règlement reste exact : 3×20 ₪ par jour).
 
+## 🎉 29.10 : PALIER 100 ABEILLES ATTEINT (nuit du 28 au 29.10, @aviv_ben_shlush = la 100e)
+- À fêter aujourd'hui : mentionner « 100 דבורים בכוורת! 💯 » dans le post/story de 07:00 et dans la légende du reel de 08:30 (sans refaire le reel). Prochain palier : 150.
+
 ## TIRAGE AU SORT 20:00 (décision de Shlomo, 28.10 soir) — REMPLACE LES 3 BILLETS dès le 29.10
 - Fini les 3 billets (ensure_slots ne crée plus rien à partir du 29.10). Nouvelle règle : 200 pollens récoltés dans la journée = 1 ticket ; chaque soir à 20:00, UN gagnant tiré au sort parmi les tickets du jour gagne 20 ₪.
 - Seuil 200 choisi d'après le record du 28.10 (140, @yakov_malka4193), arrondi au-dessus.
