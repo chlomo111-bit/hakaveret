@@ -50,6 +50,7 @@ Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, 
 - Reel du 29.10 : montrer la ruche remplie d'animaux (vraies abeilles transformées) = l'événement fou du jour.
 
 ## NOUVELLE MÉTHODE VIDÉO (Shlomo, 28.10 08:45) — OBLIGATOIRE
+- MISE EN PAGE des posts/stories (bug du 29.10 : cadres coupés à droite, bande noire à gauche) : utiliser tools/post_template.py (flex centré, box-sizing:border-box, padding 70px, width 100%) et TOUJOURS regarder l'image (Read) avant de publier.
 - MÉTHODE VALIDÉE « top incroyable » (Shlomo, 28.10, reel_tirage) : 1) pousser le MP3 de Shlomo dans le dépôt, 2) ElevenLabs creative_attach_reference_file (URL raw.githubusercontent) + creative_transcribe_audio (eleven_scribe_v1) → minutage exact de chaque mot, 3) caler chaque texte/plan sur ces temps (modèle : tools/hooks/tirage.js), 4) musique dramatique rythmée synthétisée avec impacts sur les mots clés (modèle : tools/music_tirage.py), ducking sous la voix (sidechaincompress). Ne JAMAIS caler « à l'estimation ».
 1. D'abord écrire les PAROLES (texte voix hébreu, avec tags ElevenLabs v3 [excited] etc., + tableau moment/image/voix, durée visée) et les ENVOYER à Shlomo.
 2. Shlomo génère la voix lui-même (voix Juniper) et envoie le MP3.
