@@ -222,12 +222,13 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
   <button id="chatBtn" class="chatfab hide" aria-label="צ'אט">💬<span id="chatBadge" hidden></span></button>
   <aside id="side" class="side closed" aria-label="צ'אט וחדשים">
     <div class="sidehead">
-      <div class="tabs"><button data-tab="chat" class="on">💬 צ'אט</button><button data-tab="new">🐝 חדשים</button><button data-tab="top">🏆 שיאים</button></div>
+      <div class="tabs"><button data-tab="chat" class="on">💬 צ'אט</button><button data-tab="new">🐝 חדשים</button><button data-tab="top">🏆 שיאים</button><button data-tab="idea">💡 רעיונות</button></div>
       <button class="x" id="sideX" aria-label="סגירה">✕</button>
     </div>
     <div id="chatList" class="list"></div>
     <div id="newList" class="list" hidden></div>
     <div id="topList" class="list" hidden></div>
+    <div id="ideaList" class="list" hidden></div>
     <form id="chatForm" class="chatform">
       <input id="chatIn" maxlength="140" autocomplete="off" placeholder="כתבו משהו לכוורת…" aria-label="הודעה">
       <button class="btn" id="chatSend" type="submit">שלח</button>
@@ -764,29 +765,31 @@ $("#fClaim").onclick=async()=>{
 let foundCool=0;
 $("#fClose").onclick=()=>{$("#found").hidden=true;foundShown=false;foundCool=performance.now()+8000};
 
-/* ---------- POLLEN (récolte) ---------- */
-const POLLEN_N=160,pollenPos=[],pollenPh=[];
+/* ---------- POLLEN (récolte) : 320 boules jaunes (1 pt) + 20 violettes (5 pts) ---------- */
+const POLLEN_N=320,SUPER_N=20,ALL_N=POLLEN_N+SUPER_N,pollenPos=[],pollenPh=[];
 const pollenMat=new THREE.MeshBasicMaterial({color:0xFFE45C});
 const pollenMesh=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(.32,0),pollenMat,POLLEN_N);pollenMesh.frustumCulled=false;hive.add(pollenMesh);
-const pollenGlowTex=(()=>{const c=document.createElement("canvas");c.width=c.height=64;const g=c.getContext("2d");const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,"rgba(255,236,120,.9)");gr.addColorStop(1,"rgba(255,200,60,0)");g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c)})();
-const pollenGlow=[];
+const superMesh=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(.5,0),new THREE.MeshBasicMaterial({color:0xB45CFF}),SUPER_N);superMesh.frustumCulled=false;hive.add(superMesh);
+const pollenGlowTex=(()=>{const c=document.createElement("canvas");c.width=c.height=64;const g=c.getContext("2d");const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,"rgba(255,255,255,.95)");gr.addColorStop(1,"rgba(255,255,255,0)");g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c)})();
+function glowPts(n,color,size){const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.BufferAttribute(new Float32Array(n*3),3));const p=new THREE.Points(g,new THREE.PointsMaterial({color,size,map:pollenGlowTex,transparent:true,opacity:.8,depthWrite:false,blending:THREE.AdditiveBlending}));p.frustumCulled=false;hive.add(p);return p}
+const glowY=glowPts(POLLEN_N,0xFFD54A,1.6),glowV=glowPts(SUPER_N,0xC77DFF,3.2);
 function pollenSpot(v){const a=Math.random()*Math.PI*2,r=5+Math.random()*22;return v.set(r*Math.cos(a),Math.random()*30,r*Math.sin(a))}
-for(let i=0;i<POLLEN_N;i++){pollenPos.push(pollenSpot(new THREE.Vector3()));pollenPh.push(Math.random()*6.28);
-  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:pollenGlowTex,transparent:true,depthWrite:false}));sp.scale.set(1.6,1.6,1);hive.add(sp);pollenGlow.push(sp)}
+for(let i=0;i<ALL_N;i++){pollenPos.push(pollenSpot(new THREE.Vector3()));pollenPh.push(Math.random()*6.28)}
 const pDummy=new THREE.Object3D();let honeyPending=0,honeyToday=0,honeyBusy=false;
 function updatePollen(t){
-  for(let i=0;i<POLLEN_N;i++){const p=pollenPos[i];const y=p.y+Math.sin(t*1.6+pollenPh[i])*.35;
-    pDummy.position.set(p.x,y,p.z);pDummy.rotation.set(t*.8+pollenPh[i],t*1.1,0);pDummy.scale.setScalar(1+Math.sin(t*4+pollenPh[i])*.12);pDummy.updateMatrix();pollenMesh.setMatrixAt(i,pDummy.matrix);
-    pollenGlow[i].position.set(p.x,y,p.z);
-    if(pilotBee&&pilot.pos.distanceTo(pDummy.position)<2.4){pollenSpot(p);{const m2=calKey()==="2026-10-29"?2:1;honeyPending+=m2;honeyToday+=m2}
+  const gy=glowY.geometry.attributes.position.array,gv=glowV.geometry.attributes.position.array,mult=calKey()==="2026-10-29"?2:1;
+  for(let i=0;i<ALL_N;i++){const p=pollenPos[i],sup=i>=POLLEN_N,j=sup?i-POLLEN_N:i;const y=p.y+Math.sin(t*1.6+pollenPh[i])*.35;
+    pDummy.position.set(p.x,y,p.z);pDummy.rotation.set(t*.8+pollenPh[i],t*1.1,0);pDummy.scale.setScalar(1+Math.sin(t*(sup?6:4)+pollenPh[i])*(sup?.2:.12));pDummy.updateMatrix();
+    (sup?superMesh:pollenMesh).setMatrixAt(j,pDummy.matrix);const ga=sup?gv:gy;ga[j*3]=p.x;ga[j*3+1]=y;ga[j*3+2]=p.z;
+    if(pilotBee&&pilot.pos.distanceTo(pDummy.position)<(sup?2.8:2.4)){pollenSpot(p);const v=(sup?5:1)*mult;honeyPending+=v;honeyToday+=v;
       const el=$("#honeyToday");if(el)el.textContent=honeyToday;const hp=$("#honeyPill");if(hp){hp.classList.add("pop");setTimeout(()=>hp.classList.remove("pop"),150)}
-      pollenBlip()}}
-  pollenMesh.instanceMatrix.needsUpdate=true;
+      pollenBlip();if(sup){pollenBlip();toast("💜 בועה סגולה! +"+v)}}}
+  pollenMesh.instanceMatrix.needsUpdate=true;superMesh.instanceMatrix.needsUpdate=true;glowY.geometry.attributes.position.needsUpdate=true;glowV.geometry.attributes.position.needsUpdate=true;
 }
 function pollenBlip(){try{if(!SND.ac||SND.muted)return;const ac=SND.ac,o=ac.createOscillator(),g=ac.createGain();o.type="sine";o.frequency.setValueAtTime(880,ac.currentTime);o.frequency.exponentialRampToValueAtTime(1500,ac.currentTime+.12);g.gain.setValueAtTime(.12,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.2);o.connect(g);g.connect(SND.master);o.start();o.stop(ac.currentTime+.22)}catch(e){}}
 async function flushHoney(){
   const me=lstore("kaveret_my_bee");if(!me||honeyBusy||honeyPending<=0)return;
-  const n=Math.min(15,honeyPending);honeyBusy=true;
+  const n=Math.min(40,honeyPending);honeyBusy=true;
   try{if(LIVE){const r=await sb("rpc/add_pollen",{method:"POST",body:JSON.stringify({h:me,n})});if(r.ok){const j=await r.json();honeyPending-=n;if(j&&typeof j.today==="number"){honeyToday=j.today+honeyPending;const el=$("#honeyToday");if(el)el.textContent=honeyToday}}}
     else{honeyPending-=n}}catch(e){}
   honeyBusy=false;
@@ -964,7 +967,7 @@ function updBadge(){const b=$("#chatBadge");b.hidden=!unread||sideOpen();b.textC
 $("#chatBtn").onclick=()=>openSide(!sideOpen());$("#sideX").onclick=()=>openSide(false);
 let tab="chat";
 side.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;side.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));
-  $("#chatList").hidden=tab!=="chat";$("#newList").hidden=tab!=="new";$("#topList").hidden=tab!=="top";$("#chatForm").hidden=tab!=="chat";if(tab==="new")renderNew();else if(tab==="top"){renderTop();loadHoney().then(renderTop)}else renderChat(true)});
+  $("#chatList").hidden=tab!=="chat";$("#newList").hidden=tab!=="new";$("#topList").hidden=tab!=="top";$("#chatForm").hidden=tab!=="chat";$("#ideaList").hidden=tab!=="idea";if(tab==="idea")loadIdeas();else if(tab==="new")renderNew();else if(tab==="top"){renderTop();loadHoney().then(renderTop)}else renderChat(true)});
 function ago(d){const m=Math.floor((Date.now()-new Date(d))/6e4);if(m<1)return"עכשיו";if(m<60)return"לפני "+m+" דק׳";const h=Math.floor(m/60);if(h<24)return"לפני "+h+" שע׳";return"לפני "+Math.floor(h/24)+" ימים"}
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function renderChat(scroll){
@@ -988,6 +991,26 @@ async function loadMsgs(){
     if(lastSeenMsg&&newest>lastSeenMsg&&!sideOpen()){const fresh=rows.filter(m=>m.id>lastSeenMsg);unread+=fresh.length;updBadge();const me=lstore("kaveret_my_bee");fresh.forEach(m=>{if(me&&m.handle!==me&&m.body.toLowerCase().includes("@"+me))notify("💬 @"+m.handle+" כתב/ה לך בצ'אט")})}
     lastSeenMsg=newest;msgs=rows;if(sideOpen()&&tab==="chat")renderChat()}catch(e){}
 }
+/* ---------- 💡 Boîte à idées ---------- */
+let ideas=[];
+async function loadIdeas(){const el=$("#ideaList");
+  if(!el.dataset.ready){el.dataset.ready="1";el.innerHTML=`<div style="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.12)"><div style="font-weight:900;font-size:16px;margin-bottom:6px">💡 יש לכם רעיון לשפר את הכוורת?</div><textarea id="ideaIn" maxlength="280" rows="3" placeholder="מה הייתם רוצים שיהיה במשחק? 🐝" style="width:100%;box-sizing:border-box;border-radius:12px;border:0;padding:10px;font:inherit;resize:none"></textarea><button class="btn" id="ideaSend" style="margin-top:6px;width:100%">שלחו רעיון 🚀</button><div style="font-size:12px;opacity:.75;margin-top:6px">❤️ תנו לייק לרעיונות שאתם אוהבים – הכי אהובים ייכנסו למשחק!</div></div><div id="ideaRows"></div>`;
+    $("#ideaSend").onclick=sendIdea}
+  if(!LIVE){renderIdeas();return}
+  try{const r=await sb("ideas?select=id,handle,body,likes,created_at&order=likes.desc,id.desc&limit=40");if(r.ok){ideas=await r.json();renderIdeas()}}catch(e){}}
+function renderIdeas(){const el=$("#ideaRows");if(!el)return;
+  if(!ideas.length){el.innerHTML='<div class="empty">עוד אין רעיונות… תהיו הראשונים! 💡</div>';return}
+  el.innerHTML=ideas.map(i=>`<div style="display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08)"><div style="flex:1"><div style="font-size:12px;opacity:.7" dir="ltr">@${esc(i.handle)} · ${ago(i.created_at)}</div><div style="white-space:pre-wrap">${esc(i.body)}</div></div><button class="ilike" data-id="${i.id}" style="background:none;border:0;color:#fff;font:inherit;cursor:pointer;white-space:nowrap">❤️ ${i.likes}</button></div>`).join("");
+  el.querySelectorAll(".ilike").forEach(b=>b.onclick=async()=>{const me=lstore("kaveret_my_bee");if(!me||!byHandle.get(me)){toast("הצטרפו לכוורת קודם 🐝");return}
+    try{const r=await sb("rpc/like_idea",{method:"POST",body:JSON.stringify({h:me,iid:+b.dataset.id})});if(r.ok){const n=await r.json();const it=ideas.find(x=>x.id===+b.dataset.id);if(it)it.likes=n;b.textContent="❤️ "+n}}catch(e){}})}
+async function sendIdea(){const inp=$("#ideaIn"),body=(inp.value||"").trim();if(body.length<3)return;
+  const me=lstore("kaveret_my_bee");if(!me||!byHandle.get(me)){toast("הצטרפו לכוורת קודם כדי לשלוח רעיון 🐝");openSide(false);openSheet("#joinSheet");return}
+  if(/(https?:\/\/|www\.)/i.test(body)){toast("בלי קישורים 🙂");return}
+  $("#ideaSend").disabled=true;
+  try{if(LIVE){const r=await sb("rpc/post_idea",{method:"POST",body:JSON.stringify({h:me,body})});
+      if(!r.ok){const j=await r.json().catch(()=>({}));const m=String(j.message||"");toast(m.includes("too_fast")?"רגע 🙂 רעיון אחד בדקה":m.includes("too_many")?"מקסימום 5 רעיונות ביום 🙏":"הרעיון לא נשלח");throw 0}}
+    inp.value="";toast("💡 תודה! הרעיון שלך נשלח לכוורת");await loadIdeas()}catch(e){}
+  $("#ideaSend").disabled=false}
 $("#chatForm").addEventListener("submit",async e=>{
   e.preventDefault();const inp=$("#chatIn"),body=inp.value.trim();if(!body)return;
   const me=lstore("kaveret_my_bee");
