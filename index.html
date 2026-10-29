@@ -132,11 +132,42 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
 .newrow b{direction:ltr;unicode-bidi:isolate}
 .newrow span{color:var(--muted);font-size:12px;white-space:nowrap}
 .empty{color:var(--muted);text-align:center;padding:24px 8px;font-size:14px}
-.chatform{display:flex;gap:8px;margin-top:10px}
+.chatform{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:10px}
 .chatform input{flex:1;min-width:0;font:700 15px var(--display);padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);background:rgba(0,0,0,.3);color:var(--cream);outline:none}
 .chatform input:focus{border-color:var(--honey)}
 .chatform .btn{padding:10px 16px;font-size:15px;box-shadow:0 4px 0 #B86E0A}
 @media (prefers-reduced-motion:reduce){.sheet,#toast,.top,.bottom,.side{transition:none}}
+/* ===== fonctions communes (29.10) : missions, stats, classement, signalement ===== */
+.pillbtn{cursor:pointer;color:inherit;font:inherit;pointer-events:auto}
+#missBtn b{color:var(--honey)}
+#missBtn.pulse{animation:mpulse 1.2s ease-in-out 3}
+@keyframes mpulse{50%{transform:scale(1.12);background:var(--honey);color:var(--ink)}}
+.mission{position:relative;padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--line);margin-bottom:8px;overflow:hidden}
+.mission .mt{display:flex;justify-content:space-between;gap:8px;font-weight:800;font-size:15px}
+.mission .mt span{color:var(--honey);white-space:nowrap}
+.mission .mbar{height:8px;border-radius:4px;background:rgba(255,255,255,.12);margin-top:8px;overflow:hidden}
+.mission .mbar i{display:block;height:100%;background:var(--honey);border-radius:4px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.mission.done{border-color:#2FBF71;background:rgba(47,191,113,.12)}
+.mission.done .mbar i{background:#2FBF71}
+.mission.flash{animation:mflash 1.4s ease-out}
+@keyframes mflash{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,194,75,.9)}25%{transform:scale(1.04)}100%{transform:scale(1);box-shadow:0 0 0 18px rgba(255,194,75,0)}}
+.plusfx{position:fixed;left:50%;top:42%;transform:translate(-50%,0);z-index:40;pointer-events:none;font:900 44px var(--display);color:var(--honey);text-shadow:0 4px 20px #000;animation:plusfx 1.6s ease-out forwards;direction:rtl;white-space:nowrap}
+@keyframes plusfx{0%{opacity:0;transform:translate(-50%,30px) scale(.6)}20%{opacity:1;transform:translate(-50%,0) scale(1.15)}100%{opacity:0;transform:translate(-50%,-90px) scale(1)}}
+.mprog{font-size:13px;color:var(--muted);margin:-4px 0 10px}
+.mprog .bar{height:10px;border-radius:5px;background:rgba(255,255,255,.12);margin-top:6px;overflow:hidden}
+.mprog .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--honey),#2FBF71);transition:width .8s}
+.sgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.sgrid div{padding:10px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:13px;color:var(--muted);line-height:1.3}
+.sgrid b{display:block;font:900 22px var(--display);color:var(--cream);font-variant-numeric:tabular-nums}
+.sheet h3{font:900 18px var(--display);color:var(--honey);margin:14px 0 8px}
+.lbtabs{display:flex;gap:6px;margin:4px 0 6px}
+.lbtabs button{all:unset;cursor:pointer;padding:6px 12px;border-radius:999px;font:700 13px var(--display);color:var(--muted);border:1px solid var(--line)}
+.lbtabs button.on{background:var(--honey);color:var(--ink);border-color:var(--honey)}
+.toprow.me{background:rgba(255,194,75,.25);border:1px solid var(--honey)}
+.lbgap{text-align:center;color:var(--muted);line-height:1}
+.msg .rep{all:unset;cursor:pointer;float:left;font-size:12px;opacity:.45;margin-inline-start:6px}
+.msg .rep:hover{opacity:1}
+.chatrules{font-size:11px;color:var(--muted);text-align:center;padding:2px 0 0}
 </style>
 
 <div id="stage"></div>
@@ -158,6 +189,8 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
       <span class="pill goal" title="היעד הבא של הכוורת">🐝 <b id="nBees">0</b> / <b id="nGoal">10</b><span class="gbar"><i id="gFill"></i></span></span>
       <span class="pill">👑 <b id="nQueens">0</b> מלכות</span>
       <button class="pill" id="muteBtn" aria-label="צליל" style="cursor:pointer;font:inherit;color:inherit">🔊</button>
+      <button class="pill pillbtn" id="missBtn" aria-label="משימות היום והסטטיסטיקות שלי">🎯 משימות <b id="missN">0/3</b></button>
+      <button class="pill pillbtn" id="ideaBtn" aria-label="תיבת רעיונות">💡 תיבת רעיונות</button>
       <span class="pill demo" id="demoPill" hidden>הדגמה</span>
       <span class="pill" id="huntPill" hidden style="white-space:normal;text-align:center">💸 שטר של <b id="prizeTxt"></b> מוסתר בכוורת</span>
     </div>
@@ -212,6 +245,23 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
     <input class="field" id="newsT" placeholder="כותרת (למשל: הפתעה בכוורת!)" style="direction:rtl" aria-label="כותרת">
     <textarea class="field" id="newsB" placeholder="מה חדש? כל השחקנים יראו את זה בכניסה הבאה" style="min-height:90px" aria-label="תוכן"></textarea>
     <div class="row"><button class="btn ghost" id="newsGo">פרסום לכל השחקנים</button></div>
+    <h2 style="margin-top:18px;font-size:20px">🚩 הודעות מדווחות בצ'אט</h2>
+    <div class="row"><button class="btn ghost" id="repLoad">הצגת הודעות מדווחות</button></div>
+    <div id="repList" class="list" style="margin-top:8px"></div>
+  </div>
+
+  <div class="sheet closed" id="meSheet" role="dialog" aria-label="המשימות והסטטיסטיקות שלי">
+    <button class="x" data-close aria-label="סגירה">✕</button>
+    <h2>🎯 משימות היום</h2>
+    <div class="mprog" id="mProg"></div>
+    <div id="mList"></div>
+    <div class="hint" style="margin-top:4px">כל משימה = בונוס אבקה 🌼 · משימות חדשות כל יום בחצות</div>
+    <div class="bonus" id="meLot"></div>
+    <h3>📊 הסטטיסטיקות שלי</h3>
+    <div class="sgrid" id="myStats"></div>
+    <h3>🌍 הכוורת במספרים</h3>
+    <div class="sgrid" id="gStats"></div>
+    <div class="row"><button class="btn ghost" id="meTop">🏆 לטבלת המובילים</button></div>
   </div>
 
   <div class="pilot" id="pilot" hidden>
@@ -232,6 +282,7 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
     <div id="topList" class="list" hidden></div>
     <div id="ideaList" class="list" hidden></div>
     <form id="chatForm" class="chatform">
+      <div class="chatrules" style="width:100%">צ'אט ציבורי 🐝 בלי קללות, קישורים, טלפונים או מיילים · 🚩 לדיווח</div>
       <input id="chatIn" maxlength="140" autocomplete="off" placeholder="כתבו משהו לכוורת…" aria-label="הודעה">
       <button class="btn" id="chatSend" type="submit">שלח</button>
     </form>
@@ -821,6 +872,7 @@ function renderLotBox(mine,rule,com,me){const b=$("#lotBox");if(!b)return;
   b.innerHTML=`<div><b>🎟️ הגרלת 20 ₪ – היום ב־20:00</b></div>`+row(okP,`200 אבקות היום (<b>${Math.min(mine,200)}</b>/200)`)+
     (rule?row(com,me?"תגובה על הפוסט האחרון של היום ב־<span dir=\"ltr\">@hakaveret_shelanu</span>":"תגובה על הפוסט של היום (הצטרפו עם השם שלכם כדי שנזהה אתכם)"):"")+
     `<div style="opacity:.85;font-size:.92em">${rule?"צריך את שניהם כדי להיכנס להגרלה. תגיבו מוקדם: הרשימה מתעדכנת כמה פעמים ביום (הבדיקה האחרונה לפני ההגרלה בסביבות 18:00) 🐝":"ממחר: כדי להשתתף צריך גם 200 אבקות וגם תגובה על הפוסט של היום 💬"}</div>`;
+  {const m2=document.getElementById("meLot");if(m2&&m2.innerHTML!==b.innerHTML)m2.innerHTML=b.innerHTML}
 }
 /* ---------- TIRAGE EN DIRECT dans le jeu (20:00) ---------- */
 const LIVE_SHOW={hud:null,on:false,seenKey:"",t0:0,res:null,busy:false,warned:false,cam:null};
@@ -982,15 +1034,16 @@ function updBadge(){const b=$("#chatBadge");b.hidden=!unread||sideOpen();b.textC
 $("#chatBtn").onclick=()=>openSide(!sideOpen());$("#sideX").onclick=()=>openSide(false);
 let tab="chat";
 side.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;side.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));
-  $("#chatList").hidden=tab!=="chat";$("#newList").hidden=tab!=="new";$("#topList").hidden=tab!=="top";$("#chatForm").hidden=tab!=="chat";$("#ideaList").hidden=tab!=="idea";if(tab==="idea")loadIdeas();else if(tab==="new")renderNew();else if(tab==="top"){renderTop();loadHoney().then(renderTop)}else renderChat(true)});
+  $("#chatList").hidden=tab!=="chat";$("#newList").hidden=tab!=="new";$("#topList").hidden=tab!=="top";$("#chatForm").hidden=tab!=="chat";$("#ideaList").hidden=tab!=="idea";if(tab==="idea")loadIdeas();else if(tab==="new")renderNew();else if(tab==="top"){renderTop();loadLB().then(renderTop)}else renderChat(true)});
 function ago(d){const m=Math.floor((Date.now()-new Date(d))/6e4);if(m<1)return"עכשיו";if(m<60)return"לפני "+m+" דק׳";const h=Math.floor(m/60);if(h<24)return"לפני "+h+" שע׳";return"לפני "+Math.floor(h/24)+" ימים"}
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function renderChat(scroll){
   const el=$("#chatList"),me=lstore("kaveret_my_bee"),atBottom=el.scrollTop+el.clientHeight>=el.scrollHeight-40;
   if(!msgs.length){el.innerHTML='<div class="empty">עוד אין הודעות. תהיו הראשונים לכתוב 🐝</div>';return}
-  el.innerHTML=msgs.map(m=>{const b=byHandle.get(m.handle);return `<div class="msg${m.handle===me?" mine":""}">${adminPass?`<button class="del" data-id="${m.id}" aria-label="מחיקה">🗑</button>`:""}<span class="who" data-h="${esc(m.handle)}">${b&&b.queen?"👑":"🐝"} @${esc(m.handle)}</span><span class="when">${ago(m.created_at)}</span><div>${esc(m.body)}</div></div>`}).join("");
+  el.innerHTML=msgs.map(m=>{const b=byHandle.get(m.handle);return `<div class="msg${m.handle===me?" mine":""}">${adminPass?`<button class="del" data-id="${m.id}" aria-label="מחיקה">🗑</button>`:""}${me&&m.handle!==me?`<button class="rep" data-id="${m.id}" aria-label="דיווח" title="דיווח על הודעה לא מתאימה">🚩</button>`:""}<span class="who" data-h="${esc(m.handle)}">${b&&b.queen?"👑":"🐝"} @${esc(m.handle)}</span><span class="when">${ago(m.created_at)}</span><div>${esc(m.body)}</div></div>`}).join("");
   el.querySelectorAll(".who").forEach(w=>w.onclick=()=>{const b=byHandle.get(w.dataset.h);if(b){if(innerWidth<900)openSide(false);select(b)}});
   el.querySelectorAll(".del").forEach(d=>d.onclick=async()=>{try{const r=await sb("rpc/admin_delete_message",{method:"POST",body:JSON.stringify({pass:adminPass,mid:+d.dataset.id})});if(!r.ok)throw 0;msgs=msgs.filter(m=>m.id!==+d.dataset.id);renderChat()}catch(e){toast("המחיקה לא עבדה")}});
+  el.querySelectorAll(".rep").forEach(d=>d.onclick=()=>reportMsg(+d.dataset.id));
   if(scroll||atBottom)el.scrollTop=el.scrollHeight;
 }
 function renderNew(){
@@ -1004,12 +1057,12 @@ async function loadMsgs(){
   try{const r=await sb("messages?select=id,handle,body,created_at&order=id.desc&limit=60");if(!r.ok)return;
     const rows=(await r.json()).reverse();const newest=rows.length?rows[rows.length-1].id:0;
     if(lastSeenMsg&&newest>lastSeenMsg&&!sideOpen()){const fresh=rows.filter(m=>m.id>lastSeenMsg);unread+=fresh.length;updBadge();const me=lstore("kaveret_my_bee");fresh.forEach(m=>{if(me&&m.handle!==me&&m.body.toLowerCase().includes("@"+me))notify("💬 @"+m.handle+" כתב/ה לך בצ'אט")})}
-    lastSeenMsg=newest;msgs=rows;if(sideOpen()&&tab==="chat")renderChat()}catch(e){}
+    lastSeenMsg=Math.max(lastSeenMsg,newest);msgs=rows.filter(m=>!REP.has(m.id));if(sideOpen()&&tab==="chat")renderChat()}catch(e){}
 }
 /* ---------- 💡 Boîte à idées ---------- */
 let ideas=[];
 async function loadIdeas(){const el=$("#ideaList");
-  if(!el.dataset.ready){el.dataset.ready="1";el.innerHTML=`<div style="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.12)"><div style="font-weight:900;font-size:16px;margin-bottom:6px">💡 יש לכם רעיון לשפר את הכוורת?</div><textarea id="ideaIn" maxlength="280" rows="3" placeholder="מה הייתם רוצים שיהיה במשחק? 🐝" style="width:100%;box-sizing:border-box;border-radius:12px;border:0;padding:10px;font:inherit;resize:none"></textarea><button class="btn" id="ideaSend" style="margin-top:6px;width:100%">שלחו רעיון 🚀</button><div style="font-size:12px;opacity:.75;margin-top:6px">❤️ תנו לייק לרעיונות שאתם אוהבים – הכי אהובים ייכנסו למשחק!</div></div><div id="ideaRows"></div>`;
+  if(!el.dataset.ready){el.dataset.ready="1";el.innerHTML=`<div style="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.12)"><div style="font-weight:900;font-size:16px;margin-bottom:6px">💡 תיבת רעיונות: איך לשפר את הכוורת?</div><div style="font-size:12px;opacity:.75;margin-bottom:6px">עד 200 תווים · 3 רעיונות ביום · הרעיונות הטובים נכנסים למשחק!</div><textarea id="ideaIn" maxlength="200" rows="3" placeholder="מה הייתם רוצים שיהיה במשחק? 🐝" style="width:100%;box-sizing:border-box;border-radius:12px;border:0;padding:10px;font:inherit;resize:none"></textarea><button class="btn" id="ideaSend" style="margin-top:6px;width:100%">שלחו רעיון 🚀</button><div style="font-size:12px;opacity:.75;margin-top:6px">❤️ תנו לייק לרעיונות שאתם אוהבים – הכי אהובים ייכנסו למשחק!</div></div><div id="ideaRows"></div>`;
     $("#ideaSend").onclick=sendIdea}
   if(!LIVE){renderIdeas();return}
   try{const r=await sb("ideas?select=id,handle,body,likes,created_at&order=likes.desc,id.desc&limit=40");if(r.ok){ideas=await r.json();renderIdeas()}}catch(e){}}
@@ -1020,23 +1073,23 @@ function renderIdeas(){const el=$("#ideaRows");if(!el)return;
     try{const r=await sb("rpc/like_idea",{method:"POST",body:JSON.stringify({h:me,iid:+b.dataset.id})});if(r.ok){const n=await r.json();const it=ideas.find(x=>x.id===+b.dataset.id);if(it)it.likes=n;b.textContent="❤️ "+n}}catch(e){}})}
 async function sendIdea(){const inp=$("#ideaIn"),body=(inp.value||"").trim();if(body.length<3)return;
   const me=lstore("kaveret_my_bee");if(!me||!byHandle.get(me)){toast("הצטרפו לכוורת קודם כדי לשלוח רעיון 🐝");openSide(false);openSheet("#joinSheet");return}
-  if(/(https?:\/\/|www\.)/i.test(body)){toast("בלי קישורים 🙂");return}
+  {const m=modLocal(body);if(m){toast(MOD_MSG[m]);return}}
   $("#ideaSend").disabled=true;
   try{if(LIVE){const r=await sb("rpc/post_idea",{method:"POST",body:JSON.stringify({h:me,body})});
-      if(!r.ok){const j=await r.json().catch(()=>({}));const m=String(j.message||"");toast(m.includes("too_fast")?"רגע 🙂 רעיון אחד בדקה":m.includes("too_many")?"מקסימום 5 רעיונות ביום 🙏":"הרעיון לא נשלח");throw 0}}
-    inp.value="";toast("💡 תודה! הרעיון שלך נשלח לכוורת");await loadIdeas()}catch(e){}
+      if(!r.ok){const j=await r.json().catch(()=>({}));const m=String(j.message||"");toast(m.includes("too_fast")?"רגע 🙂 רעיון אחד בדקה":m.includes("too_many")?"מקסימום 3 רעיונות ביום 🙏 נתראה מחר":m.includes("bad_length")?"בין 3 ל־200 תווים 🙂":modErr(m)||"הרעיון לא נשלח");throw 0}}
+    inp.value="";toast("💡 תודה! הרעיון שלך נשלח לכוורת");await loadIdeas();missionsTick()}catch(e){}
   $("#ideaSend").disabled=false}
 $("#chatForm").addEventListener("submit",async e=>{
   e.preventDefault();const inp=$("#chatIn"),body=inp.value.trim();if(!body)return;
   const me=lstore("kaveret_my_bee");
   if(!me||!byHandle.get(me)){toast("הצטרפו לכוורת קודם כדי לכתוב 🐝");openSide(false);openSheet("#joinSheet");return}
-  if(/(https?:\/\/|www\.)/i.test(body)){toast("אי אפשר לשלוח קישורים בצ'אט");return}
+  {const m=modLocal(body);if(m){toast(MOD_MSG[m]);return}}
   $("#chatSend").disabled=true;
   try{
     if(LIVE){const r=await sb("rpc/post_message",{method:"POST",body:JSON.stringify({h:me,body})});
       if(!r.ok){const j=await r.json().catch(()=>({}));const m=String(j.message||"");
-        toast(m.includes("too_fast")?"רגע 🙂 אפשר לשלוח הודעה כל 10 שניות":m.includes("not_a_bee")?"הצטרפו לכוורת קודם 🐝":"ההודעה לא נשלחה");throw 0}
-      await loadMsgs()}
+        toast(m.includes("too_fast")?"רגע 🙂 אפשר לשלוח הודעה כל 10 שניות":m.includes("not_a_bee")?"הצטרפו לכוורת קודם 🐝":modErr(m)||"ההודעה לא נשלחה");throw 0}
+      await loadMsgs();missionsTick()}
     else{msgs.push({id:Date.now(),handle:me,body,created_at:new Date().toISOString()})}
     inp.value="";renderChat(true);
   }catch(e){}
@@ -1334,13 +1387,13 @@ async function dailyCheckIn(){
     else{const last=lstore("kaveret_last"),y=new Date(Date.now()-864e5);const yk=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
       st=last===yk?(b.streak||0)+1:1;best=Math.max(b.best||0,st);lstore("kaveret_last",calKey())}
   }catch(e){return}
-  lstore(key,"1");const before=b.best||0;b.streak=st;b.best=best;b.look=styleFor(b);rebuildBees();
+  lstore(key,"1");setTimeout(missionsTick,800);const before=b.best||0;b.streak=st;b.best=best;b.look=styleFor(b);rebuildBees();
   if(sel===b&&!$("#beeSheet").classList.contains("closed"))select(b,{fly:false});
   notify(st>1?"🔥 "+st+" ימים ברצף! המשיכו מחר":"🐝 ברוכים השבים! יום ראשון ברצף");
   for(const [n,label] of [[3,"פרח 🌸"],[7,"כנפי זהב ✨"],[30,"כתר 👑"]])if(before<n&&best>=n)notify("🎁 קיבלתם "+label+"!");
 }
 function renderTop(){
-  const el=$("#topList");
+  const el=$("#topList");if(LIVE&&LB.data){renderTopLB(el);return}
   const rec=bees.filter(b=>(b.refs||0)>0).sort((a,b)=>b.refs-a.refs).slice(0,10);
   const str=bees.filter(b=>(b.streak||0)>1).sort((a,b)=>b.streak-a.streak).slice(0,10);
   const row=(b,v)=>`<div class="toprow" data-h="${esc(b.handle)}"><b>${b.queen?"👑":"🐝"} @${esc(b.handle)}</b><span>${v}</span></div>`;
@@ -1597,6 +1650,102 @@ function frameBody(){
   renderer.render(hive,camera);
 }
 
+/* ================= FONCTIONS COMMUNES (directeur des jeux, 29.10) : missions, stats, classements, chat modéré en direct ================= */
+const fmtN=n=>Number(n||0).toLocaleString("he-IL");
+/* --- modération (le filtre complet insultes / contenu sexuel est côté serveur : mod_check) --- */
+const MOD_MSG={links:"אי אפשר לשלוח קישורים 🙂",email:"בלי כתובות מייל, בשביל הבטיחות שלכם 🔒",phone:"בלי מספרי טלפון, בשביל הבטיחות שלכם 🔒",bad:"אופס… בלי קללות ותוכן לא מתאים 🙏"};
+function modLocal(t){const s=String(t||"").toLowerCase();
+  if(/(https?:\/\/|www\.|t\.me\/|wa\.me|bit\.ly|[a-z0-9-]+\.(com|net|org|io|me|ly|gg|tv|app|xyz|link|info|ru|co\.il|org\.il)([\/ ]|$))/.test(s))return"links";
+  if(/[a-z0-9._%+-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}/.test(s))return"email";
+  if(/([0-9][ -]?){9,}/.test(s)||/\+ ?972/.test(s))return"phone";
+  return null}
+function modErr(m){m=String(m||"");return m.includes("no_links")?MOD_MSG.links:m.includes("no_email")?MOD_MSG.email:m.includes("no_phone")?MOD_MSG.phone:m.includes("bad_words")?MOD_MSG.bad:""}
+const REP=new Set((lstore("kaveret_rep")||"").split(",").filter(Boolean).map(Number));
+async function reportMsg(id){const me=lstore("kaveret_my_bee");if(!me||!byHandle.get(me)){toast("הצטרפו לכוורת קודם 🐝");return}
+  if(!confirm("לדווח על ההודעה הזאת כלא מתאימה? 🚩"))return;
+  try{const r=await sb("rpc/report_message",{method:"POST",body:JSON.stringify({h:me,mid:id})});if(!r.ok)throw 0;
+    REP.add(id);lstore("kaveret_rep",[...REP].slice(-200).join(","));msgs=msgs.filter(m=>m.id!==id);renderChat();toast("🚩 תודה! ההודעה דווחה ונעלמה אצלכם")}catch(e){toast("הדיווח לא נשלח, נסו שוב")}}
+$("#repLoad").onclick=async()=>{const el=$("#repList"),pass=$("#adminPass").value;
+  try{const r=await sb("rpc/admin_reported",{method:"POST",body:JSON.stringify({pass})});if(!r.ok){el.innerHTML='<div class="empty">סיסמה שגויה</div>';return}adminPass=pass;const a=await r.json();
+    el.innerHTML=a.length?a.map(m=>`<div class="msg"><button class="del" data-id="${m.id}" aria-label="מחיקה">🗑</button><span class="who">@${esc(m.handle)}</span><span class="when">🚩 ${m.reports}${m.hidden?" · מוסתרת":""}</span><div>${esc(m.body)}</div></div>`).join(""):'<div class="empty">אין הודעות מדווחות 👍</div>';
+    el.querySelectorAll(".del").forEach(d=>d.onclick=async()=>{try{const r=await sb("rpc/admin_delete_message",{method:"POST",body:JSON.stringify({pass,mid:+d.dataset.id})});if(r.ok){d.closest(".msg").remove();msgs=msgs.filter(m=>m.id!==+d.dataset.id);renderChat()}}catch(e){}})}catch(e){}};
+/* --- chat en direct (Supabase realtime) ; repli : rafraîchissement toutes les 8 s --- */
+let RT=null,RT_OK=false,rtN=0;
+function startRealtime(){if(!LIVE||RT||window.CAP||REEL)return;RT=1;const sc=document.createElement("script");sc.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
+  sc.onload=()=>{try{const cl=window.supabase.createClient(CONFIG.SUPABASE_URL,CONFIG.SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+    RT=cl.channel("kaveret-chat").on("postgres_changes",{event:"*",schema:"public",table:"messages"},onRT).subscribe(st=>{RT_OK=st==="SUBSCRIBED"})}catch(e){RT_OK=false}};
+  sc.onerror=()=>{RT_OK=false};document.head.appendChild(sc)}
+function onRT(p){try{
+  if(p.eventType==="INSERT"){const m=p.new;if(!m||m.hidden||REP.has(m.id)||msgs.some(x=>x.id===m.id))return;msgs.push(m);if(msgs.length>80)msgs.shift();
+    if(lastSeenMsg&&m.id>lastSeenMsg&&!sideOpen()){unread++;updBadge();const me=lstore("kaveret_my_bee");if(me&&m.handle!==me&&String(m.body).toLowerCase().includes("@"+me))notify("💬 @"+m.handle+" כתב/ה לך בצ'אט")}
+    lastSeenMsg=Math.max(lastSeenMsg,m.id);if(sideOpen()&&tab==="chat")renderChat()}
+  else if(p.eventType==="UPDATE"&&p.new&&p.new.hidden){msgs=msgs.filter(x=>x.id!==p.new.id);renderChat()}
+  else if(p.eventType==="DELETE"&&p.old&&p.old.id){msgs=msgs.filter(x=>x.id!==p.old.id);if(sideOpen()&&tab==="chat")renderChat()}}catch(e){}}
+/* --- missions du jour (3 par jour, remise à zéro à minuit heure d'Israël, bonus validé côté serveur) --- */
+const MISSION_TXT={pollen50:"🌼 אספו 50 אבקות היום",pollen100:"🌼 אספו 100 אבקות היום",pollen150:"🌼 אספו 150 אבקות היום",login:"🐝 היכנסו לכוורת היום",comment:"💬 הגיבו על הפוסט של היום באינסטגרם",invite:"📣 תייגו חבר באינסטגרם (או שלחו לו את הקישור שלכם) – והוא מצטרף לכוורת",evening:"🌙 חזרו לכוורת בערב (מ־18:00) לקראת ההגרלה",chat:"💬 כתבו הודעה בצ'אט של הכוורת",idea:"💡 שלחו רעיון לתיבת הרעיונות"};
+let MS=null,msBusy=false;
+async function missionsTick(){if(!LIVE||msBusy)return;msBusy=true;
+  try{const h=lstore("kaveret_my_bee")||"";const r=await sb("rpc/missions_state",{method:"POST",body:JSON.stringify({h})});
+    if(r.ok){const j=await r.json();MS=j;const fresh=(j.missions||[]).filter(m=>m.new);
+      if(fresh.length){let add=0;fresh.forEach(m=>add+=m.bonus);honeyToday+=add;const el=$("#honeyToday");if(el)el.textContent=honeyToday;missionFx(fresh);setTimeout(lotteryTick,500)}
+      renderMissions(fresh)}}catch(e){}
+  msBusy=false}
+function renderMissions(fresh){if(!MS)return;const me=lstore("kaveret_my_bee"),reg=!!(me&&byHandle.get(me)),list=MS.missions||[],n=MS.done||0,tot=MS.total||list.length||3;
+  const mb=$("#missN");if(mb)mb.textContent=reg?n+"/"+tot:"0/"+tot;
+  const pr=$("#mProg");if(pr)pr.innerHTML=reg?`${n===tot?"🎉 כל המשימות של היום הושלמו! מחר משימות חדשות":`השלמתם <b>${n}</b> מתוך <b>${tot}</b> משימות`}<div class="bar"><i style="width:${Math.round(n/tot*100)}%"></i></div>`:`הצטרפו לכוורת עם השם שלכם באינסטגרם כדי להתחיל את המשימות 🐝`;
+  const el=$("#mList");if(!el)return;const fk=new Set((fresh||[]).map(m=>m.k));
+  el.innerHTML=list.map(m=>{const isP=m.k.startsWith("pollen"),prog=m.done?m.target:isP?Math.min(m.target,Math.max(m.progress,honeyToday||0)):m.progress;
+    return `<div class="mission${m.done?" done":""}${fk.has(m.k)?" flash":""}" data-k="${m.k}" role="button" tabindex="0"><div class="mt"><div>${m.done?"✅ ":""}${MISSION_TXT[m.k]||m.k}</div><span>+${m.bonus} 🌼</span></div><div class="mbar"><i style="width:${Math.round(prog/m.target*100)}%"></i></div>${m.target>1?`<div style="font-size:12px;color:var(--muted);margin-top:4px">${fmtN(prog)}/${fmtN(m.target)}</div>`:""}</div>`}).join("");
+  el.querySelectorAll(".mission").forEach(d=>d.onclick=()=>missionGo(d.dataset.k));
+}
+function missionGo(k){const it=(MS&&MS.missions||[]).find(m=>m.k===k);if(it&&it.done)return;const me=lstore("kaveret_my_bee");
+  if(!me||!byHandle.get(me)){closeSheets();openSheet("#joinSheet");return}
+  if(k==="comment")window.open("https://www.instagram.com/hakaveret_shelanu/","_blank","noopener");
+  else if(k==="invite")invite(me);
+  else if(k==="chat"){closeSheets();openTab("chat")}
+  else if(k==="idea"){closeSheets();openTab("idea")}
+  else if(k.startsWith("pollen")){closeSheets();const b=byHandle.get(me);if(b)select(b);toast("✈️ הטיסו את הדבורה שלכם ואספו אבקה 🌼")}
+  else if(k==="evening")toast("🌙 חזרו לכוורת אחרי 18:00 והמשימה תושלם לבד")}
+function missionFx(fresh){fresh.forEach((m,i)=>setTimeout(()=>{
+  const fx=document.createElement("div");fx.className="plusfx";fx.textContent="🎯 +"+m.bonus+" 🌼";document.body.appendChild(fx);setTimeout(()=>fx.remove(),1700);
+  notify("✅ משימה הושלמה! "+(MISSION_TXT[m.k]||"")+" · +"+m.bonus+" אבקות");
+  try{pollenBlip();setTimeout(pollenBlip,120);setTimeout(pollenBlip,240)}catch(e){}
+  const b=$("#missBtn");if(b){b.classList.remove("pulse");void b.offsetWidth;b.classList.add("pulse")}},i*1800))}
+setInterval(()=>{if(!MS)return;const p=(MS.missions||[]).find(m=>m.k.startsWith("pollen")&&!m.done);if(p&&honeyToday>=p.target&&honeyPending<=0)missionsTick();else if(!$("#meSheet").classList.contains("closed"))renderMissions()},5000);
+/* --- statistiques --- */
+async function loadMyStats(){const el=$("#myStats"),me=lstore("kaveret_my_bee");if(!el)return;
+  if(!me||!byHandle.get(me)){el.innerHTML='<div style="grid-column:1/-1">הצטרפו לכוורת כדי לראות את הסטטיסטיקות שלכם 🐝</div>';return}
+  try{const r=await sb("rpc/player_stats",{method:"POST",body:JSON.stringify({h:me})});if(!r.ok)return;const s=await r.json();if(!s)return;
+    const c=(v,l)=>`<div><b>${v}</b>${l}</div>`;
+    el.innerHTML=c(fmtN(Math.max(s.today,honeyToday||0)),"🌼 אבקה היום"+(s.rank_today?` · מקום ${s.rank_today}`:""))+c(fmtN(s.total),"🍯 אבקה בסך הכול"+(s.rank_total?` · מקום ${s.rank_total}`:""))
+      +c(s.streak,`🔥 ימים ברצף (שיא: ${s.best_streak})`)+c(s.missions_today+"/"+((MS&&MS.total)||3),`🎯 משימות היום · ${s.missions_total} בסך הכול`)
+      +c(s.participations,"🎟️ השתתפויות בהגרלה")+c(s.wins_lottery+s.wins_billets,"🏆 זכיות")}catch(e){}}
+async function loadGlobal(){const el=$("#gStats");if(!el||!LIVE)return;
+  try{const r=await sb("rpc/global_stats",{method:"POST",body:"{}"});if(!r.ok)return;const g=await r.json();const c=(v,l)=>`<div><b>${v}</b>${l}</div>`;
+    el.innerHTML=c(fmtN(g.players),"🐝 שחקנים"+(g.new_today?` · +${g.new_today} היום`:""))+(g.followers?c(fmtN(g.followers),"📸 עוקבים באינסטגרם"):"")
+      +c(fmtN(g.pollen_today),"🌼 אבקה שנאספה היום")+c(fmtN(g.entrants_today),"🎟️ בהגרלה של היום")}catch(e){}}
+function openMe(){openSheet("#meSheet");renderMissions();missionsTick().then(loadMyStats);loadGlobal();try{renderLottery()}catch(e){}}
+function openTab(t){openSide(true);const b=side.querySelector('.tabs button[data-tab="'+t+'"]');if(b)b.click()}
+$("#missBtn").onclick=openMe;$("#ideaBtn").onclick=()=>openTab("idea");$("#meTop").onclick=()=>{closeSheets();openTab("top")};
+/* --- classements : du jour + général, place du joueur toujours visible --- */
+const LB={data:null,mode:"today"};
+async function loadLB(){if(!LIVE)return;try{const r=await sb("rpc/leaderboard",{method:"POST",body:JSON.stringify({h:lstore("kaveret_my_bee")||""})});if(r.ok)LB.data=await r.json()}catch(e){}}
+function renderTopLB(el){const d=LB.data,me=lstore("kaveret_my_bee")||"",today=LB.mode==="today",list=(today?d.today:d.total)||[],mine=today?d.me_today:d.me_total;
+  const medal=r=>r<=3?["🥇","🥈","🥉"][r-1]:r+".";
+  const row=x=>`<div class="toprow${x.handle===me?" me":""}" data-h="${esc(x.handle)}"><b>${medal(x.rank)} @${esc(x.handle)}</b><span>${fmtN(x.score)} 🌼</span></div>`;
+  let h=`<div class="lbtabs"><button data-m="today" class="${today?"on":""}">🌼 היום</button><button data-m="total" class="${today?"":"on"}">🏆 כל הזמנים</button></div>`;
+  h+=list.length?list.map(row).join(""):`<div class="empty">${today?"עוד אף אחד לא אסף אבקה היום. טוסו! 🌼":"עוד אין תוצאות"}</div>`;
+  if(me&&byHandle.get(me)){if(mine&&!list.some(x=>x.handle===me))h+=`<div class="lbgap">⋮</div>`+row(mine);else if(!mine)h+=`<div class="lbgap">⋮</div><div class="toprow me"><b>@${esc(me)}</b><span>${today?"עוד לא אספתם היום 🌼":"עוד אין אבקה"}</span></div>`}
+  const rec=bees.filter(b=>(b.refs||0)>0).sort((a,b)=>b.refs-a.refs).slice(0,5);
+  const str=bees.filter(b=>(b.streak||0)>1).sort((a,b)=>b.streak-a.streak).slice(0,5);
+  const r2=(b,v)=>`<div class="toprow${b.handle===me?" me":""}" data-h="${esc(b.handle)}"><b>${b.queen?"👑":"🐝"} @${esc(b.handle)}</b><span>${v}</span></div>`;
+  if(rec.length)h+=`<div class="sec">📣 מגייסים מובילים</div>`+rec.map(b=>r2(b,b.refs+" חברים")).join("");
+  if(str.length)h+=`<div class="sec">🔥 הכי הרבה ימים ברצף</div>`+str.map(b=>r2(b,b.streak+" ימים")).join("");
+  el.innerHTML=h;
+  el.querySelectorAll(".lbtabs button").forEach(b=>b.onclick=()=>{LB.mode=b.dataset.m;renderTop()});
+  el.querySelectorAll(".toprow[data-h]").forEach(r=>r.onclick=()=>{const b=byHandle.get(r.dataset.h);if(b){if(innerWidth<900)openSide(false);select(b)}});
+}
+
 /* ================= boot ================= */
 (async()=>{
   if(!LIVE)$("#demoPill").hidden=false;
@@ -1610,7 +1759,7 @@ function frameBody(){
   updateStats();
   if(LIVE)setInterval(async()=>{try{const last=bees.reduce((m,b)=>Math.max(m,b.id||0),0);const r=await sb("bees?select="+BEE_FIELDS+"&id=gt."+last+"&order=id.asc");if(r.ok){const rows=await r.json();if(rows.length)ingest(rows,true)}}catch(e){}},30000);
   pickLabels();
-  loadMsgs();if(LIVE)setInterval(loadMsgs,8000);
+  loadMsgs();if(LIVE){setInterval(()=>{if(!RT_OK||++rtN%4===0)loadMsgs()},8000);startRealtime();missionsTick();setInterval(missionsTick,60000)}
   loadWins();
   if(LIVE)setInterval(async()=>{try{const all=await loadAll(),keep=new Set(all.map(r=>r.handle));bees.filter(b=>!keep.has(b.handle)).map(b=>b.handle).forEach(removeBee);ingest(all,true)}catch(e){}},60000);
 })();
