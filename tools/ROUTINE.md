@@ -30,6 +30,7 @@ Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, 
 
 ## 🎉 29.10 : PALIER 100 ABEILLES ATTEINT (nuit du 28 au 29.10, @aviv_ben_shlush = la 100e)
 - Événement fou du palier (décidé le 29.10 04:30) : « הכוורת ממריאה לחלל 🚀 » — dans le jeu (#ev100) : alarme, compte à rebours 3-2-1, décollage, les abeilles forment « 100 », la ruche reste dans l'espace (violet/étoiles). Lien avec le commentaire « טיל » de @rahelassouline → « ביקשתם טיל ». BONUS : pollen ×2 toute la journée du 29.10 (plus facile d'atteindre 200 pour le tirage).
+- 29.10 : post 100 abeilles PUBLIÉ à 07:43 (https://www.instagram.com/p/DfESH-olaR7/, id 18051801353815835, + commentaire d'appel animal) + story 07:00 publiée (media/2026-10-29/post_0700.jpg, story_0700.jpg). Reel tirage programmé à 08:30 (tâche trig_014oviy5gM2EkGN7jva3pxu6). Ne pas republier.
 - À annoncer dans le post/story de 07:00 (« 💯 100 דבורים! הכוורת עפה לחלל 🚀 · היום אבקה ×2 ») et dans la légende du reel de 08:30. Prochain palier : 150.
 
 ## TIRAGE AU SORT 20:00 (décision de Shlomo, 28.10 soir) — REMPLACE LES 3 BILLETS dès le 29.10
