@@ -4,6 +4,7 @@ Shlomo a donné l'autonomie complète (27.10.2026) : publier chaque jour stories
 
 ## AUTONOMIE (Shlomo, 29.10 07:43)
 Ne JAMAIS demander l'autorisation pour les automatisations et programmations (tâches programmées, stories, publications, modifications du jeu) : les faire directement.
+SEULE chose à demander : la voix des vidéos. Envoyer le texte à Shlomo 2 à 3 heures AVANT l'heure de mise en ligne prévue de la vidéo (programmer ce rappel avec send_later si besoin) ; ensuite tout est autonome (montage, publication).
 
 ## ⚠️ RÈGLE INSTAGRAM OBLIGATOIRE (Shlomo, 28.10 21:40)
 Toute action Instagram via Composio (publier, lire les commentaires, statistiques) : UNIQUEMENT account="instagram_recoup-katar" (@hakaveret_shelanu). JAMAIS instagram_unhave-raband (= @chlomo_assouline malgré son nom), JAMAIS le compte par défaut. Avant CHAQUE publication : INSTAGRAM_GET_USER_INFO / GET_IG_USER_MEDIA → username doit être exactement hakaveret_shelanu ; sinon ne rien publier et prévenir Shlomo.
