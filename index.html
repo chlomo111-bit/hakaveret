@@ -765,7 +765,7 @@ let foundCool=0;
 $("#fClose").onclick=()=>{$("#found").hidden=true;foundShown=false;foundCool=performance.now()+8000};
 
 /* ---------- POLLEN (récolte) ---------- */
-const POLLEN_N=34,pollenPos=[],pollenPh=[];
+const POLLEN_N=80,pollenPos=[],pollenPh=[];
 const pollenMat=new THREE.MeshBasicMaterial({color:0xFFE45C});
 const pollenMesh=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(.32,0),pollenMat,POLLEN_N);pollenMesh.frustumCulled=false;hive.add(pollenMesh);
 const pollenGlowTex=(()=>{const c=document.createElement("canvas");c.width=c.height=64;const g=c.getContext("2d");const gr=g.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,"rgba(255,236,120,.9)");gr.addColorStop(1,"rgba(255,200,60,0)");g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c)})();
