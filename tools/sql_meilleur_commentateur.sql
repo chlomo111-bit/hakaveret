@@ -31,13 +31,14 @@ alter table public.top_commenter_awards enable row level security;
 create or replace function public.log_comment(cid text, u text, mid text, t timestamptz, body text)
 returns json language plpgsql security definer set search_path = public as $$
 declare d date := (t at time zone 'Asia/Jerusalem')::date; uu text := lower(btrim(coalesce(u,''),' @'));
-        nb text := lower(regexp_replace(coalesce(body,''), '\s+', ' ', 'g')); ok boolean;
+        nb text := btrim(lower(regexp_replace(coalesce(body,''), '\s+', ' ', 'g'))); ok boolean;
 begin
   if uu = '' or uu = 'hakaveret_shelanu' then return json_build_object('skipped',true); end if;
-  nb := btrim(nb);
   ok := nb <> '' and not exists(select 1 from comment_log c where c.day = d and c.username = uu and c.body_norm = nb and c.comment_id <> cid);
   insert into comment_log(comment_id, day, username, media_id, ts, body_norm, valid)
-    values (cid, d, uu, mid, t, nb, ok) on conflict (comment_id) do nothing;
+    values (cid, d, uu, mid, t, nb, ok)
+    on conflict (comment_id) do update set day = excluded.day, media_id = excluded.media_id, ts = excluded.ts, body_norm = excluded.body_norm, valid = excluded.valid
+    where comment_log.body_norm is null;
   return json_build_object('day', d, 'username', uu, 'valid', ok,
     'count', (select count(*) from comment_log c where c.day = d and c.username = uu and c.valid));
 end $$;
@@ -92,3 +93,17 @@ grant execute on function public.commenter_state(text) to anon, authenticated;
 revoke execute on function public.log_comment(text,text,text,timestamptz,text) from anon, authenticated, public;
 revoke execute on function public.award_top_commenter(date) from anon, authenticated, public;
 revoke execute on function public.set_commenter_wish(date,text,text) from anon, authenticated, public;
+
+-- Filet de sécurité (ajouté 30.10) : tout commentaire inséré dans ig_seen_comments par le passage est aussi compté
+-- (heure = heure du passage, texte inconnu → pas de contrôle anti-spam ; log_comment() le complète ensuite avec le vrai texte/heure).
+create or replace function public.trg_seen_to_comment_log() returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  if coalesce(new.handle,'') <> '' and new.handle <> 'hakaveret_shelanu' then
+    insert into comment_log(comment_id, day, username, media_id, ts, body_norm, valid)
+      values (new.comment_id, (coalesce(new.seen_at, now()) at time zone 'Asia/Jerusalem')::date, lower(new.handle), null, coalesce(new.seen_at, now()), null, true)
+      on conflict (comment_id) do nothing;
+  end if;
+  return new;
+end $$;
+drop trigger if exists seen_to_comment_log on public.ig_seen_comments;
+create trigger seen_to_comment_log after insert on public.ig_seen_comments for each row execute function public.trg_seen_to_comment_log();
