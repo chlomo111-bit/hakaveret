@@ -11,7 +11,9 @@ Les anciennes tâches (désactivées le 30.10 à 10:46, puis supprimées) sont a
 | sam. 31.10 18:30 | trig_013oUomqTwWpwSXkmRo95xG9 | Sortie de Shabbat : programmer le réveil 19:55, tirage du VENDREDI (run_lottery('2026-10-30') + award_top_commenter + story + message Bit à Shlomo), passage complet, vérifier le reel de 19:30 |
 | sam. 31.10 19:05 | trig_01WBUtskm8phZ9xLcXtnDkF5 (ancienne tâche isolée, désactivation refusée par les permissions) | Story « 🎤 חדש! The Noise » + popup vers thenoise.hakaveret.online |
 | sam. 31.10 19:20 | trig_01F7FBkCXDhciDLzgy4Mf3gZ (send_later, chat de la ruche) | Filet de sécurité : ne fait la story/popup The Noise QUE si 19:05 ne l'a pas faite (jamais 2, jamais 0) |
+| sam. 31.10 19:30 | trig_01D8nEJD5xEcgWweWgaMpP1E | Publication du reel « החיות השתלטו על הכוורת » (anti-doublon) + commentaire CTA |
 | sam. 31.10 19:55 | à créer à 18:30 | Passage + story « 5 דקות להגרלה! » + tirage du samedi 20:00 |
+| sam. 31.10 20:35 | trig_01REN87YGqFu8DFHFQ5qjc2t (chat de la ruche) | Contrôle : réveils de dimanche présents (sinon les créer ici), tirages ven. + sam. faits |
 
 ## Rythme normal (dimanche → jeudi)
 - Passages commentaires : 6:00, 12:00, 17:00 et 19:55 (5 min avant le tirage). À chaque passage : réponses à tous les commentaires, abeilles/reines, tags d'amis, animaux, bonus story, ET inscription des commentateurs du jour dans daily_commenters.
