@@ -185,3 +185,7 @@ d. Communication : rappeler de temps en temps (pas tous les jours) dans une stor
 
 ## 💡 IDÉES FUTURES (demandes d'abonnés, à faire plus tard — Shlomo)
 - 30.10 @shahar_b.y : « collecter du nectar (צוף) sur des fleurs → en faire du miel ; celui qui fait le plus de miel est 1er au classement ». Piste : des fleurs dans/autour de la ruche à butiner (nectar), retour à la ruche = conversion en miel, classement « מלך הדבש » (honey.total). Quand on la réalise : l'annoncer comme « הרעיון של @shahar_b.y » dans un reel + story.
+
+## 🎬 VIDÉOS — RÈGLE DE SHLOMO (30.10, 13:34) — TOUS LES JEUX
+- Les vidéos de TOUS les jeux sont générées UNIQUEMENT dans le chat de la ruche (session_01P3PorVNfckHy3LzDtVio4U). Les autres chats préparent le texte voix et demandent la vidéo à ce chat.
+- Chaque vidéo terminée est enregistrée : (1) sur le bureau du Mac de Shlomo (toujours allumé) : ~/Desktop/Vidéos jeux/<nom du jeu>/<nom du jeu> – AAAA-MM-JJ – <titre>.mp4 ; (2) envoyée dans le chat (SendUserFile) avec le nom du jeu.
