@@ -159,5 +159,10 @@ d. Communication : rappeler de temps en temps (pas tous les jours) dans une stor
 - Ne jamais toucher aux autres projets/automatisations de Shlomo.
 - Jamais de doublon (abeilles, réponses, publications).
 
+## 🕯️ SHABBAT (Shlomo, 30.10) — règle commune à tous les jeux
+- Rien n'est publié ni exécuté entre vendredi 16:00 et samedi 18:30 (tâches programmées décalées par la direction des jeux).
+- Tirage du vendredi : PAS à 20:00. lottery_live() renvoie state 'shabbat' le vendredi ; lottery_state() renvoie shabbat=true et draw_at = samedi 18:30 (le jeu affiche « במוצאי שבת 18:30 »). Le tirage de vendredi est fait samedi 18:30 par la tâche de rattrapage (run_lottery(vendredi)) ; ensuite lottery_live() du samedi entre 18:30 et 20:00 renvoie le résultat de vendredi (show LIVE pour les joueurs restés sur la page). Samedi 20:00 : tirage normal du samedi → samedi soir = 2 tirages.
+- Le vendredi, le reel et les stories doivent sortir AVANT 16:00 (voix à demander à Shlomo le matin).
+
 ## 💡 IDÉES FUTURES (demandes d'abonnés, à faire plus tard — Shlomo)
 - 30.10 @shahar_b.y : « collecter du nectar (צוף) sur des fleurs → en faire du miel ; celui qui fait le plus de miel est 1er au classement ». Piste : des fleurs dans/autour de la ruche à butiner (nectar), retour à la ruche = conversion en miel, classement « מלך הדבש » (honey.total). Quand on la réalise : l'annoncer comme « הרעיון של @shahar_b.y » dans un reel + story.
