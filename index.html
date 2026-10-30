@@ -854,24 +854,24 @@ let lot=null,lotSkew=0,lotNotified=false;
 async function lotteryTick(){try{const h=lstore("kaveret_my_bee")||"";const r=await sb("rpc/lottery_state",{method:"POST",body:JSON.stringify({h})});if(r.ok){lot=await r.json();lotSkew=Date.parse(lot.now)-Date.now();renderLottery()}}catch(e){}}
 function renderLottery(){const p=$("#huntPill");if(!p||!lot)return;
   const mine=Math.max(lot.mine||0,honeyToday||0),left=Math.max(0,Math.floor((Date.parse(lot.draw_at)-(Date.now()+lotSkew))/1000));
-  const T=isFinite(left)?`<b style="font-variant-numeric:tabular-nums">${fmtCountdown(left)}</b>`:"20:00";
+  const DH=lot.shabbat?"במוצאי שבת 18:30":"ב־20:00";const T=isFinite(left)?`<b style="font-variant-numeric:tabular-nums">${fmtCountdown(left)}</b>`:"20:00";
   const rule=!!lot.comment_rule,com=!!lot.commented,okP=mine>=200,okC=!rule||com,me=!!(lstore("kaveret_my_bee")||"");
   /* depuis le 30.10 : 200 pollens ET un commentaire sur le post du jour */
   const chk=rule?` · 🌼 <b>${Math.min(mine,200)}</b>/200 ${okP?"✓":"✗"} · 💬 תגובה על הפוסט של היום ${okC?"✓":"✗"}`:` · יש לכם <b>${mine}</b>/200`;
   renderLotBox(mine,rule,com,me);
   if(lot.drawn_today)p.innerHTML=lot.last_winner&&lot.last_day===lot.day?`🎉 הזוכה בהגרלה של היום: <b dir="ltr">@${esc(lot.last_winner)}</b> · מחר הגרלה חדשה ב־20:00 🎟️`:`🎟️ ההגרלה של היום הסתיימה · מחר הגרלה חדשה ב־20:00`;
-  else if(okP&&okC){p.innerHTML=`✅ אתם בהגרלה! 🎟️ 20 ₪ ב־20:00 · בעוד ${T}`;if(!lotNotified){lotNotified=true;notify("🎟️ אתם בהגרלה של 20:00 על 20 ₪ 🍀")}}
+  else if(okP&&okC){p.innerHTML=`✅ אתם בהגרלה! 🎟️ 20 ₪ ${DH} · בעוד ${T}`;if(!lotNotified){lotNotified=true;notify(lot.shabbat?"🎟️ אתם בהגרלה של מוצאי שבת על 20 ₪ 🍀":"🎟️ אתם בהגרלה של 20:00 על 20 ₪ 🍀")}}
   else if(okP&&!okC)p.innerHTML=`🌼 200/200 ✓ · 💬 חסרה תגובה על הפוסט של היום ✗ · בלי תגובה אין הגרלה! 👉 אינסטגרם · בעוד ${T}`;
   else if(isFinite(left)&&left<=900&&left>0)p.innerHTML=`🔴 ההגרלה בשידור חי בעוד ${T}${chk} · תישארו בכוורת!`;
-  else p.innerHTML=`🎟️ הגרלה על <b>20 ₪</b> ב־20:00 · בעוד ${T}${chk}`;
+  else p.innerHTML=`🎟️ הגרלה על <b>20 ₪</b> ${DH} · בעוד ${T}${chk}`;
   p.style.cursor=okP&&!okC&&!lot.drawn_today?"pointer":"";p.onclick=okP&&!okC&&!lot.drawn_today?()=>window.open("https://www.instagram.com/hakaveret_shelanu/","_blank"):null;
 }
 /* fiche « où j'en suis » avant le tirage (dans la feuille de l'abeille) */
 function renderLotBox(mine,rule,com,me){const b=$("#lotBox");if(!b)return;
   const okP=mine>=200,okC=!rule||com,row=(ok,t)=>`<div>${ok?"✅":"❌"} ${t}</div>`;
-  b.innerHTML=`<div><b>🎟️ הגרלת 20 ₪ – היום ב־20:00</b></div>`+row(okP,`200 אבקות היום (<b>${Math.min(mine,200)}</b>/200)`)+
+  b.innerHTML=`<div><b>🎟️ הגרלת 20 ₪ – ${lot&&lot.shabbat?"של היום: במוצאי שבת 18:30 🕯️":"היום ב־20:00"}</b></div>`+row(okP,`200 אבקות היום (<b>${Math.min(mine,200)}</b>/200)`)+
     (rule?row(com,me?"תגובה על הפוסט האחרון של היום ב־<span dir=\"ltr\">@hakaveret_shelanu</span>":"תגובה על הפוסט של היום (הצטרפו עם השם שלכם כדי שנזהה אתכם)"):"")+
-    `<div style="opacity:.85;font-size:.92em">${rule?"צריך את שניהם כדי להיכנס להגרלה. תגיבו מוקדם: הרשימה מתעדכנת כמה פעמים ביום (הבדיקה האחרונה לפני ההגרלה בסביבות 18:00) 🐝":"ממחר: כדי להשתתף צריך גם 200 אבקות וגם תגובה על הפוסט של היום 💬"}</div>`;
+    `<div style="opacity:.85;font-size:.92em">${rule?"צריך את שניהם כדי להיכנס להגרלה. תגיבו מוקדם: הרשימה מתעדכנת כמה פעמים ביום (הבדיקה האחרונה לפני ההגרלה ${lot&&lot.shabbat?"ביום שישי בסביבות 14:00":"בסביבות 18:00"}) 🐝":"ממחר: כדי להשתתף צריך גם 200 אבקות וגם תגובה על הפוסט של היום 💬"}</div>`;
   {const m2=document.getElementById("meLot");if(m2&&m2.innerHTML!==b.innerHTML)m2.innerHTML=b.innerHTML}
 }
 /* ---------- TIRAGE EN DIRECT dans le jeu (20:00) ---------- */
