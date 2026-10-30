@@ -189,3 +189,9 @@ d. Communication : rappeler de temps en temps (pas tous les jours) dans une stor
 ## 🎬 VIDÉOS — RÈGLE DE SHLOMO (30.10, 13:34) — TOUS LES JEUX
 - Les vidéos de TOUS les jeux sont générées UNIQUEMENT dans le chat de la ruche (session_01P3PorVNfckHy3LzDtVio4U). Les autres chats préparent le texte voix et demandent la vidéo à ce chat.
 - Chaque vidéo terminée est enregistrée : (1) sur le bureau du Mac de Shlomo (toujours allumé) : ~/Desktop/Vidéos jeux/<nom du jeu>/<nom du jeu> – AAAA-MM-JJ – <titre>.mp4 ; (2) envoyée dans le chat (SendUserFile) avec le nom du jeu.
+
+## 📺 JOURNAL DU JOUR AU MILIEU DE CHAQUE VIDÉO (Shlomo, 30.10 14:02) — tous les jeux
+- Chaque vidéo du jour fait une petite PAUSE au milieu : on coupe vers un PLATEAU TÉLÉ (« מהדורת הכוורת ») avec le journal du jour.
+- Le journal montre LE COMMENTAIRE DU JOUR = le commentaire qui a eu le plus de likes (@auteur + texte + ❤️ nombre), comme promis aux abonnés, et dit ce qu'on en a fait dans le jeu (l'événement réalisé). Puis la vidéo reprend.
+- Ce qui est annoncé au journal doit exister VRAIMENT dans le jeu le jour même.
+- Design du plateau : à définir avec Shlomo (en cours, 30.10).
