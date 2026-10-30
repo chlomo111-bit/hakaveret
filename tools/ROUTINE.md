@@ -158,3 +158,6 @@ d. Communication : rappeler de temps en temps (pas tous les jours) dans une stor
 - Économe : une seule génération de voix, pas de rendus inutiles.
 - Ne jamais toucher aux autres projets/automatisations de Shlomo.
 - Jamais de doublon (abeilles, réponses, publications).
+
+## 💡 IDÉES FUTURES (demandes d'abonnés, à faire plus tard — Shlomo)
+- 30.10 @shahar_b.y : « collecter du nectar (צוף) sur des fleurs → en faire du miel ; celui qui fait le plus de miel est 1er au classement ». Piste : des fleurs dans/autour de la ruche à butiner (nectar), retour à la ruche = conversion en miel, classement « מלך הדבש » (honey.total). Quand on la réalise : l'annoncer comme « הרעיון של @shahar_b.y » dans un reel + story.
