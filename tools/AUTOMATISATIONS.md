@@ -28,3 +28,4 @@ Les anciennes tâches (désactivées le 30.10 à 10:46, puis supprimées) sont a
 ## 🎬 VIDÉOS — RÈGLE DE SHLOMO (30.10, 13:34) — TOUS LES JEUX
 - Les vidéos de TOUS les jeux sont générées UNIQUEMENT dans le chat de la ruche (session_01P3PorVNfckHy3LzDtVio4U). Les autres chats préparent le texte voix et demandent la vidéo à ce chat.
 - Chaque vidéo terminée est enregistrée : (1) sur le bureau du Mac de Shlomo (toujours allumé) : ~/Desktop/Vidéos jeux/<nom du jeu>/<nom du jeu> – AAAA-MM-JJ – <titre>.mp4 ; (2) envoyée dans le chat (SendUserFile) avec le nom du jeu.
+- Pas seulement les vidéos : TOUT ce qui est créé (vidéos, posts, stories, couvertures, aperçus) est fait dans ce chat, envoyé ici ET copié sur le bureau (~/Desktop/Vidéos jeux/<jeu>/ pour les vidéos, ~/Desktop/Vidéos jeux/<jeu>/Images/ pour les images). Copie vers le Mac : curl depuis raw.githubusercontent.com dans device_bash (device_commit_files limité à 30 Mo par fichier).
