@@ -871,7 +871,7 @@ function renderLotBox(mine,rule,com,me){const b=$("#lotBox");if(!b)return;
   const okP=mine>=200,okC=!rule||com,row=(ok,t)=>`<div>${ok?"✅":"❌"} ${t}</div>`;
   b.innerHTML=`<div><b>🎟️ הגרלת 20 ₪ – ${lot&&lot.shabbat?"של היום: במוצאי שבת 18:30 🕯️":"היום ב־20:00"}</b></div>`+row(okP,`200 אבקות היום (<b>${Math.min(mine,200)}</b>/200)`)+
     (rule?row(com,me?"תגובה על הפוסט האחרון של היום ב־<span dir=\"ltr\">@hakaveret_shelanu</span>":"תגובה על הפוסט של היום (הצטרפו עם השם שלכם כדי שנזהה אתכם)"):"")+
-    `<div style="opacity:.85;font-size:.92em">${rule?"צריך את שניהם כדי להיכנס להגרלה. תגיבו מוקדם: הרשימה מתעדכנת כמה פעמים ביום (הבדיקה האחרונה לפני ההגרלה ${lot&&lot.shabbat?"ביום שישי בסביבות 14:00":"בסביבות 18:00"}) 🐝":"ממחר: כדי להשתתף צריך גם 200 אבקות וגם תגובה על הפוסט של היום 💬"}</div>`;
+    `<div style="opacity:.85;font-size:.92em">${rule?"צריך את שניהם כדי להיכנס להגרלה. תגיבו מוקדם: הרשימה מתעדכנת כמה פעמים ביום (הבדיקה האחרונה לפני ההגרלה "+(lot&&lot.shabbat?"ביום שישי בסביבות 14:00":"בסביבות 18:00")+") 🐝":"ממחר: כדי להשתתף צריך גם 200 אבקות וגם תגובה על הפוסט של היום 💬"}</div>`;
   {const m2=document.getElementById("meLot");if(m2&&m2.innerHTML!==b.innerHTML)m2.innerHTML=b.innerHTML}
 }
 /* ---------- TIRAGE EN DIRECT dans le jeu (20:00) ---------- */
