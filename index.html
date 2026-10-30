@@ -354,7 +354,7 @@ const store={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},
 
 /* ================= styles (vêtements) ================= */
 const HATS=["cap","tophat","beanie","flower","bow"];
-const TINTS={yellow:[1,1,1],pink:[1,.62,.8],blue:[.55,.78,1],green:[.62,1,.6],purple:[.78,.6,1],red:[1,.5,.45],orange:[1,.78,.5]};
+const TINTS={yellow:[1,1,1],pink:[1,.62,.8],blue:[.55,.78,1],green:[.62,1,.6],purple:[.78,.6,1],red:[1,.5,.45],orange:[1,.78,.5],grey:[.55,.6,.68]};
 const ACCENTS=["#E5484D","#3E8BFF","#2FBF71","#A35CFF","#FF7AB6","#FF8A1F","#14B8C4","#FFFFFF"];
 const WORDS=[
   [/מלכה|queen/,"queen"],[/משקפי ?שמש|sunglasses/,"sunglasses"],[/משקפיים|glasses/,"glasses"],
@@ -589,9 +589,10 @@ const ACC={
   an_panda:merge([boxGeo(.1,.12,.12,0,0,.15,"#1B1B1B"),boxGeo(.1,.12,.12,0,0,-.15,"#1B1B1B"),boxGeo(.03,.13,.13,.15,-.18,.1,"#1B1B1B"),boxGeo(.03,.13,.13,.15,-.18,-.1,"#1B1B1B")]),
   an_pig:merge([boxGeo(.08,.12,.16,.2,-.12,0,W),boxGeo(.02,.04,.04,.25,-.12,.04,"#7A2E45"),boxGeo(.02,.04,.04,.25,-.12,-.04,"#7A2E45"),boxGeo(.12,.06,.1,-.02,0,.15,W),boxGeo(.12,.06,.1,-.02,0,-.15,W)]),
   an_unicorn:merge([boxGeo(.08,.08,.08,0,0,0,W),boxGeo(.06,.1,.06,.02,.08,0,W),boxGeo(.04,.1,.04,.04,.17,0,W),boxGeo(.02,.06,.02,.05,.24,0,W)]),
-  an_bunny:merge([boxGeo(.08,.34,.08,-.03,.12,.09,W),boxGeo(.08,.34,.08,-.03,.12,-.09,W),boxGeo(.04,.24,.04,-.0,.12,.09,"#FFB6C8"),boxGeo(.04,.24,.04,0,.12,-.09,"#FFB6C8")])
+  an_bunny:merge([boxGeo(.08,.34,.08,-.03,.12,.09,W),boxGeo(.08,.34,.08,-.03,.12,-.09,W),boxGeo(.04,.24,.04,-.0,.12,.09,"#FFB6C8"),boxGeo(.04,.24,.04,0,.12,-.09,"#FFB6C8")]),
+  an_elephant:merge([boxGeo(.19,.03,.28,0,.14,0,"#5E6873"),boxGeo(.19,.27,.02,0,0,.145,"#5E6873"),boxGeo(.19,.27,.02,0,0,-.145,"#5E6873"),boxGeo(.04,.36,.3,-.04,.03,.27,"#5E6873"),boxGeo(.04,.36,.3,-.04,.03,-.27,"#5E6873"),boxGeo(.02,.24,.18,-.015,.03,.25,"#C98A9A"),boxGeo(.02,.24,.18,-.015,.03,-.25,"#C98A9A"),boxGeo(.1,.1,.1,.12,-.06,0,"#5E6873"),boxGeo(.09,.1,.09,.15,-.14,0,"#5E6873"),boxGeo(.08,.07,.08,.18,-.2,0,"#5E6873"),boxGeo(.06,.06,.07,.22,-.18,0,"#5E6873"),boxGeo(.11,.035,.035,.15,-.1,.075,"#FFFFFF"),boxGeo(.11,.035,.035,.15,-.1,-.075,"#FFFFFF")])
 };
-const ANIMALS={cat:{tint:"orange",col:"#FF9A3C",he:"חתול 🐱"},dog:{tint:"orange",col:"#8B5A2B",he:"כלב 🐶"},lion:{tint:"orange",col:"#C8741A",he:"אריה 🦁"},frog:{tint:"green",col:"#5FD35A",he:"צפרדע 🐸"},panda:{tint:"yellow",col:"#FFFFFF",he:"פנדה 🐼"},pig:{tint:"pink",col:"#FF9FC0",he:"חזיר 🐷"},unicorn:{tint:"purple",col:"#FFFFFF",he:"חד־קרן 🦄"},bunny:{tint:"pink",col:"#FFFFFF",he:"ארנב 🐰"}};
+const ANIMALS={cat:{tint:"orange",col:"#FF9A3C",he:"חתול 🐱"},dog:{tint:"orange",col:"#8B5A2B",he:"כלב 🐶"},lion:{tint:"orange",col:"#C8741A",he:"אריה 🦁"},frog:{tint:"green",col:"#5FD35A",he:"צפרדע 🐸"},panda:{tint:"yellow",col:"#FFFFFF",he:"פנדה 🐼"},pig:{tint:"pink",col:"#FF9FC0",he:"חזיר 🐷"},unicorn:{tint:"purple",col:"#FFFFFF",he:"חד־קרן 🦄"},bunny:{tint:"pink",col:"#FFFFFF",he:"ארנב 🐰"},elephant:{tint:"grey",col:"#FFFFFF",he:"פיל 🐘"}};
 const ACC_LOCAL={
   crown:new THREE.Matrix4().makeTranslation(.47,.29,0), cap:new THREE.Matrix4().makeTranslation(.47,.27,0),
   tophat:new THREE.Matrix4().makeTranslation(.47,.23,0), beanie:new THREE.Matrix4().makeTranslation(.47,.2,0),
@@ -600,7 +601,8 @@ const ACC_LOCAL={
   scarf:new THREE.Matrix4().makeTranslation(.33,0,0),
   an_cat:new THREE.Matrix4().makeTranslation(.47,.24,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_dog:new THREE.Matrix4().makeTranslation(.47,.1,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_lion:new THREE.Matrix4().makeTranslation(.4,.02,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),
   an_frog:new THREE.Matrix4().makeTranslation(.5,.25,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_panda:new THREE.Matrix4().makeTranslation(.47,.22,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_pig:new THREE.Matrix4().makeTranslation(.47,.05,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),
-  an_unicorn:new THREE.Matrix4().makeTranslation(.5,.24,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_bunny:new THREE.Matrix4().makeTranslation(.47,.24,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5))
+  an_unicorn:new THREE.Matrix4().makeTranslation(.5,.24,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_bunny:new THREE.Matrix4().makeTranslation(.47,.24,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),
+  an_elephant:new THREE.Matrix4().makeTranslation(.47,.02,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5))
 };
 const BEE_S=1.6;
 let beeMesh=null,wingL=null,wingR=null,acc={},cap=0,accSlots={};
