@@ -9,7 +9,8 @@ Les anciennes tâches (désactivées le 30.10 à 10:46, puis supprimées) sont a
 |---|---|---|
 | ven. 30.10 15:00 | trig_01DbpuEsEn6KJbqsZSTMYEZy | Vérif avant Shabbat : reel « החיות השתלטו על הכוורת » (media/2026-10-31/reel_animaux.mp4) prêt + publication programmée sam. 19:30 |
 | sam. 31.10 18:30 | trig_013oUomqTwWpwSXkmRo95xG9 | Sortie de Shabbat : programmer le réveil 19:55, tirage du VENDREDI (run_lottery('2026-10-30') + award_top_commenter + story + message Bit à Shlomo), passage complet, vérifier le reel de 19:30 |
-| sam. 31.10 19:05 | send_later (story The Noise) | Story « 🎤 חדש! The Noise » + popup vers thenoise.hakaveret.online (remplace trig_01WBUtskm8phZ9xLcXtnDkF5) |
+| sam. 31.10 19:05 | trig_01WBUtskm8phZ9xLcXtnDkF5 (ancienne tâche isolée, désactivation refusée par les permissions) | Story « 🎤 חדש! The Noise » + popup vers thenoise.hakaveret.online |
+| sam. 31.10 19:20 | trig_01F7FBkCXDhciDLzgy4Mf3gZ (send_later, chat de la ruche) | Filet de sécurité : ne fait la story/popup The Noise QUE si 19:05 ne l'a pas faite (jamais 2, jamais 0) |
 | sam. 31.10 19:55 | à créer à 18:30 | Passage + story « 5 דקות להגרלה! » + tirage du samedi 20:00 |
 
 ## Rythme normal (dimanche → jeudi)
