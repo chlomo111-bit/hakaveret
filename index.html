@@ -192,7 +192,7 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
       <button class="pill pillbtn" id="missBtn" aria-label="משימות היום והסטטיסטיקות שלי">🎯 משימות <b id="missN">0/3</b></button>
       <button class="pill pillbtn" id="ideaBtn" aria-label="תיבת רעיונות">💡 תיבת רעיונות</button>
       <span class="pill demo" id="demoPill" hidden>הדגמה</span>
-      <span class="pill" id="huntPill" hidden style="white-space:normal;text-align:center">💸 שטר של <b id="prizeTxt"></b> מוסתר בכוורת</span>
+      <span class="pill" id="huntPill" hidden style="white-space:normal;text-align:center">🪙 מטבע זהב של <b id="prizeTxt"></b> מוסתר בכוורת</span>
     </div>
   </div>
   <div class="bottom hide" id="bottom"><button class="btn" id="joinBtn">🐝 הצטרפו לכוורת</button></div>
@@ -211,7 +211,7 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
     <div class="row" id="shareRow" style="margin-top:10px">
       <button class="btn ghost" id="shareBtn">📸 שיתוף לסטורי</button>
     </div>
-    <div class="bonus" id="lotBox" style="margin-top:8px"><div><b>🎟️ הגרלת 20 ₪ כל ערב ב־20:00</b> · 200 אבקות + תגובה על הפוסט של היום</div></div>
+    <div class="bonus" id="lotBox" style="margin-top:8px"><div><b>🎟️ הגרלה כל ערב ב־20:00: 2000 🌼 + הזוכה בוחר/ת מה מטורף יקרה מחר</b> · 200 אבקות + תגובה על הפוסט של היום</div></div>
     <div class="bonus" id="storyBonus" style="margin-top:8px"><div><b>🎁 +1000 אבקות ביום!</b> שתפו את הדבורה שלכם בסטורי ו<b>תייגו את <span dir="ltr">@hakaveret_shelanu</span></b> – הבונוס נכנס אוטומטית תוך כמה שעות 🌼</div></div>
     <div class="bonus" id="bonusBox">
       <div><b>🎁 בונוס:</b> עקבו אחרי הכוורת וכתבו <b>"דבורה"</b> בתגובות לרילס של היום, והדבורה שלכם תקבל כתר או אביזר מיוחד ✨</div>
@@ -306,8 +306,8 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
     </div>
     <div id="fWin" hidden>
       <div class="big">זכית! 🏆</div>
-      <div class="sub">צלמו מסך <b>עכשיו</b> ושלחו בהודעה ל־<span dir="ltr">@hakaveret_shelanu</span> כדי לקבל <b id="fPrize"></b>.</div>
-      <div class="code" dir="ltr" id="fCode"></div>
+      <div class="sub">🪙 <b id="fPrize"></b> נוספו עכשיו לדבורה שלכם! 🐝</div>
+      <div class="code" dir="ltr" id="fCode" style="display:none"></div>
       <div class="when" id="fWhen"></div>
       <div class="sub" id="fGift" hidden style="margin-top:8px"></div>
     </div>
@@ -333,7 +333,7 @@ const CONFIG = {
   SUPABASE_KEY: "sb_publishable_kQz8LnmhYbK-8m79fAPe8Q_51MAcYgz",
   DAY_START: "2026-10-27",   // jour 1 de la ruche
   ACCOUNT: "@hakaveret_shelanu",
-  TREASURE: { on: true, prize: "20 ₪", secret: "change-me-kaveret" } // billet caché, nouvel endroit chaque jour
+  TREASURE: { on: true, prize: "500 🌼", secret: "change-me-kaveret" } // billet caché, nouvel endroit chaque jour
 };
 const LIVE = !!(CONFIG.SUPABASE_URL && CONFIG.SUPABASE_KEY);
 
@@ -738,17 +738,17 @@ const treasure=new THREE.Group();let treasureHit=null,billetLocked=false,paintNo
 if(CONFIG.TREASURE.on){
   const cv=document.createElement("canvas");cv.width=256;cv.height=128;const g=cv.getContext("2d");
   const tx=new THREE.CanvasTexture(cv);tx.encoding=THREE.sRGBEncoding;
-  // billet normal (rouge 20 ₪) ou billet cadeau (violet + or, offert par un gagnant)
-  paintNote=(prize,gift)=>{const P=gift?["#7B3FE4","#FFC93C","#FFE7A8","#3A1676","#FFFFFF"]:["#D9536B","#8E2438","#F7C6CF","#7A1B2E","#7A1B2E"];
+  // pièce d'or (500 🌼 dans le jeu, depuis le 1.11 plus de vrai argent) ou billet cadeau (violet + or, offert par un gagnant)
+  paintNote=(prize,gift)=>{const P=gift?["#7B3FE4","#FFC93C","#FFE7A8","#3A1676","#FFFFFF"]:["#F5B800","#8A5A00","#FFE7A8","#5A3A00","#5A3A00"];
     g.clearRect(0,0,256,128);g.fillStyle=P[0];g.fillRect(0,0,256,128);g.strokeStyle=P[1];g.lineWidth=10;g.strokeRect(5,5,246,118);
     if(gift){g.strokeStyle="rgba(255,201,60,.55)";g.lineWidth=3;g.strokeRect(16,16,224,96)}
-    g.fillStyle=P[2];g.beginPath();g.arc(70,64,34,0,7);g.fill();g.fillStyle=P[4];g.font="900 58px Heebo, sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(String(prize||20),178,68);
-    g.fillStyle=P[3];g.font="900 34px Heebo, sans-serif";g.fillText("₪",70,66);tx.needsUpdate=true;
+    g.fillStyle=P[2];g.beginPath();g.arc(70,64,34,0,7);g.fill();g.fillStyle=P[4];g.font="900 58px Heebo, sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText(String(prize||500),178,68);
+    g.fillStyle=P[3];g.font="900 34px Heebo, sans-serif";g.fillText("🌼",70,66);tx.needsUpdate=true;
     const hl=treasure.userData.halo;if(hl){hl.material.color.set(gift?0x9B6BFF:0xffffff);hl.material.opacity=gift?.55:1}
     const lb=treasure.userData.giftLabel;if(lb){lb.visible=!!gift;if(gift){const c=lb.material.map.image,x=c.getContext("2d");x.clearRect(0,0,c.width,c.height);
       x.fillStyle="rgba(58,22,118,.92)";x.beginPath();x.roundRect?x.roundRect(4,4,c.width-8,c.height-8,40):x.rect(4,4,c.width-8,c.height-8);x.fill();x.strokeStyle="#FFC93C";x.lineWidth=6;x.stroke();
       x.fillStyle="#FFE7A8";x.font="900 46px Heebo, sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText("🎁 מתנה מ־@"+gift,c.width/2,c.height/2+2);lb.material.map.needsUpdate=true}}};
-  paintNote(20,null);
+  paintNote(500,null);
   const note=new THREE.Mesh(new THREE.BoxGeometry(1.3,.65,.05),new THREE.MeshBasicMaterial({map:tx}));
   note.scale.setScalar(1.8);treasure.add(note);
   // halo doré visible de loin
@@ -781,27 +781,27 @@ function setWinner(w){ // w = {handle, found_at}
 }
 function renderHunt(){
   const p=$("#huntPill");if(!p||!CONFIG.TREASURE.on)return;const T=`<b style="font-variant-numeric:tabular-nums">${fmtCountdown(secsToNextTreasure())}</b>`;
-  const NG=LIVE&&billet&&billet.next_gift_from?`🎁 השטר הבא: <b>${billet.next_prize} ₪</b> מתנה מ־<b dir="ltr">@${esc(billet.next_gift_from)}</b> · בעוד ${T}`:"";
+  const NG=false&&billet&&billet.next_gift_from?`🎁 המטבע הבא: <b>${billet.next_prize} ₪</b> מתנה מ־<b dir="ltr">@${esc(billet.next_gift_from)}</b> · בעוד ${T}`:"";
   const LW=(typeof lastWin!=="undefined"&&lastWin)?`🏆 הזוכה האחרון: <b dir="ltr">@${esc(lastWin.handle)}</b> · `:"";
-  if(LIVE&&billet&&!billet.slot)p.innerHTML=LW+(NG||`💸 השטר הבא יוסתר בכוורת בעוד ${T} · 3 שטרות של 20 ₪ ביום`);
-  else if(currentWinner)p.innerHTML=`🏆 נמצא ע״י <b dir="ltr">@${esc(currentWinner.handle)}</b> · `+(NG||`השטר הבא בעוד ${T}`);
-  else if(CONFIG.TREASURE.gift&&!billetLocked)p.innerHTML=`🎁 שטר מתנה של <b>${CONFIG.TREASURE.prize}</b> מ־<b dir="ltr">@${esc(CONFIG.TREASURE.gift)}</b> מחכה בכוורת!`;
-  else if(billetLocked&&billet&&billet.won_today)p.innerHTML=`🏆 כבר זכית בשטר היום! שטר אחד לאדם ביום · מחר עוד 3 שטרות 💸`;
-  else if(billetLocked)p.innerHTML=LW+`🔒 השטרות גלויים רק למי שהגיב/ה על הפוסט של 07:00 · <u>לחצו כדי להגיב</u> 💬 · הבא בעוד ${T}`;
-  else p.innerHTML=`💸 שטר של <b>${CONFIG.TREASURE.prize}</b> מחכה בכוורת! · הבא בעוד ${T}`;
+  if(LIVE&&billet&&!billet.slot)p.innerHTML=LW+(NG||`💸 המטבע הבא יוסתר בכוורת בעוד ${T} · 3 מטבעות זהב של 500 🌼 ביום`);
+  else if(currentWinner)p.innerHTML=`🏆 נמצא ע״י <b dir="ltr">@${esc(currentWinner.handle)}</b> · `+(NG||`המטבע הבא בעוד ${T}`);
+  else if(CONFIG.TREASURE.gift&&!billetLocked)p.innerHTML=`🎁 מטבע מתנה של <b>${CONFIG.TREASURE.prize}</b> מ־<b dir="ltr">@${esc(CONFIG.TREASURE.gift)}</b> מחכה בכוורת!`;
+  else if(billetLocked&&billet&&billet.won_today)p.innerHTML=`🏆 כבר זכית במטבע היום! מטבע אחד לאדם ביום · מחר עוד 3 מטבעות 💸`;
+  else if(billetLocked)p.innerHTML=LW+`🔒 המטבעות גלויים רק למי שהגיב/ה על הפוסט של 07:00 · <u>לחצו כדי להגיב</u> 💬 · הבא בעוד ${T}`;
+  else p.innerHTML=`💸 מטבע של <b>${CONFIG.TREASURE.prize}</b> מחכה בכוורת! · הבא בעוד ${T}`;
 }
 function applyBillet(st){
   const first=!billet;billet=st;billet._skew=Date.parse(st.now)-Date.now();billetLocked=st.access===false;
-  CONFIG.TREASURE.prize=(st.prize||20)+" ₪";CONFIG.TREASURE.gift=st.slot?st.gift_from||null:null;CONFIG.TREASURE.giftMsg=st.gift_msg||"";
-  if(paintNote._k!==(st.prize||20)+"|"+CONFIG.TREASURE.gift){paintNote._k=(st.prize||20)+"|"+CONFIG.TREASURE.gift;paintNote(st.prize||20,CONFIG.TREASURE.gift)}
+  CONFIG.TREASURE.prize="500 🌼";CONFIG.TREASURE.gift=null;CONFIG.TREASURE.giftMsg=st.gift_msg||"";
+  if(paintNote._k!=="500"){paintNote._k="500";paintNote(500,null)}
   const k=st.slot?st.day+"#"+st.slot:"none";
   if(k!==todayKey){todayKey=k;winKey="kaveret_win_"+k;currentWinner=null;foundShown=false;
     if(st.slot)placeTreasure();else{treasure.visible=false;treasureHit=null}
-    if(!first&&st.slot&&mode==="hive")notify(CONFIG.TREASURE.gift?"🎁 שטר מתנה של "+CONFIG.TREASURE.prize+" מ־@"+CONFIG.TREASURE.gift+" הוסתר בכוורת! מי ימצא ראשון?":"💸 שטר חדש של "+CONFIG.TREASURE.prize+" הוסתר בכוורת! מי ימצא ראשון?")}
+    if(!first&&st.slot&&mode==="hive")notify(CONFIG.TREASURE.gift?"🎁 מטבע מתנה של "+CONFIG.TREASURE.prize+" מ־@"+CONFIG.TREASURE.gift+" הוסתר בכוורת! מי ימצא ראשון?":"💸 מטבע חדש של "+CONFIG.TREASURE.prize+" הוסתר בכוורת! מי ימצא ראשון?")}
   else if(billetLocked){treasure.visible=false;treasureHit=null}
   else if(st.slot&&!st.winner&&!currentWinner&&!treasure.visible)placeTreasure();
   if(st.winner)setWinner({handle:st.winner,found_at:st.found_at});
-  if(billetLocked&&!st.won_today&&!lstore("kaveret_lockmsg_"+st.day)){lstore("kaveret_lockmsg_"+st.day,"1");setTimeout(()=>notify("🔒 רוצים לראות את השטרות של היום? תגיבו על הפוסט של 07:00 באינסטגרם ותייגו חבר 💬 (לחצו על הפס למעלה)"),2500)}
+  if(billetLocked&&!st.won_today&&!lstore("kaveret_lockmsg_"+st.day)){lstore("kaveret_lockmsg_"+st.day,"1");setTimeout(()=>notify("🔒 רוצים לראות את המטבעות של היום? תגיבו על הפוסט של 07:00 באינסטגרם ותייגו חבר 💬 (לחצו על הפס למעלה)"),2500)}
   const hp=$("#huntPill");if(hp){hp.style.cursor=billetLocked&&!st.won_today?"pointer":"";hp.onclick=billetLocked&&!st.won_today?()=>window.open("https://www.instagram.com/hakaveret_shelanu/","_blank"):null}
   renderHunt();
 }
@@ -835,15 +835,15 @@ $("#fClaim").onclick=async()=>{
   const h=cleanHandle($("#fHandle").value);if(!HANDLE_RE.test(h)){$("#fErr").textContent="כתבו שם משתמש של אינסטגרם";return}
   $("#fClaim").disabled=true;let w=null,me=false;
   try{
-    if(LIVE){const r=await sb("rpc/claim_treasure",{method:"POST",body:JSON.stringify({h})});const rows=await r.json();if(!r.ok){$("#fErr").textContent=String(rows&&rows.message||"").includes("already_won")?"🏆 כבר זכית היום – שטר אחד לאדם ביום. נתראה מחר!":String(rows&&rows.message||"").includes("not_eligible")?"🔒 רק מי שהגיב/ה על הפוסט של הבוקר יכול/ה לזכות היום":String(rows&&rows.message||"").includes("no_billet")?"השטר הבא עוד לא הוסתר… חכו לספירה לאחור 💸":"משהו לא עבד, נסו שוב";$("#fClaim").disabled=false;return}w=rows[0];me=!!(w&&w.is_me)}
+    if(LIVE){const r=await sb("rpc/claim_treasure",{method:"POST",body:JSON.stringify({h})});const rows=await r.json();if(!r.ok){$("#fErr").textContent=String(rows&&rows.message||"").includes("already_won")?"🏆 כבר זכית היום – מטבע אחד לאדם ביום. נתראה מחר!":String(rows&&rows.message||"").includes("not_eligible")?"🔒 רק מי שהגיב/ה על הפוסט של הבוקר יכול/ה לזכות היום":String(rows&&rows.message||"").includes("no_billet")?"המטבע הבא עוד לא הוסתר… חכו לספירה לאחור 💸":"משהו לא עבד, נסו שוב";$("#fClaim").disabled=false;return}w=rows[0];me=!!(w&&w.is_me)}
     else{const ex=lstore(winKey);if(ex){w=JSON.parse(ex)}else{w={handle:h,found_at:new Date().toISOString()};lstore(winKey,JSON.stringify(w));me=true}}
   }catch(e){$("#fErr").textContent="משהו לא עבד, נסו שוב";$("#fClaim").disabled=false;return}
   $("#fClaim").disabled=false;$("#fAsk").hidden=true;
   if(me){$("#fPrize").textContent=CONFIG.TREASURE.prize;$("#fCode").textContent=treasureCode()+"\n@"+h;
     $("#fWhen").textContent=new Date(w.found_at).toLocaleString("he-IL",{dateStyle:"short",timeStyle:"medium"});
-    const gf=CONFIG.TREASURE.gift;$("#fGift").hidden=!gf;if(gf)$("#fGift").innerHTML=`🎁 השטר הזה הוא מתנה מ־<b dir="ltr">@${esc(gf)}</b>, שזכה והחליט להכפיל ולהעביר הלאה 💜`+(CONFIG.TREASURE.giftMsg?`<br><i>"${esc(CONFIG.TREASURE.giftMsg)}"</i>`:"");
+    const gf=CONFIG.TREASURE.gift;$("#fGift").hidden=!gf;if(gf)$("#fGift").innerHTML=`🎁 המטבע הזה הוא מתנה מ־<b dir="ltr">@${esc(gf)}</b>, שזכה והחליט להכפיל ולהעביר הלאה 💜`+(CONFIG.TREASURE.giftMsg?`<br><i>"${esc(CONFIG.TREASURE.giftMsg)}"</i>`:"");
     $("#fWin").hidden=false}
-  else{$("#fLateTxt").innerHTML=`<b dir="ltr">@${w.handle}</b> מצא את השטר ראשון ב־${new Date(w.found_at).toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})}.<br>השטר הבא יוסתר בקרוב במקום אחר… 3 שטרות ביום 🐝`;$("#fLate").hidden=false}
+  else{$("#fLateTxt").innerHTML=`<b dir="ltr">@${w.handle}</b> מצא את המטבע ראשון ב־${new Date(w.found_at).toLocaleTimeString("he-IL",{hour:"2-digit",minute:"2-digit"})}.<br>המטבע הבא יוסתר בקרוב במקום אחר… 3 מטבעות ביום 🐝`;$("#fLate").hidden=false}
   setWinner(w);loadWins();
 };
 let foundCool=0;
@@ -880,7 +880,7 @@ async function flushHoney(){
 }
 setInterval(flushHoney,3000);
 let honeyTop=[];
-/* ---------- TIRAGE AU SORT de 20:00 (depuis le 29.10) : 200 pollens = 1 ticket, 1 gagnant de 20 ₪ ---------- */
+/* ---------- TIRAGE AU SORT de 20:00 (depuis le 29.10) : 200 pollens = 1 ticket, 1 gagnant : 2000 🌼 + choisit l'événement de demain (plus de vrai argent depuis le 1.11) ---------- */
 let lot=null,lotSkew=0,lotNotified=false;
 async function lotteryTick(){try{const h=lstore("kaveret_my_bee")||"";const r=await sb("rpc/lottery_state",{method:"POST",body:JSON.stringify({h})});if(r.ok){lot=await r.json();lotSkew=Date.parse(lot.now)-Date.now();renderLottery()}}catch(e){}}
 function renderLottery(){const p=$("#huntPill");if(!p||!lot)return;
@@ -891,10 +891,10 @@ function renderLottery(){const p=$("#huntPill");if(!p||!lot)return;
   const chk=rule?` · 🌼 <b>${Math.min(mine,200)}</b>/200 ${okP?"✓":"✗"} · 💬 תגובה על הפוסט של היום ${okC?"✓":"✗"}`:` · יש לכם <b>${mine}</b>/200`;
   renderLotBox(mine,rule,com,me);
   if(lot.drawn_today)p.innerHTML=lot.last_winner&&lot.last_day===lot.day?`🎉 הזוכה בהגרלה של היום: <b dir="ltr">@${esc(lot.last_winner)}</b> · מחר הגרלה חדשה ב־20:00 🎟️`:`🎟️ ההגרלה של היום הסתיימה · מחר הגרלה חדשה ב־20:00`;
-  else if(okP&&okC){p.innerHTML=`✅ אתם בהגרלה! 🎟️ 20 ₪ ${DH} · בעוד ${T}`;if(!lotNotified){lotNotified=true;notify(lot.shabbat?"🎟️ אתם בהגרלה של מוצאי שבת על 20 ₪ 🍀":"🎟️ אתם בהגרלה של 20:00 על 20 ₪ 🍀")}}
+  else if(okP&&okC){p.innerHTML=`✅ אתם בהגרלה! 🎟️ 2000 🌼 ${DH} · בעוד ${T}`;if(!lotNotified){lotNotified=true;notify(lot.shabbat?"🎟️ אתם בהגרלה של מוצאי שבת על 2000 🌼 🍀":"🎟️ אתם בהגרלה של 20:00 על 2000 🌼 🍀")}}
   else if(okP&&!okC)p.innerHTML=`🌼 200/200 ✓ · 💬 חסרה תגובה על הפוסט של היום ✗ · בלי תגובה אין הגרלה! 👉 אינסטגרם · בעוד ${T}`;
   else if(isFinite(left)&&left<=900&&left>0)p.innerHTML=`🔴 ההגרלה בשידור חי בעוד ${T}${chk} · תישארו בכוורת!`;
-  else p.innerHTML=`🎟️ הגרלה על <b>20 ₪</b> ${DH} · בעוד ${T}${chk}`;
+  else p.innerHTML=`🎟️ הגרלה על <b>2000 🌼</b> ${DH} · בעוד ${T}${chk}`;
   p.style.cursor=okP&&!okC&&!lot.drawn_today?"pointer":"";p.onclick=okP&&!okC&&!lot.drawn_today?()=>window.open("https://www.instagram.com/hakaveret_shelanu/","_blank"):null;
 }
 /* bloc « המגיב של היום » : le plus de commentaires aujourd'hui = couronne + choisit ce qui arrive demain */
@@ -907,7 +907,7 @@ function cmtBoxHtml(me){const c=CMT||{},top=(c.top||[])[0];
 /* fiche « où j'en suis » avant le tirage (dans la feuille de l'abeille) */
 function renderLotBox(mine,rule,com,me){const b=$("#lotBox");if(!b)return;
   const okP=mine>=200,okC=!rule||com,row=(ok,t)=>`<div>${ok?"✅":"❌"} ${t}</div>`;
-  b.innerHTML=`<div><b>🎟️ הגרלת 20 ₪ – ${lot&&lot.shabbat?"של היום: במוצאי שבת 18:30 🕯️":"היום ב־20:00"}</b></div>`+row(okP,`200 אבקות היום (<b>${Math.min(mine,200)}</b>/200)`)+
+  b.innerHTML=`<div><b>🎟️ הגרלת 2000 🌼 – ${lot&&lot.shabbat?"של היום: במוצאי שבת 18:30 🕯️":"היום ב־20:00"}</b></div>`+row(okP,`200 אבקות היום (<b>${Math.min(mine,200)}</b>/200)`)+
     (rule?row(com,me?"תגובה על הפוסט האחרון של היום ב־<span dir=\"ltr\">@hakaveret_shelanu</span>":"תגובה על הפוסט של היום (הצטרפו עם השם שלכם כדי שנזהה אתכם)"):"")+
     `<div style="opacity:.85;font-size:.92em">${rule?"צריך את שניהם כדי להיכנס להגרלה. תגיבו מוקדם: הרשימה מתעדכנת כמה פעמים ביום (הבדיקה האחרונה לפני ההגרלה "+(lot&&lot.shabbat?"ביום שישי בסביבות 12:00":"ב־19:55")+") 🐝":"ממחר: כדי להשתתף צריך גם 200 אבקות וגם תגובה על הפוסט של היום 💬"}</div>`;
   b.innerHTML+=cmtBoxHtml(me);
@@ -929,7 +929,7 @@ function liveTick(){
 }
 function liveFrame(){
   if(!LIVE_SHOW.on)return;const e=(window.LIVE_CLOCK?LIVE_CLOCK():performance.now()/1000)-LIVE_SHOW.t0,R=LIVE_SHOW.res,ents=(R.entrants&&R.entrants.length?R.entrants:(R.winner?[R.winner]:[])),W=R.winner;
-  let h=`<div style="position:absolute;top:6%;left:0;right:0"><span style="display:inline-block;background:#E5484D;color:#fff;font:900 22px Heebo;padding:6px 16px;border-radius:999px;text-shadow:none">🔴 LIVE</span><div style="font:900 40px/1.15 Heebo;margin-top:10px">🎟️ ההגרלה של הערב</div><div style="font:700 22px Heebo;opacity:.9">${ents.length} משתתפים · 20 ₪</div></div>`;
+  let h=`<div style="position:absolute;top:6%;left:0;right:0"><span style="display:inline-block;background:#E5484D;color:#fff;font:900 22px Heebo;padding:6px 16px;border-radius:999px;text-shadow:none">🔴 LIVE</span><div style="font:900 40px/1.15 Heebo;margin-top:10px">🎟️ ההגרלה של הערב</div><div style="font:700 22px Heebo;opacity:.9">${ents.length} משתתפים · 2000 🌼</div></div>`;
   if(!W){h+=`<div style="position:absolute;top:40%;left:0;right:0;font:900 46px/1.2 Heebo">אף אחד לא הגיע ל־200 😱<br><span style="color:#FFC24B">מחר ב־20:00</span> הגרלה חדשה!</div>`;if(e>8)liveStop();liveEl.innerHTML=h;return}
   if(e<10){ // roulette qui ralentit
     const speed=Math.max(.06,.06+Math.pow(e/10,3)*.6),idx=Math.floor((e/speed))%ents.length,name=e>9.2?W:ents[idx];
@@ -938,7 +938,7 @@ function liveFrame(){
   }else{ // révélation
     if(!liveFrame._boom){liveFrame._boom=true;try{evSound("boom");evSound("fanfare")}catch(x){}
       const b=bees.find(x=>x.handle===W);if(b){LIVE_SHOW.cam=b}}
-    h+=`<div style="position:absolute;top:30%;left:0;right:0"><div style="font:900 70px Heebo">🎉</div><div style="font:900 50px/1.15 Heebo"><span dir="ltr" style="color:#FFC24B">@${esc(W)}</span><br>זוכה ב־20 ₪!</div><div style="font:700 24px Heebo;margin-top:12px">מחר ב־20:00 עוד הגרלה · אספו 200 אבקות 🌼</div></div>`;
+    h+=`<div style="position:absolute;top:30%;left:0;right:0"><div style="font:900 70px Heebo">🎉</div><div style="font:900 50px/1.15 Heebo"><span dir="ltr" style="color:#FFC24B">@${esc(W)}</span><br>זוכה ב־2000 🌼!</div><div style="font:900 30px Heebo;margin-top:8px">✨ ובוחר/ת מה מטורף יקרה מחר בכוורת!</div><div style="font:700 24px Heebo;margin-top:12px">מחר ב־20:00 עוד הגרלה · אספו 200 אבקות 🌼</div></div>`;
     if(e>18)liveStop();
   }
   liveEl.innerHTML=h;
@@ -1397,7 +1397,7 @@ function profileBox(b){
   const w=winsBy[b.handle]||0;
   return `<div class="mybox">
     <div>🔥 <b>${b.streak||0}</b> ימים ברצף · שיא <b>${b.best||0}</b></div>
-    <div>📣 <b>${b.refs||0}</b> חברים הצטרפו דרכה · 🏆 <b>${w}</b> ${w===1?"זכייה":"זכיות"} בשטר</div>
+    <div>📣 <b>${b.refs||0}</b> חברים הצטרפו דרכה · 🏆 <b>${w}</b> ${w===1?"זכייה":"זכיות"} במטבע</div>
   </div>`;
 }
 function nextReward(cur,steps){for(const [n,label] of steps)if(cur<n)return{n,label};return null}
@@ -1408,7 +1408,7 @@ function myProgress(b){
   return `<div class="mybox">
     <div>🔥 <b>${st}</b> ${st===1?"יום":"ימים"} ברצף${ns?` · עוד ${Math.max(1,ns.n-(b.best||0))} ל${ns.label}`:" · כל הפרסים נפתחו!"}</div>
     <div>📣 <b>${rf}</b> חברים הצטרפו דרכך${nr?` · עוד ${nr.n-rf} ל${nr.label}`:""}</div>
-    <div>🏆 <b>${winsBy[b.handle]||0}</b> זכיות בשטר</div>
+    <div>🏆 <b>${winsBy[b.handle]||0}</b> זכיות במטבע</div>
     <button class="btn" id="inviteBtn">📣 הזמינו חברים לכוורת</button>
   </div>`;
 }

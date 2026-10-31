@@ -21,7 +21,7 @@ Tirages ven. (@zoharkoresh_) et sam. (@shahar_b.y) faits. Réveils : 6:00 produc
 ## Rythme normal (dimanche → jeudi)
 - Passages commentaires : 6:00, 12:00, 17:00 et 19:55 (5 min avant le tirage). À chaque passage : réponses à tous les commentaires, abeilles/reines, tags d'amis, animaux, bonus story, ET inscription des commentateurs du jour dans daily_commenters.
 - Production du matin : post du jour (4:5) + story, vidéo du jour (texte voix envoyé à Shlomo 2–3 h avant, voix Juniper).
-- 20:00 : tirage en direct dans le jeu (lottery_live) ; ensuite story du gagnant + message « 20 ₪ à payer par Bit ».
+- 20:00 : tirage en direct dans le jeu (lottery_live) ; ensuite story du gagnant (2000 🌼 + il choisit l'événement de demain). Depuis le 1.11 plus de vrai argent, plus de message Bit.
 - Shabbat : rien entre vendredi 16:00 et samedi 18:30 ; le tirage du vendredi se fait samedi 18:30 (voir ROUTINE.md, section SHABBAT).
 
 ## Identifiants

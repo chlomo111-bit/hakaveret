@@ -4,7 +4,7 @@
 En cas de contradiction avec une section plus ancienne de ce fichier (billets, passages 8:52/11:52…, post de 07:00 « billet », soir 21:15…), CES RÈGLES l'emportent.
 1. VIDÉO DU JOUR : chaque jour un reel qui raconte ce qui s'est passé dans le jeu (vrais joueurs tagués, vrais chiffres) et se termine par « מה יקרה מחר? התגובה עם הכי הרבה לייקים קובעת ». AVANT d'écrire la vidéo : lire TOUS les commentaires du post/reel précédent ; le commentaire valable le plus liké décide de ce qui arrive. Texte écrit pour la voix (hébreu, balises Eleven v3) envoyé à Shlomo 2–3 h avant la mise en ligne (SendUserMessage + PushNotification) : SEULE chose qu'on lui demande. Couverture dédiée (jamais une image noire).
 2. CHAQUE JOUR QUELQUE CHOSE D'EXTRAORDINAIRE dans le jeu (événement fou, surprise, nouveauté visible), idéalement tiré des commentaires / de la boîte à idées, raconté dans la vidéo.
-3. LOTERIE 20 ₪ CHAQUE SOIR À 20:00 (1 gagnant, payé par Shlomo par Bit). 2 conditions : (a) commenter le POST DU JOUR, (b) 200 pollens récoltés dans la journée. AUCUNE condition d'abonnement (ne jamais écrire « עקבו » comme condition). Le POST DU JOUR est créé CHAQUE MATIN par la production (4:5, hook + rappel des 2 conditions + « הגיבו כאן »), à épingler (l'API ne permet pas d'épingler → demander à Shlomo seulement si c'est utile) ; ne jamais l'oublier. Tirage en direct dans le jeu à 20:00 (lottery_live), story du résultat, message à Shlomo (gagnant + « 20 ₪ à payer par Bit »).
+3. LOTERIE CHAQUE SOIR À 20:00 — DEPUIS LE 1.11 PLUS DE VRAI ARGENT (règle de Shlomo, 31.10) : le gagnant reçoit 2000 🌼 dans le jeu (run_lottery les crédite tout seul) + choisit l'événement extraordinaire du lendemain (en plus de celui du meilleur commentateur). Plus de Bit, plus de « 20 ₪ » dans aucun texte, post, story, vidéo. 2 conditions inchangées : (a) commenter le POST DU JOUR, (b) 200 pollens récoltés dans la journée.
 3 bis. PRIX « המגיב של היום » (meilleur commentateur) — en ligne depuis le 30.10 (SQL : tools/sql_meilleur_commentateur.sql, déjà appliqué) :
    - Chaque passage journalise TOUS les commentaires de joueurs du jour sur TOUS les posts : `select public.log_comment('<comment_id>','<username>','<media_id>','<timestamp ISO>','<texte>');` (idempotent ; un texte identique répété le même jour = invalide/spam ; table comment_log).
    - Classement : `select * from public.top_commenters(<jour>);` (égalité = celui qui a atteint ce nombre en premier).
@@ -35,7 +35,7 @@ Toute action Instagram via Composio (publier, lire les commentaires, statistique
 Objectif : un maximum d'abonnés, de commentaires et d'interactions. Agir sans demander (Shlomo l'a dit), en gardant l'usage léger. Argument massue : « אין עוד משחק שנותן כסף כל יום — 60 ₪ ביום, 3 שטרות של 20 ₪ ».
 Leviers à utiliser CHAQUE jour :
 1. « תייגו חבר » (depuis le 28.10) : un ami tagué dans un commentaire = une abeille à son nom (bees.referred_by) ; le tagueur gagne +1 refs (1 = chapeau 🎩, 3 = abeille dorée ✨). Le passage commentaires le gère et répond en mentionnant l'ami (qui reçoit une notif → nouvel abonné). Le rappeler dans CHAQUE légende et dans le commentaire du post de 07:00.
-2. Post de 07:00 : légende qui demande un commentaire ET un tag (« תייגו חבר שצריך 20 ₪ »).
+2. Post de 07:00 : légende qui demande un commentaire ET un tag (« תייגו חבר שצריך 2000 אבקות »).
 3. Story « בעוד 10 דקות שטר חדש בכוורת » ~10 min avant chaque billet (heures dans billet_slots) : la production du matin les génère et les programme (create_trigger run_once, une par billet).
 4. Story gagnant le soir en mentionnant @gagnant (il repartage → ses abonnés découvrent le jeu).
 5. Reel quotidien : hook choc 1re seconde, l'événement voté « מה יקרה מחר », fin = CTA commentaire + tag.
@@ -43,7 +43,7 @@ Leviers à utiliser CHAQUE jour :
 7. Réponses rapides et variées (5 passages/jour : 8:52, 11:52, 14:52, 17:52, 20:52) — toujours en hébreu, sans URL. À CHAQUE passage : enregistrer les commentateurs du post du jour dans daily_commenters (voir « RÈGLE COMMENTAIRE DU JOUR »).
 8. Paliers d'abonnés/abeilles (100, 150, 200…) = événement spécial + reel (comme כוורת הזהב à 50).
 9. Hashtags : 5, en hébreu, liés à l'Israël/jeu/argent (#משחק #זכייה #ישראל …), varier un peu chaque jour.
-Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, giveaway trompeur (le règlement reste exact : 3×20 ₪ par jour).
+Ne jamais : acheter des abonnés, follow/unfollow en masse, DM non sollicités, giveaway trompeur (le règlement reste exact : prix uniquement dans le jeu depuis le 1.11).
 
 ## 🧩 FONCTIONS COMMUNES À TOUS LES JEUX (ordre du directeur des jeux, validé par Shlomo le 29.10 23:31) — en ligne depuis le 29.10 au soir
 SQL complet : tools/sql_fonctions_communes.sql (déjà appliqué). Dans le jeu : boutons « 🎯 משימות X/3 » et « 💡 תיבת רעיונות » dans la barre du haut.
@@ -197,3 +197,9 @@ d. Communication : rappeler de temps en temps (pas tous les jours) dans une stor
 - Plateau CHOISI (30.10, Shlomo : « je te fais confiance ») : tools/hooks/journal.js (aperçu media/journal_apercu.jpg). Déroulé 6,5 s : flash rouge « 🔴 מבזק » (1,1 s, effet glitch) → studio « מהדורת הכוורת » : présentatrice abeille en cubes (cravate + micro), écran LED avec la bulle Instagram du commentaire (@ + texte), ❤️ likes qui montent, « 🏆 התגובה של היום », puis « ✅ ce qui est arrivé dans le jeu », bandeau rouge « מבזק » qui défile → fondu au noir, retour à la vidéo.
 - Utilisation dans un hook de capture : charger journal.js (pg.evaluate du fichier avant le hook), puis dans capHook, entre deux plans au milieu (vers 40–50 % de la vidéo) : `if(JOURNAL.frame(t-T0,{user,text,likes,result})) return;` pendant JOURNAL.DUR. Prévoir dans le texte voix une phrase pour ce passage (« ועכשיו… מהדורת הכוורת! התגובה של היום: … »). Musique : jingle « news » court (3 notes montantes + whoosh) au flash.
 - Pour les autres jeux : même plateau, changer D.show (nom du journal) et la présentatrice (bateau = capitaine, סבתא מזל, The Noise = דודי).
+
+
+## 🪙 PLUS DE VRAI ARGENT (31.10, 22:07)
+- 31.10 = dernier jour avec de l'argent réel (gagnants payés : @zoharkoresh_ ven., @shahar_b.y sam.).
+- À partir du 1.11 : loterie = 2000 🌼 crédités automatiquement + le gagnant décide de ce qui arrive d'extraordinaire dans le jeu le lendemain (lui répondre en commentaire « מה יקרה מחר בזכותך? »). Pièce d'or cachée (si réactivée) = 500 🌼 automatiques.
+- Les anciennes lignes de ce fichier qui parlent de ₪ / Bit / billets sont historiques : ne plus les appliquer. Ne plus envoyer de message « à payer par Bit » à Shlomo.
