@@ -292,6 +292,7 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
 <div id="newsModal" hidden><div class="fcard">
   <div class="big" id="newsTitle" style="font-size:34px"></div>
   <div class="sub" id="newsBody" style="white-space:pre-line;text-align:right"></div>
+  <a class="btn" id="newsLink" hidden target="_blank" rel="noopener" style="display:block;width:100%;margin-bottom:12px"></a>
   <button class="btn" id="newsOk" style="width:100%">יאללה! 🐝</button>
 </div></div>
 <div id="found" hidden>
@@ -1444,9 +1445,9 @@ function renderTop(){
 const DEFAULT_NEWS={id:"local-v2",title:"חדש בכוורת! 🐝",body:"🔥 בואו כל יום: הדבורה שלכם צוברת ימים ברצף ומקבלת פרסים.\n📣 הזמינו חברים עם הקישור האישי שלכם וקבלו מגבעת, כנפי זהב וכתר.\n🎯 כשהכוורת מגיעה ליעד, היא גדלה לכולם!"};
 async function showNews(){
   let n=null;
-  try{if(LIVE){const r=await sb("news?select=id,title,body&order=id.desc&limit=1");if(r.ok){const j=await r.json();n=j[0]||null}}else n=DEFAULT_NEWS}catch(e){}
-  if(!n)return;const key="kaveret_news_seen";if(String(lstore(key))===String(n.id))return;
-  $("#newsTitle").textContent=n.title;$("#newsBody").textContent=n.body;$("#newsModal").hidden=false;
+  try{if(LIVE){const r=await sb("news?select=id,title,body,link_url,link_label,until&order=id.desc&limit=1");if(r.ok){const j=await r.json();n=j[0]||null}}else n=DEFAULT_NEWS}catch(e){}
+  if(!n||(n.until&&new Date(n.until)<new Date()))return;const key="kaveret_news_seen";if(String(lstore(key))===String(n.id))return;
+  $("#newsTitle").textContent=n.title;$("#newsBody").textContent=n.body;const nl=$("#newsLink");if(n.link_url&&/^https:\/\//.test(n.link_url)){nl.href=n.link_url;nl.textContent=n.link_label||"לפרטים 👉";nl.hidden=false;nl.onclick=()=>lstore(key,String(n.id))}else nl.hidden=true;$("#newsModal").hidden=false;
   $("#newsOk").onclick=()=>{$("#newsModal").hidden=true;lstore(key,String(n.id))};
 }
 $("#newsGo").onclick=async()=>{
