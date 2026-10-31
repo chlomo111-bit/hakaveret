@@ -15,6 +15,9 @@ Les anciennes tâches (désactivées le 30.10 à 10:46, puis supprimées) sont a
 | sam. 31.10 19:55 | à créer à 18:30 | Passage + story « 5 דקות להגרלה! » + tirage du samedi 20:00 |
 | sam. 31.10 20:35 | trig_01REN87YGqFu8DFHFQ5qjc2t (chat de la ruche) | Contrôle : réveils de dimanche présents (sinon les créer ici), tirages ven. + sam. faits |
 
+## Dimanche 1.11 (contrôle du 31.10, 20:36)
+Tirages ven. (@zoharkoresh_) et sam. (@shahar_b.y) faits. Réveils : 6:00 production (autre chat, programme 12:00) ; 17:00 passage trig_01A2gDnq3LJ6VwuSe6kdLMV8 et 19:55 passage + tirage trig_01DzdBaQUUQb652AYWYS6xCo (CE chat, anti-doublon). Détail : TACHES_PROGRAMMEES.md.
+
 ## Rythme normal (dimanche → jeudi)
 - Passages commentaires : 6:00, 12:00, 17:00 et 19:55 (5 min avant le tirage). À chaque passage : réponses à tous les commentaires, abeilles/reines, tags d'amis, animaux, bonus story, ET inscription des commentateurs du jour dans daily_commenters.
 - Production du matin : post du jour (4:5) + story, vidéo du jour (texte voix envoyé à Shlomo 2–3 h avant, voix Juniper).
