@@ -218,3 +218,16 @@ d. Communication : rappeler de temps en temps (pas tous les jours) dans une stor
 - Stories : autant qu'on veut. Rythme de base : ~09:00 (nouveauté du jour), 11:00 (classement pollen), 14:00 (meilleurs commentaires), 17:00 (nouvelles abeilles), 18:30 (teaser reel / compte à rebours), 19:55 (5 דקות להגרלה), après 20:00 (gagnant), 21:30 (ce qui arrive demain).
 - Outil : python3 tools/story_make.py story.json out.jpg (1080×1920, Heebo, *jaune*, _violet_). Toujours regarder l'image avant, une seule publication par créneau, copie dans ~/Desktop/Jeux/הכוורת שלנו/Images/.
 - Les réveils du soir (19:55) programment les créneaux stories du lendemain dans ce chat.
+
+## 🐻 ÉVÉNEMENT LUNDI 2.11 — « פו הדב פרץ לכוורת! » (décidé 1.11, main libre de Shlomo)
+- Origine : commentaire « מחר מגיע פו הדב לכוורת ומתחיל לאכול דבש » (3 likes, 28.10), jamais réalisé.
+- Dans le jeu (automatique, table hive_events + rpc bear_state) : un ours en cubes mange le miel à côté de la fontaine ; barre « חומת הדבש » = somme des pollens de TOUS les joueurs du jour ; objectif 8 000 🌼 avant 20:00.
+  - Réussi → l'ours devient une statue de pierre pour toujours + tous ceux qui ont récolté ce jour-là = « 🛡️ שומרי הכוורת » (les citer en story/reel).
+  - Raté → « פו הדב ניצח הפעם », il reste ; nouvel essai possible un autre jour (insert hive_events).
+- Post du jour 2.11 = l'ours (hook « 🐻 פו הדב פרץ לכוורת ואוכל לנו את הדבש! », objectif commun, 200 🌼 = ticket, commentaire = ×2). Stories toutes les 2–3 h avec la barre (rpc bear_state : total/goal/players).
+- Reel du soir 2.11 : la bataille contre l'ours + journal « מהדורת הכוורת ».
+
+## 🎟️ TIRAGE — NOUVELLE RÈGLE À PARTIR DU 2.11
+- 200 🌼 dans la journée = 1 ticket. Un commentaire sur le post du jour = 2 tickets (×2). Le commentaire n'est PLUS obligatoire (il avait divisé les participants par 2).
+- Gain inchangé : 2000 🌼 crédités automatiquement + le gagnant choisit l'événement du lendemain.
+- Textes : « 200 אבקות = כרטיס · תגובה על הפוסט = כרטיס כפול ×2 ».

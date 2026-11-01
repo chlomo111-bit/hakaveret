@@ -892,10 +892,10 @@ function renderLottery(){const p=$("#huntPill");if(!p||!lot)return;
   const DH=lot.shabbat?"במוצאי שבת 18:30":"ב־20:00";const T=isFinite(left)?`<b style="font-variant-numeric:tabular-nums">${fmtCountdown(left)}</b>`:"20:00";
   const rule=!!lot.comment_rule,com=!!lot.commented,okP=mine>=200,okC=!rule||com,me=!!(lstore("kaveret_my_bee")||"");
   /* depuis le 30.10 : 200 pollens ET un commentaire sur le post du jour */
-  const chk=rule?` · 🌼 <b>${Math.min(mine,200)}</b>/200 ${okP?"✓":"✗"} · 💬 תגובה על הפוסט של היום ${okC?"✓":"✗"}`:` · יש לכם <b>${mine}</b>/200`;
+  const dbl=!!lot.double_rule;const chk=rule?` · 🌼 <b>${Math.min(mine,200)}</b>/200 ${okP?"✓":"✗"} · 💬 תגובה על הפוסט של היום ${okC?"✓":"✗"}`:dbl?` · 🌼 <b>${Math.min(mine,200)}</b>/200 ${okP?"✓":"✗"} · 💬 תגובה = כרטיס כפול ${com?"✓":"✗"}`:` · יש לכם <b>${mine}</b>/200`;
   renderLotBox(mine,rule,com,me);
   if(lot.drawn_today)p.innerHTML=lot.last_winner&&lot.last_day===lot.day?`🎉 הזוכה בהגרלה של היום: <b dir="ltr">@${esc(lot.last_winner)}</b> · מחר הגרלה חדשה ב־20:00 🎟️`:`🎟️ ההגרלה של היום הסתיימה · מחר הגרלה חדשה ב־20:00`;
-  else if(okP&&okC){p.innerHTML=`✅ אתם בהגרלה! 🎟️ 2000 🌼 ${DH} · בעוד ${T}`;if(!lotNotified){lotNotified=true;notify(lot.shabbat?"🎟️ אתם בהגרלה של מוצאי שבת על 2000 🌼 🍀":"🎟️ אתם בהגרלה של 20:00 על 2000 🌼 🍀")}}
+  else if(okP&&okC){p.innerHTML=dbl&&!com?`✅ אתם בהגרלה עם כרטיס אחד 🎟️ · 💬 תגיבו על הפוסט של היום = כרטיס כפול ×2! · בעוד ${T}`:`✅ אתם בהגרלה${dbl?" עם 2 כרטיסים 🎟️🎟️":"! 🎟️"} 2000 🌼 ${DH} · בעוד ${T}`;if(!lotNotified){lotNotified=true;notify(lot.shabbat?"🎟️ אתם בהגרלה של מוצאי שבת על 2000 🌼 🍀":"🎟️ אתם בהגרלה של 20:00 על 2000 🌼 🍀")}}
   else if(okP&&!okC)p.innerHTML=`🌼 200/200 ✓ · 💬 חסרה תגובה על הפוסט של היום ✗ · בלי תגובה אין הגרלה! 👉 אינסטגרם · בעוד ${T}`;
   else if(isFinite(left)&&left<=900&&left>0)p.innerHTML=`🔴 ההגרלה בשידור חי בעוד ${T}${chk} · תישארו בכוורת!`;
   else p.innerHTML=`🎟️ הגרלה על <b>2000 🌼</b> ${DH} · בעוד ${T}${chk}`;
@@ -912,8 +912,8 @@ function cmtBoxHtml(me){const c=CMT||{},top=(c.top||[])[0];
 function renderLotBox(mine,rule,com,me){const b=$("#lotBox");if(!b)return;
   const okP=mine>=200,okC=!rule||com,row=(ok,t)=>`<div>${ok?"✅":"❌"} ${t}</div>`;
   b.innerHTML=`<div><b>🎟️ הגרלת 2000 🌼 – ${lot&&lot.shabbat?"של היום: במוצאי שבת 18:30 🕯️":"היום ב־20:00"}</b></div>`+row(okP,`200 אבקות היום (<b>${Math.min(mine,200)}</b>/200)`)+
-    (rule?row(com,me?"תגובה על הפוסט האחרון של היום ב־<span dir=\"ltr\">@hakaveret_shelanu</span>":"תגובה על הפוסט של היום (הצטרפו עם השם שלכם כדי שנזהה אתכם)"):"")+
-    `<div style="opacity:.85;font-size:.92em">${rule?"צריך את שניהם כדי להיכנס להגרלה. תגיבו מוקדם: הרשימה מתעדכנת כמה פעמים ביום (הבדיקה האחרונה לפני ההגרלה "+(lot&&lot.shabbat?"ביום שישי בסביבות 12:00":"ב־19:55")+") 🐝":"ממחר: כדי להשתתף צריך גם 200 אבקות וגם תגובה על הפוסט של היום 💬"}</div>`;
+    (rule?row(com,me?"תגובה על הפוסט האחרון של היום ב־<span dir=\"ltr\">@hakaveret_shelanu</span>":"תגובה על הפוסט של היום (הצטרפו עם השם שלכם כדי שנזהה אתכם)"):"")+(lot&&lot.double_rule?row(com,"💬 בונוס: תגובה על הפוסט של היום ב־<span dir=\"ltr\">@hakaveret_shelanu</span> = <b>כרטיס כפול ×2</b>"):"")+
+    `<div style="opacity:.85;font-size:.92em">${lot&&lot.double_rule?"200 אבקות = כרטיס להגרלה 🎟️ · ותגובה על הפוסט של היום מכפילה את הסיכוי! הרשימה מתעדכנת כמה פעמים ביום (האחרונה ב־19:55) 🐝":rule?"צריך את שניהם כדי להיכנס להגרלה. תגיבו מוקדם: הרשימה מתעדכנת כמה פעמים ביום (הבדיקה האחרונה לפני ההגרלה "+(lot&&lot.shabbat?"ביום שישי בסביבות 12:00":"ב־19:55")+") 🐝":"ממחר: כדי להשתתף צריך גם 200 אבקות וגם תגובה על הפוסט של היום 💬"}</div>`;
   b.innerHTML+=cmtBoxHtml(me);
   {const m2=document.getElementById("meLot");if(m2&&m2.innerHTML!==b.innerHTML)m2.innerHTML=b.innerHTML}
 }
