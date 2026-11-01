@@ -1,5 +1,14 @@
 # Routine quotidienne autonome — הכוורת שלנו (@hakaveret_shelanu)
 
+## 🔁 OBJECTIF N°1 : FAIRE REPOSTER NOS REELS (Shlomo, 01/11/2026) — RÈGLE OBLIGATOIRE POUR TOUS LES JEUX
+But : que les utilisateurs repostent / partagent nos reels (story, envoi à des amis, repost). C'est la meilleure façon d'avoir de nouveaux visiteurs. Tout le contenu est pensé pour ça.
+1. **Reel pensé pour être partagé** : hook dès la 1re seconde, un moment drôle ou fou que les gens ont envie de montrer, et les vrais joueurs tagués (les gens repartagent quand ils se voient dans la vidéo).
+2. **Appel au partage partout**, court et pas forcé : à la fin de chaque reel, dans la légende et dans le commentaire du compte. Ex. « 🔁 שתפו בסטורי ותייגו אותנו » / « שלחו למישהו שחייב לראות את זה 👀 ». On garde aussi « מה יקרה מחר? התגובה עם הכי הרבה לייקים קובעת ».
+3. **Récompense dans le jeu** : qui partage le reel du jour en story en taguant le compte reçoit un bonus dans la monnaie du jeu + un badge « 🔁 שגריר » sur son personnage, et un merci en story (repartager sa story quand c'est possible). Vérification : la mention de story arrive en message privé (INSTAGRAM_LIST_ALL_CONVERSATIONS), ou capture envoyée en DM. Jamais d'argent réel, jamais de condition « suivre le compte ».
+4. **Chaque jour** : partager en story notre propre reel du jour (« פרק חדש! 👇 ») dès qu'il sort, et repartager les stories des joueurs qui nous taguent.
+5. **Mesurer** : à chaque passage, relever les partages du reel du jour (INSTAGRAM_GET_IG_MEDIA_INSIGHTS, métriques `shares` et `reposts`) et noter quel type de reel est le plus partagé, pour refaire ce qui marche.
+6. S'applique dès la prochaine vidéo (le chat vidéos du jeu) et dès le prochain passage (le chat automatisation du jeu).
+
 ## ⭐ RÈGLES OBLIGATOIRES POUR TOUS LES JEUX (Shlomo, 30.10.2026) — PRIORITAIRES sur tout ce qui suit
 En cas de contradiction avec une section plus ancienne de ce fichier (billets, passages 8:52/11:52…, post de 07:00 « billet », soir 21:15…), CES RÈGLES l'emportent.
 1. VIDÉO DU JOUR : chaque jour un reel qui raconte ce qui s'est passé dans le jeu (vrais joueurs tagués, vrais chiffres) et se termine par « מה יקרה מחר? התגובה עם הכי הרבה לייקים קובעת ». AVANT d'écrire la vidéo : lire TOUS les commentaires du post/reel précédent ; le commentaire valable le plus liké décide de ce qui arrive. Texte écrit pour la voix (hébreu, balises Eleven v3) envoyé à Shlomo 2–3 h avant la mise en ligne (SendUserMessage + PushNotification) : SEULE chose qu'on lui demande. Couverture dédiée (jamais une image noire).
