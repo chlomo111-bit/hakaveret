@@ -1,0 +1,16 @@
+# Vidéo du jour 1.11 — « כריש בכוורת » — mise en ligne 19:30 — voix Juniper (Eleven v3), ~25 s
+# Tableau : moment / image / voix
+# 0–3 s   hook : aileron de requin qui fend la ruche, flash rouge       → [shouting] כריש! יש כריש בתוך הכוורת!
+# 3–7 s   caméra sur @orian7489 transformé en requin                     → [excited] ביקשתם מתחת לסרטון… ובנינו.
+# 7–13 s  « מהדורת הכוורת » (journal.js) : commentaire « כריש » 👍       → מהדורת הכוורת…
+# 13–18 s baleine @saardano11 + jet d'eau                                → לוויתן
+# 18–23 s fontaine de miel au centre, @shahar_b.y                        → מזרקת דבש
+# 23–27 s 20:00 + 2000 אבקות + CTA                                       → מה יקרה מחר?
+
+[shouting] כריש! יש כריש בתוך הכוורת!
+[excited] ביקשתם את זה מתחת לסרטון… אז בנינו.
+[fast] ועכשיו… מהדורת הכוורת! התגובה של היום: "כריש" – של אוריאן!
+[laughs] וסער ביקש לוויתן – והוא כבר שוחה בין הדבורים!
+[excited] ובאמצע הכוורת? מזרקה של דבש! הרעיון של שחר, המגיבה של היום.
+[fast] הערב בשמונה – הגרלה בשידור חי: הזוכה מקבל אלפיים אבקות, ובוחר מה יקרה מחר!
+[shouting] אז מה יקרה מחר? התגובה עם הכי הרבה לייקים קובעת!
