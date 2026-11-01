@@ -192,6 +192,7 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
       <button class="pill pillbtn" id="missBtn" aria-label="משימות היום והסטטיסטיקות שלי">🎯 משימות <b id="missN">0/3</b></button>
       <button class="pill pillbtn" id="ideaBtn" aria-label="תיבת רעיונות">💡 תיבת רעיונות</button>
       <span class="pill demo" id="demoPill" hidden>הדגמה</span>
+      <span class="pill" id="bearPill" hidden style="white-space:normal;text-align:center;border-color:#E5484D"></span>
       <span class="pill" id="huntPill" hidden style="white-space:normal;text-align:center">🪙 מטבע זהב של <b id="prizeTxt"></b> מוסתר בכוורת</span>
     </div>
   </div>
@@ -1703,6 +1704,38 @@ function updateFountain(t){const L=1.44;for(let i=0;i<FOUNT_N;i++){const rq=Math
   fountD.position.set(r*Math.cos(a),4.1+5*s-4.9*s*s,r*Math.sin(a));fountD.rotation.set(s*3,a,s*2);const k=.6+.4*Math.sin(i);fountD.scale.set(k,k,k);fountD.updateMatrix();fountDrops.setMatrixAt(i,fountD.matrix)}
   fountDrops.instanceMatrix.needsUpdate=true}
 
+/* ---------- 🐻 פו הדב attaque la ruche (événement du 2.11, demande de 3 likes du 28.10) : objectif commun en pollen, sinon il mange le miel ---------- */
+const BEAR=new THREE.Group();BEAR.position.set(6.5,-5.6,-3.5);BEAR.rotation.y=-2.2;BEAR.visible=false;hive.add(BEAR);
+let bearSt=null,bearSkew=0;
+{const F="#C8862E",D="#9A5E1A",L="#F2C27A",K="#1A1108",R="#E5484D";const G=[
+  boxGeo(3.2,3.4,2.6,0,2.2,0,F),boxGeo(2.2,2.2,.3,0,2,1.35,L),
+  boxGeo(1,1.1,1.6,-1,.55,.9,D),boxGeo(1,1.1,1.6,1,.55,.9,D),
+  boxGeo(2.6,2.4,2.3,0,5,0,F),boxGeo(.75,.75,.4,-1,6.35,0,D),boxGeo(.75,.75,.4,1,6.35,0,D),
+  boxGeo(1.2,.85,.6,0,4.6,1.3,L),boxGeo(.45,.3,.2,0,4.95,1.62,K),
+  boxGeo(.32,.32,.15,-.6,5.5,1.18,K),boxGeo(.32,.32,.15,.6,5.5,1.18,K),
+  boxGeo(3.3,.9,2.7,0,3.45,0,R)];
+ const body=new THREE.Mesh(merge(G),new THREE.MeshLambertMaterial({vertexColors:true}));BEAR.add(body);BEAR.userData.body=body;
+ const arm=new THREE.Group();arm.position.set(1.7,3.6,.5);BEAR.add(arm);BEAR.userData.arm=arm;
+ arm.add(new THREE.Mesh(merge([boxGeo(.8,2,.8,0,-.6,.5,F),boxGeo(1.3,1.1,1.3,0,-1.3,1.3,"#E9A13B"),boxGeo(1.35,.25,1.35,0,-.72,1.3,"#5E3A12")]),new THREE.MeshLambertMaterial({vertexColors:true})));
+ const arm2=new THREE.Mesh(merge([boxGeo(.8,2,.8,0,-.6,.5,F)]),new THREE.MeshLambertMaterial({vertexColors:true}));arm2.position.set(-1.7,3.6,.5);BEAR.add(arm2);
+ BEAR.userData.stone=new THREE.MeshLambertMaterial({color:0xA8A39A});
+ const pl=new THREE.PointLight(0xff6040,0,10,1.8);pl.position.set(0,5,2);BEAR.add(pl);BEAR.userData.light=pl;}
+function bearStatue(on){if(BEAR.userData.isStone===on)return;BEAR.userData.isStone=on;BEAR.traverse(o=>{if(o.isMesh){if(on){o.userData.mat=o.userData.mat||o.material;o.material=BEAR.userData.stone}else if(o.userData.mat)o.material=o.userData.mat}})}
+function updateBear(t){if(!BEAR.visible)return;const st=BEAR.userData.isStone;
+  BEAR.userData.arm.rotation.x=st?-.9:-.6-.6*Math.max(0,Math.sin(t*2.2));BEAR.userData.body.position.y=st?0:Math.abs(Math.sin(t*2.2))*.12;
+  BEAR.userData.light.intensity=st?0:.6+.4*Math.sin(t*6)}
+async function bearTick(){try{const r=await sb("rpc/bear_state",{method:"POST",body:"{}"});if(!r.ok)return;const j=await r.json();bearSkew=Date.parse(j.now)-Date.now();const first=!bearSt;const wasWon=bearSt?!!bearSt.won:null;bearSt=j;
+  BEAR.visible=!!(j.active||j.statue);bearStatue(!!j.statue);renderBear();
+  if(j.active&&first&&!j.won&&!j.lost&&mode==="hive")notify("🐻 פו הדב פרץ לכוורת ואוכל את הדבש! אספו אבקה יחד כדי לגרש אותו 🌼");
+  if(j.won&&wasWon===false)notify("🛡️ ניצחנו! פו הדב הפך לפסל – כל מי שאסף היום הוא שומר/ת הכוורת 🐝")}catch(e){}}
+function renderBear(){const p=$("#bearPill");if(!p)return;const j=bearSt;if(!j||!j.active){p.hidden=true;return}p.hidden=false;
+  const pct=Math.min(100,Math.round(100*j.total/j.goal)),left=Math.max(0,Math.floor((Date.parse(j.ends_at)-(Date.now()+bearSkew))/1000));
+  const bar=`<span style="display:inline-block;vertical-align:middle;width:120px;height:12px;border-radius:8px;background:rgba(255,255,255,.18);overflow:hidden;margin:0 6px"><span style="display:block;height:100%;width:${pct}%;background:linear-gradient(90deg,#FFC24B,#FF8A3D)"></span></span>`;
+  if(j.won)p.innerHTML=`🛡️ ניצחנו! פו הדב הפך לפסל · <b>${j.total.toLocaleString("he-IL")}</b> 🌼 · ${j.players} שומרי הכוורת 🐝`;
+  else if(j.lost)p.innerHTML=`🐻 פו הדב ניצח הפעם… הוא נשאר בכוורת 😱 · מחר מנסים שוב!`;
+  else p.innerHTML=`🐻 פו הדב אוכל את הדבש! חומת הדבש:${bar}<b>${j.total.toLocaleString("he-IL")}</b>/${j.goal.toLocaleString("he-IL")} 🌼 · עוד <b style="font-variant-numeric:tabular-nums">${fmtCountdown(left)}</b> · כל אבקה שאתם אוספים עוזרת!`}
+bearTick();setInterval(bearTick,30000);setInterval(renderBear,1000);
+
 function loop(){
   if(!window.CAP)requestAnimationFrame(loop);
   try{frameBody()}catch(e){showErr(e)}
@@ -1716,7 +1749,7 @@ function frameBody(){
   {const ab=byHandle.get(ADMIN_HANDLE);if(ab&&posArr.length>ab.i*3+2){angelHalo.visible=true;const sc=beeScale(ab)*BEE_S;angelHalo.position.set(posArr[ab.i*3]+.45*sc*Math.cos(yawArr[ab.i]),posArr[ab.i*3+1]+.62*sc+Math.sin(t*2)*.05,posArr[ab.i*3+2]-.45*sc*Math.sin(yawArr[ab.i]));angelHalo.scale.setScalar(sc*.55)}else angelHalo.visible=false}
   if(mode==="intro"){runIntro(dt);return}
   pollen.rotation.y+=dt*.02;if(treasureHit){treasure.children[0].position.z=Math.sin(t*2)*.08;const hs=6+Math.sin(t*3)*1.5;treasure.userData.halo.scale.set(hs,hs,1)}core.intensity=1.5+Math.sin(t*1.3)*.15;
-  e2Check(t);evCheck(t);evRain(dt);metCheck(t);metIdle(t);updateFlowers(t,dt);updateFountain(t);
+  e2Check(t);evCheck(t);evRain(dt);metCheck(t);metIdle(t);updateFlowers(t,dt);updateFountain(t);updateBear(t);
   if(E2.space>0&&stars.visible&&!E2.on)stars.rotation.y+=dt*.01;
   if(EV.on){evFrame(t,dt)}
   else if(E2.on){e2Frame(t,dt)}
