@@ -355,7 +355,7 @@ const store={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},
 
 /* ================= styles (vêtements) ================= */
 const HATS=["cap","tophat","beanie","flower","bow"];
-const TINTS={yellow:[1,1,1],pink:[1,.62,.8],blue:[.55,.78,1],green:[.62,1,.6],purple:[.78,.6,1],red:[1,.5,.45],orange:[1,.78,.5],grey:[.55,.6,.68]};
+const TINTS={yellow:[1,1,1],pink:[1,.62,.8],blue:[.55,.78,1],green:[.62,1,.6],purple:[.78,.6,1],red:[1,.5,.45],orange:[1,.78,.5],grey:[.55,.6,.68],sea:[.42,.62,2.8],ocean:[.25,.45,3.2]};
 const ACCENTS=["#E5484D","#3E8BFF","#2FBF71","#A35CFF","#FF7AB6","#FF8A1F","#14B8C4","#FFFFFF"];
 const WORDS=[
   [/מלכה|queen/,"queen"],[/משקפי ?שמש|sunglasses/,"sunglasses"],[/משקפיים|glasses/,"glasses"],
@@ -591,9 +591,11 @@ const ACC={
   an_pig:merge([boxGeo(.08,.12,.16,.2,-.12,0,W),boxGeo(.02,.04,.04,.25,-.12,.04,"#7A2E45"),boxGeo(.02,.04,.04,.25,-.12,-.04,"#7A2E45"),boxGeo(.12,.06,.1,-.02,0,.15,W),boxGeo(.12,.06,.1,-.02,0,-.15,W)]),
   an_unicorn:merge([boxGeo(.08,.08,.08,0,0,0,W),boxGeo(.06,.1,.06,.02,.08,0,W),boxGeo(.04,.1,.04,.04,.17,0,W),boxGeo(.02,.06,.02,.05,.24,0,W)]),
   an_bunny:merge([boxGeo(.08,.34,.08,-.03,.12,.09,W),boxGeo(.08,.34,.08,-.03,.12,-.09,W),boxGeo(.04,.24,.04,-.0,.12,.09,"#FFB6C8"),boxGeo(.04,.24,.04,0,.12,-.09,"#FFB6C8")]),
-  an_elephant:merge([boxGeo(.19,.03,.28,0,.14,0,"#5E6873"),boxGeo(.19,.27,.02,0,0,.145,"#5E6873"),boxGeo(.19,.27,.02,0,0,-.145,"#5E6873"),boxGeo(.04,.36,.3,-.04,.03,.27,"#5E6873"),boxGeo(.04,.36,.3,-.04,.03,-.27,"#5E6873"),boxGeo(.02,.24,.18,-.015,.03,.25,"#C98A9A"),boxGeo(.02,.24,.18,-.015,.03,-.25,"#C98A9A"),boxGeo(.1,.1,.1,.12,-.06,0,"#5E6873"),boxGeo(.09,.1,.09,.15,-.14,0,"#5E6873"),boxGeo(.08,.07,.08,.18,-.2,0,"#5E6873"),boxGeo(.06,.06,.07,.22,-.18,0,"#5E6873"),boxGeo(.11,.035,.035,.15,-.1,.075,"#FFFFFF"),boxGeo(.11,.035,.035,.15,-.1,-.075,"#FFFFFF")])
+  an_elephant:merge([boxGeo(.19,.03,.28,0,.14,0,"#5E6873"),boxGeo(.19,.27,.02,0,0,.145,"#5E6873"),boxGeo(.19,.27,.02,0,0,-.145,"#5E6873"),boxGeo(.04,.36,.3,-.04,.03,.27,"#5E6873"),boxGeo(.04,.36,.3,-.04,.03,-.27,"#5E6873"),boxGeo(.02,.24,.18,-.015,.03,.25,"#C98A9A"),boxGeo(.02,.24,.18,-.015,.03,-.25,"#C98A9A"),boxGeo(.1,.1,.1,.12,-.06,0,"#5E6873"),boxGeo(.09,.1,.09,.15,-.14,0,"#5E6873"),boxGeo(.08,.07,.08,.18,-.2,0,"#5E6873"),boxGeo(.06,.06,.07,.22,-.18,0,"#5E6873"),boxGeo(.11,.035,.035,.15,-.1,.075,"#FFFFFF"),boxGeo(.11,.035,.035,.15,-.1,-.075,"#FFFFFF")]),
+  an_shark:merge([boxGeo(.19,.03,.28,0,.14,0,"#5B7C99"),boxGeo(.16,.14,.04,-.33,.24,0,"#5B7C99"),boxGeo(.09,.1,.04,-.37,.35,0,"#5B7C99"),boxGeo(.04,.26,.04,-.7,.1,0,"#5B7C99"),boxGeo(.04,.12,.04,-.74,.27,0,"#5B7C99"),boxGeo(.04,.12,.04,-.7,-.1,0,"#5B7C99"),boxGeo(.14,.03,.12,-.18,-.13,.24,"#5B7C99"),boxGeo(.14,.03,.12,-.18,-.13,-.24,"#5B7C99"),boxGeo(.015,.03,.2,.1,-.06,0,"#1B1B1B"),boxGeo(.02,.035,.03,.105,-.09,-.075,W),boxGeo(.02,.035,.03,.105,-.09,-.025,W),boxGeo(.02,.035,.03,.105,-.09,.025,W),boxGeo(.02,.035,.03,.105,-.09,.075,W)]),
+  an_whale:merge([boxGeo(.19,.03,.28,0,.14,0,"#2F5D8C"),boxGeo(.04,.14,.04,-.08,.22,0,"#BFE8FF"),boxGeo(.12,.04,.12,-.08,.31,0,"#BFE8FF"),boxGeo(.04,.04,.04,-.16,.36,.07,"#BFE8FF"),boxGeo(.04,.04,.04,0,.37,-.07,"#BFE8FF"),boxGeo(.04,.04,.04,-.1,.4,0,"#BFE8FF"),boxGeo(.06,.1,.08,-.68,.02,0,"#2F5D8C"),boxGeo(.06,.03,.4,-.73,.08,0,"#2F5D8C"),boxGeo(.44,.03,.26,-.28,-.21,0,"#E8F4FF"),boxGeo(.14,.03,.1,-.15,-.15,.24,"#2F5D8C"),boxGeo(.14,.03,.1,-.15,-.15,-.24,"#2F5D8C")])
 };
-const ANIMALS={cat:{tint:"orange",col:"#FF9A3C",he:"חתול 🐱"},dog:{tint:"orange",col:"#8B5A2B",he:"כלב 🐶"},lion:{tint:"orange",col:"#C8741A",he:"אריה 🦁"},frog:{tint:"green",col:"#5FD35A",he:"צפרדע 🐸"},panda:{tint:"yellow",col:"#FFFFFF",he:"פנדה 🐼"},pig:{tint:"pink",col:"#FF9FC0",he:"חזיר 🐷"},unicorn:{tint:"purple",col:"#FFFFFF",he:"חד־קרן 🦄"},bunny:{tint:"pink",col:"#FFFFFF",he:"ארנב 🐰"},elephant:{tint:"grey",col:"#FFFFFF",he:"פיל 🐘"}};
+const ANIMALS={cat:{tint:"orange",col:"#FF9A3C",he:"חתול 🐱"},dog:{tint:"orange",col:"#8B5A2B",he:"כלב 🐶"},lion:{tint:"orange",col:"#C8741A",he:"אריה 🦁"},frog:{tint:"green",col:"#5FD35A",he:"צפרדע 🐸"},panda:{tint:"yellow",col:"#FFFFFF",he:"פנדה 🐼"},pig:{tint:"pink",col:"#FF9FC0",he:"חזיר 🐷"},unicorn:{tint:"purple",col:"#FFFFFF",he:"חד־קרן 🦄"},bunny:{tint:"pink",col:"#FFFFFF",he:"ארנב 🐰"},elephant:{tint:"grey",col:"#FFFFFF",he:"פיל 🐘"},shark:{tint:"sea",col:"#FFFFFF",he:"כריש 🦈"},whale:{tint:"ocean",col:"#FFFFFF",he:"לוויתן 🐋"}};
 const ACC_LOCAL={
   crown:new THREE.Matrix4().makeTranslation(.47,.29,0), cap:new THREE.Matrix4().makeTranslation(.47,.27,0),
   tophat:new THREE.Matrix4().makeTranslation(.47,.23,0), beanie:new THREE.Matrix4().makeTranslation(.47,.2,0),
@@ -603,7 +605,8 @@ const ACC_LOCAL={
   an_cat:new THREE.Matrix4().makeTranslation(.47,.24,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_dog:new THREE.Matrix4().makeTranslation(.47,.1,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_lion:new THREE.Matrix4().makeTranslation(.4,.02,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),
   an_frog:new THREE.Matrix4().makeTranslation(.5,.25,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_panda:new THREE.Matrix4().makeTranslation(.47,.22,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_pig:new THREE.Matrix4().makeTranslation(.47,.05,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),
   an_unicorn:new THREE.Matrix4().makeTranslation(.5,.24,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_bunny:new THREE.Matrix4().makeTranslation(.47,.24,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),
-  an_elephant:new THREE.Matrix4().makeTranslation(.47,.02,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5))
+  an_elephant:new THREE.Matrix4().makeTranslation(.47,.02,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),
+  an_shark:new THREE.Matrix4().makeTranslation(.47,.02,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5)),an_whale:new THREE.Matrix4().makeTranslation(.47,.02,0).multiply(new THREE.Matrix4().makeScale(1.5,1.5,1.5))
 };
 const BEE_S=1.6;
 let beeMesh=null,wingL=null,wingR=null,acc={},cap=0,accSlots={};
@@ -1682,6 +1685,24 @@ let errShown=false;
 function showErr(e){if(errShown)return;errShown=true;try{console.error(e);toast("⚠️ "+(e&&e.message||e))}catch(_){}}
 addEventListener("error",ev=>showErr(ev.error||ev.message));
 addEventListener("unhandledrejection",ev=>showErr(ev.reason));
+/* ---------- FONTAINE DE MIEL au centre de la ruche (souhait de @shahar_b.y, meilleure commentatrice du 30.10 — ajoutée le 1.11) ---------- */
+const FOUNT=new THREE.Group();FOUNT.position.set(0,-5.6,0);hive.add(FOUNT);
+const FOUNT_N=70,fountDrops=new THREE.InstancedMesh(new THREE.BoxGeometry(.24,.24,.24),new THREE.MeshLambertMaterial({color:0xFFB02E,emissive:0x8a4400}),FOUNT_N);
+{const S="#5E3A12",S2="#7A4A16",G=[
+  boxGeo(5.6,.6,5.6,0,0,0,S),boxGeo(5.6,.7,.5,0,.6,2.55,S2),boxGeo(5.6,.7,.5,0,.6,-2.55,S2),boxGeo(.5,.7,5.6,2.55,.6,0,S2),boxGeo(.5,.7,5.6,-2.55,.6,0,S2),
+  boxGeo(.9,3.4,.9,0,2,0,S2),boxGeo(2.2,.35,2.2,0,3.75,0,S),boxGeo(2.2,.3,.25,0,4.05,1,S2),boxGeo(2.2,.3,.25,0,4.05,-1,S2),boxGeo(.25,.3,2.2,1,4.05,0,S2),boxGeo(.25,.3,2.2,-1,4.05,0,S2),
+  boxGeo(.5,.5,.5,1.9,1.1,1.9,"#FFD23F"),boxGeo(.5,.5,.5,-1.9,1.1,-1.9,"#FFD23F"),boxGeo(.5,.5,.5,1.9,1.1,-1.9,"#FF6FA8"),boxGeo(.5,.5,.5,-1.9,1.1,1.9,"#FF6FA8")];
+ FOUNT.add(new THREE.Mesh(merge(G),new THREE.MeshLambertMaterial({vertexColors:true})));
+ const hm=new THREE.MeshLambertMaterial({color:0xF08A00,emissive:0x5a2800});
+ const pool=new THREE.Mesh(new THREE.BoxGeometry(4.6,.2,4.6),hm);pool.position.y=.85;FOUNT.add(pool);
+ const top=new THREE.Mesh(new THREE.BoxGeometry(1.8,.16,1.8),hm);top.position.y=4.05;FOUNT.add(top);
+ fountDrops.frustumCulled=false;FOUNT.add(fountDrops);
+ const fl=new THREE.PointLight(0xffb030,.5,8,1.8);fl.position.set(0,5,0);FOUNT.add(fl);}
+const fountD=new THREE.Object3D();
+function updateFountain(t){const L=1.44;for(let i=0;i<FOUNT_N;i++){const rq=Math.sin(i*12.9898)*43758.5453,a=(rq-Math.floor(rq))*6.283,rq2=Math.sin(i*78.233)*12345.678,ph=rq2-Math.floor(rq2),s=((t/L+ph)%1)*L,r=.3+1.25*s;
+  fountD.position.set(r*Math.cos(a),4.1+5*s-4.9*s*s,r*Math.sin(a));fountD.rotation.set(s*3,a,s*2);const k=.6+.4*Math.sin(i);fountD.scale.set(k,k,k);fountD.updateMatrix();fountDrops.setMatrixAt(i,fountD.matrix)}
+  fountDrops.instanceMatrix.needsUpdate=true}
+
 function loop(){
   if(!window.CAP)requestAnimationFrame(loop);
   try{frameBody()}catch(e){showErr(e)}
@@ -1695,7 +1716,7 @@ function frameBody(){
   {const ab=byHandle.get(ADMIN_HANDLE);if(ab&&posArr.length>ab.i*3+2){angelHalo.visible=true;const sc=beeScale(ab)*BEE_S;angelHalo.position.set(posArr[ab.i*3]+.45*sc*Math.cos(yawArr[ab.i]),posArr[ab.i*3+1]+.62*sc+Math.sin(t*2)*.05,posArr[ab.i*3+2]-.45*sc*Math.sin(yawArr[ab.i]));angelHalo.scale.setScalar(sc*.55)}else angelHalo.visible=false}
   if(mode==="intro"){runIntro(dt);return}
   pollen.rotation.y+=dt*.02;if(treasureHit){treasure.children[0].position.z=Math.sin(t*2)*.08;const hs=6+Math.sin(t*3)*1.5;treasure.userData.halo.scale.set(hs,hs,1)}core.intensity=1.5+Math.sin(t*1.3)*.15;
-  e2Check(t);evCheck(t);evRain(dt);metCheck(t);metIdle(t);updateFlowers(t,dt);
+  e2Check(t);evCheck(t);evRain(dt);metCheck(t);metIdle(t);updateFlowers(t,dt);updateFountain(t);
   if(E2.space>0&&stars.visible&&!E2.on)stars.rotation.y+=dt*.01;
   if(EV.on){evFrame(t,dt)}
   else if(E2.on){e2Frame(t,dt)}
