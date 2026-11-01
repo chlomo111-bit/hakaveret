@@ -1,4 +1,4 @@
-# Tâches programmées — הכוורת שלנו (état au 1.11.2026, 11:05) — règle : stories à volonté, 1 post + 1 reel max par jour
+# Tâches programmées — הכוורת שלנו (état au 1.11.2026, 16:25) — règle : stories à volonté, 1 post + 1 reel max par jour
 
 Samedi 31.10 : tout est fait — tirage vendredi (@zoharkoresh_, 3 participants), tirage samedi (@shahar_b.y, 2 participants), story The Noise publiée une seule fois (19:10) + popup.
 
@@ -14,7 +14,7 @@ Samedi 31.10 : tout est fait — tirage vendredi (@zoharkoresh_, 3 participants)
 | dim. 1.11 18:30 | Ruche – story 18:30 | trig_01LFZRGP3mgNvgtEZ4SCCnDf | CE chat | Story teaser reel / compte à rebours |
 | dim. 1.11 19:55 | Ruche – passage + tirage dim. 19:55 | trig_01DzdBaQUUQb652AYWYS6xCo | CE chat | Passage + story « 5 דקות להגרלה! » + gagnant 20:00 + réveils de lundi |
 | dim. 1.11 21:30 | Ruche – story 21:30 | trig_01GP2q1nPnfwpB5wxRQR4knW | CE chat | Story « ce qui arrive demain » |
-| dès réception du MP3 | Vidéo du jour avec « מהדורת הכוורת » | — | CE chat | Montage, couverture, envoi ici + bureau, publication |
+| dim. 1.11 19:30 | Ruche – publier le reel requin 19:30 | trig_01E5JHLd6et5k6SL7J9qSnGB | CE chat | Reel « יש כריש בכוורת » (fait 16:25, envoyé + bureau) publié avec couverture, anti-doublon |
 
 Le tirage de 20:00 se fait automatiquement dans le jeu (lottery_live), même sans tâche.
 Anciennes tâches supprimées le 30.10 : voir ANCIENNES_TACHES.md.
