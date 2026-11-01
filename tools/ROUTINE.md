@@ -212,3 +212,9 @@ d. Communication : rappeler de temps en temps (pas tous les jours) dans une stor
 - 31.10 = dernier jour avec de l'argent réel (gagnants payés : @zoharkoresh_ ven., @shahar_b.y sam.).
 - À partir du 1.11 : loterie = 2000 🌼 crédités automatiquement + le gagnant décide de ce qui arrive d'extraordinaire dans le jeu le lendemain (lui répondre en commentaire « מה יקרה מחר בזכותך? »). Pièce d'or cachée (si réactivée) = 500 🌼 automatiques.
 - Les anciennes lignes de ce fichier qui parlent de ₪ / Bit / billets sont historiques : ne plus les appliquer. Ne plus envoyer de message « à payer par Bit » à Shlomo.
+
+## 📲 STORIES À VOLONTÉ — 1 POST + 1 REEL MAX PAR JOUR (règle de Shlomo, 1.11, 09:01)
+- Publications du fil : MAXIMUM 1 post + 1 reel par jour. Jamais plus (« plus que ça c'est trop »).
+- Stories : autant qu'on veut. Rythme de base : ~09:00 (nouveauté du jour), 11:00 (classement pollen), 14:00 (meilleurs commentaires), 17:00 (nouvelles abeilles), 18:30 (teaser reel / compte à rebours), 19:55 (5 דקות להגרלה), après 20:00 (gagnant), 21:30 (ce qui arrive demain).
+- Outil : python3 tools/story_make.py story.json out.jpg (1080×1920, Heebo, *jaune*, _violet_). Toujours regarder l'image avant, une seule publication par créneau, copie dans ~/Desktop/Jeux/הכוורת שלנו/Images/.
+- Les réveils du soir (19:55) programment les créneaux stories du lendemain dans ce chat.
