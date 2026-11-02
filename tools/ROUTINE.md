@@ -235,3 +235,6 @@ d. Communication : rappeler de temps en temps (pas tous les jours) dans une stor
 ## ⏰ HORAIRES DE PUBLICATION (règle de Shlomo, 2.11, 07:18)
 - RIEN n'est publié avant 08:00 (post, story, reel) : ça ne sert à rien, personne ne regarde.
 - La production du matin peut se préparer tôt (image, légende, événement), mais la publication du post du jour se fait à partir de 08:30 ; première story à partir de 09:00.
+
+## ✉️ MESSAGES PRIVÉS (constat 2.11)
+- L'API Instagram refuse toute réponse en DM (« outside of allowed window ») même quelques heures après le message : impossible de répondre aux DM depuis les automatisations. Lire les DM à chaque passage et signaler à Shlomo ceux qui demandent une action (ex. paiements, plaintes) ; répondre plutôt en commentaire public quand c'est possible.
