@@ -1,15 +1,15 @@
-# Vidéo du jour 2.11 — « פו הדב פרץ לכוורת » — publication 19:30 — voix Juniper (Eleven v3), ~26 s
-# À ajuster à 16:30 selon la barre réelle (bear_state) : si gagné avant → remplacer la ligne de suspense par la victoire.
-# 0–3 s   hook : alarme rouge, l'ours en gros plan qui mange le miel
-# 3–7 s   la ruche en feu (souhait de @maayan_danon)
-# 7–13 s  « מהדורת הכוורת » (journal.js) : commentaire « שהכוורת תעלה באש » de maayan_danon
-# 13–20 s barre « חומת הדבש » qui monte, abeilles qui récoltent, noms des שומרי הכוורת
-# 20–26 s suspense 20:00 + tirage 2000 🌼 + CTA
+# Vidéo du jour 2.11 — « ניצחנו את פו הדב » — publication 19:30 — voix Juniper (Eleven v3), ~26 s
+# Mis à jour 14:05 : objectif atteint (9 881 / 8 000 🌼 dès 14:00, 5 שומרי הכוורת)
+# 0–3 s   hook : alarme, l'ours dans la ruche en feu
+# 3–7 s   il mange le miel, flammes (souhait de @maayan_danon)
+# 7–13 s  « מהדורת הכוורת » (journal.js) : « חומת הדבש הושלמה! »
+# 13–20 s l'ours se transforme en statue de pierre + noms des 5 שומרי הכוורת
+# 20–26 s tirage 20:00 + 2000 🌼 + CTA
 
-[shouting] אזעקה! יש דוב בתוך הכוורת!
-[excited] פו הדב פרץ פנימה… והוא אוכל לנו את כל הדבש!
-[fast] ועכשיו… מהדורת הכוורת! מעיין ביקשה שהכוורת תעלה באש – והיא בוערת!
-[serious] רק דבר אחד יכול לגרש אותו: חומת דבש של שמונת אלפים אבקות.
-[excited] כל דבורה שאוספת – עוזרת. ומי שאוסף היום, הופך לשומר הכוורת!
-[fast] בשמונה בערב נדע: הדוב בורח… או נשאר?
-[shouting] והזוכה בהגרלה מקבל אלפיים אבקות ובוחר מה יקרה מחר! הקישור בביו!
+[shouting] אזעקה! פו הדב פרץ לכוורת!
+[excited] הכוורת בערה – בדיוק כמו שמעיין ביקשה – והוא אכל לנו את כל הדבש!
+[fast] ועכשיו… מהדורת הכוורת! חומת הדבש הושלמה – כבר בשתיים בצהריים!
+[excited] פו הדב… הפך לפסל! לתמיד!
+[warm] תודה לשומרי הכוורת: רחל, זוהר, יקיר, שלי ואביב!
+[fast] הערב בשמונה – הגרלה בשידור חי: הזוכה מקבל אלפיים אבקות ובוחר מה יקרה מחר!
+[shouting] אז מה יקרה מחר? התגובה עם הכי הרבה לייקים קובעת!
