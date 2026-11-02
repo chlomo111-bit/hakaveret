@@ -231,3 +231,7 @@ d. Communication : rappeler de temps en temps (pas tous les jours) dans une stor
 - 200 🌼 dans la journée = 1 ticket. Un commentaire sur le post du jour = 2 tickets (×2). Le commentaire n'est PLUS obligatoire (il avait divisé les participants par 2).
 - Gain inchangé : 2000 🌼 crédités automatiquement + le gagnant choisit l'événement du lendemain.
 - Textes : « 200 אבקות = כרטיס · תגובה על הפוסט = כרטיס כפול ×2 ».
+
+## ⏰ HORAIRES DE PUBLICATION (règle de Shlomo, 2.11, 07:18)
+- RIEN n'est publié avant 08:00 (post, story, reel) : ça ne sert à rien, personne ne regarde.
+- La production du matin peut se préparer tôt (image, légende, événement), mais la publication du post du jour se fait à partir de 08:30 ; première story à partir de 09:00.
