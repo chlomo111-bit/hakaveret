@@ -5,7 +5,11 @@ import json, re, sys
 from playwright.sync_api import sync_playwright
 SP = "/tmp/claude-0/-home-claude/5aa6884f-a888-58d7-91af-e41ef083cb89/scratchpad"; F = SP + "/three3/node_modules/@fontsource/heebo/files"
 d = json.load(open(sys.argv[1])); out = sys.argv[2]
-def m(s): return re.sub(r"_(.+?)_", r"<span class=v>\1</span>", re.sub(r"\*(.+?)\*", r"<span class=y>\1</span>", s or ""))
+def m(s):
+    s = s or ""; keep = []
+    s = re.sub(r"<bdi[^>]*>.*?</bdi>|@[A-Za-z0-9._]+", lambda x: (keep.append(x.group(0)), "\x00%d\x00" % (len(keep) - 1))[1], s)  # @handles intacts (pas de _ ou * interprétés)
+    s = re.sub(r"_(.+?)_", r"<span class=v>\1</span>", re.sub(r"\*(.+?)\*", r"<span class=y>\1</span>", s))
+    return re.sub(r"\x00(\d+)\x00", lambda x: keep[int(x.group(1))], s)
 css = f"""@font-face{{font-family:H;font-weight:900;src:url(file://{F}/heebo-hebrew-900-normal.woff2)}}@font-face{{font-family:H;font-weight:900;src:url(file://{F}/heebo-latin-900-normal.woff2);unicode-range:U+0000-00FF}}@font-face{{font-family:H;font-weight:700;src:url(file://{F}/heebo-hebrew-700-normal.woff2)}}@font-face{{font-family:H;font-weight:700;src:url(file://{F}/heebo-latin-700-normal.woff2);unicode-range:U+0000-00FF}}
 *{{margin:0;padding:0;box-sizing:border-box}}html,body{{width:1080px;height:1920px;overflow:hidden}}
 body{{font-family:H;direction:rtl;color:#fff;background:#120c2e url(file://{SP}/bg_space.jpg) center/cover;position:relative}}
