@@ -1,0 +1,17 @@
+# Reel 3.11 — « הכוורת שלנו – פרק 1: המסיבה » — publication 19:00 — voix Juniper (Eleven v3), ~30 s
+# Nouveau règlement 3.11 : explication nouveaux → hier X / aujourd'hui Y → commentaire du jour → hier → journal au milieu → cliffhanger
+# Chiffres réels : 147 דבורים · dimanche 4,705 🌼 → lundi 15,160 🌼 (פי 3) · 88 עוקבים
+# 0–4 s    hook : la ruche en fête (boule disco, feux d'artifice)
+# 4–9 s    explication pour les nouveaux
+# 9–13 s   hier X / aujourd'hui Y
+# 13–19 s  « מהדורת הכוורת » : le commentaire du jour de @shellydor20
+# 19–24 s  hier : l'ours en statue, Shelly gagne → la fête
+# 24–30 s  rebondissement : la statue ouvre un œil… + CTA
+
+[excited] פרק 1: מסיבה בכוורת!
+[fast] חדשים פה? כל עוקב הוא דבורה, אוספים אבקה – וכל ערב בשמונה יש הגרלה!
+[excited] ביום ראשון אספנו ארבעת אלפים אבקות… ואתמול? חמש עשרה אלף! פי שלוש!
+[fast] ועכשיו… מהדורת הכוורת! התגובה של היום – שלי: "מחר יש מסיבה לכל חברי הכוורת!"
+[warm] אתמול פו הדב הפך לפסל, שלי זכתה בהגרלה… והיום כל הדבורים רוקדות!
+[whispers] אבל בזמן שכולם רוקדים… הפסל של פו הדב… פקח עין.
+[shouting] מה יקרה בפרק הבא? התגובה עם הכי הרבה לייקים קובעת!
