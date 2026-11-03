@@ -1,5 +1,17 @@
 # Routine quotidienne autonome — הכוורת שלנו (@hakaveret_shelanu)
 
+## 📜 NOUVEAU RÈGLEMENT (Shlomo, 03.11.2026) — PRIORITAIRE SUR TOUT LE RESTE
+Remplace « une vidéo du jour obligatoire chaque jour », « 1 post + 1 reel par jour » et le Shabbat fixe à 18:30.
+1. **Alternance** (même rythme pour tous les jeux) : un jour REEL, le jour suivant POST normal. Mar. 3.11 = reel (1er), mer. 4.11 = post, jeu. 5.11 = reel, ven. 6.11 = post, sam. 7.11 soir = reel, dim. 8.11 = post, lun. 9.11 = reel… Jamais deux reels de suite, jamais de vidéo de remplissage.
+   - Jour POST : post publié à 08:30 (pas avant 08:00), base de la loterie (commentaire sous le post = ×2).
+   - Jour REEL : pas de post. Le reel sort à 19:30 (voix demandée à Shlomo 2–3 h avant). Pour le tirage, ×2 = commentaire du jour sous le reel du jour OU sous le dernier post (les passages enregistrent les deux dans daily_commenters).
+2. **Structure du reel** : (1) explication courte de la ruche pour les nouveaux (« כל עוקב = דבורה, אוספים אבקה, כל ערב הגרלה ») ; (2) « אתמול הכוורת הייתה ב־X (דבורים / אבקה / עוקבים), היום אנחנו ב־Y » (vrais chiffres : honey_days, nombre d'abeilles, followers) ; (3) le commentaire du jour ; (4) ce qui s'est passé hier. « מהדורת הכוורת » (journal.js) reste au milieu.
+3. **Mini-série animée** : chaque reel = un épisode (« פרק N »), suspense, rebondissement, fin sur une question/cliffhanger qui donne envie de voir le suivant. Toujours caméra 3D qui bouge, son parfaitement synchronisé.
+4. **Paliers d'abonnés** (game_meta key `last_palier`) : à chaque passage, si followers ≥ last_palier+10 → tous les joueurs reçoivent +100 🌼 (`update honey set total=total+100`) OU un ticket en plus ce soir-là, story + news « 🎉 עוד 10 עוקבים! », puis last_palier = palier atteint. Tous les 100 (100, 200…) → GRAND événement dans la ruche (reel ce jour-là si l'alternance le permet, sinon post + stories). Jamais de vrai argent.
+5. **Shabbat** : vendredi = post normal seulement (pas de reel) + story « שבת שלום » 1 h avant l'entrée de Shabbat (vérifier chaque semaine l'horaire d'allumage des bougies, Tel Aviv). RIEN entre l'entrée et la sortie de Shabbat (horaire réel de la havdala, vérifié chaque semaine — plus le 18:30 fixe). La loterie du vendredi se fait samedi soir à la sortie.
+6. **Stories** : minimum 3 par jour en semaine, pas de maximum. Alterner images et PETITES VIDÉOS en story (8–15 s, capture 3D de la ruche qui bouge + musique/sons, SANS voix ElevenLabs ; 1080×1920, cadrage vérifié). Une photo seule toute la journée = trop sec.
+7. **Priorité absolue** : samedi soir, juste après la sortie de Shabbat, TOUJOURS un reel, quelle que soit l'alternance. Dimanche = post, puis l'alternance reprend.
+
 ## 🔁 OBJECTIF N°1 : FAIRE REPOSTER NOS REELS (Shlomo, 01/11/2026) — RÈGLE OBLIGATOIRE POUR TOUS LES JEUX
 But : que les utilisateurs repostent / partagent nos reels (story, envoi à des amis, repost). C'est la meilleure façon d'avoir de nouveaux visiteurs. Tout le contenu est pensé pour ça.
 1. **Reel pensé pour être partagé** : hook dès la 1re seconde, un moment drôle ou fou que les gens ont envie de montrer, et les vrais joueurs tagués (les gens repartagent quand ils se voient dans la vidéo).
@@ -213,7 +225,7 @@ d. Communication : rappeler de temps en temps (pas tous les jours) dans une stor
 - À partir du 1.11 : loterie = 2000 🌼 crédités automatiquement + le gagnant décide de ce qui arrive d'extraordinaire dans le jeu le lendemain (lui répondre en commentaire « מה יקרה מחר בזכותך? »). Pièce d'or cachée (si réactivée) = 500 🌼 automatiques.
 - Les anciennes lignes de ce fichier qui parlent de ₪ / Bit / billets sont historiques : ne plus les appliquer. Ne plus envoyer de message « à payer par Bit » à Shlomo.
 
-## 📲 STORIES À VOLONTÉ — 1 POST + 1 REEL MAX PAR JOUR (règle de Shlomo, 1.11, 09:01)
+## 📲 STORIES À VOLONTÉ — 1 POST + 1 REEL MAX PAR JOUR (règle de Shlomo, 1.11, 09:01) — ⚠️ REMPLACÉ le 3.11 par l'alternance reel/post (voir NOUVEAU RÈGLEMENT en haut)
 - Publications du fil : MAXIMUM 1 post + 1 reel par jour. Jamais plus (« plus que ça c'est trop »).
 - Stories : autant qu'on veut. Rythme de base : ~09:00 (nouveauté du jour), 11:00 (classement pollen), 14:00 (meilleurs commentaires), 17:00 (nouvelles abeilles), 18:30 (teaser reel / compte à rebours), 19:55 (5 דקות להגרלה), après 20:00 (gagnant), 21:30 (ce qui arrive demain).
 - Outil : python3 tools/story_make.py story.json out.jpg (1080×1920, Heebo, *jaune*, _violet_). Toujours regarder l'image avant, une seule publication par créneau, copie dans ~/Desktop/Jeux/הכוורת שלנו/Images/.
