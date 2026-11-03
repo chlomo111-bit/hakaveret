@@ -34,7 +34,7 @@ Résultat : ours vaincu à 12:28 (9 881 / 8 000 🌼) → statue. Reel « פו �
 | 09:30 | Story image (fête) | trig_01Lgvh547z8jiBuESpJVnr9A |
 | 12:00 | Passage + story top récolteurs | trig_01Q3oJAVGESnxkVp9uFPwgXx |
 | 14:00 | Story question/sondage | trig_01VJihUZ7EQLrRkwsGdkQjyo |
-| 16:30 | Texte voix à Shlomo + story ; reel dès le MP3, publié 19:30 | trig_011TcMQbfbnQJPJvzmHxbZkJ |
+| 16:00 | Texte voix à Shlomo + story ; reel dès le MP3, publié 19:00 | trig_011TcMQbfbnQJPJvzmHxbZkJ |
 | 18:30 | Story vidéo « עוד שעה » tirage | trig_016onFu7R4mvwxmse6xBMBKY |
 | 19:55 | Passage + tirage + programmation de mercredi (jour POST) | trig_01WCrQ9VGDTQ5rFGSQHJhm6N |
 | 21:30 | Story « ce qui arrive demain » | trig_01QXGpGDc3iws6S4j1mSazbZ |
