@@ -48,7 +48,7 @@ Résultat : ours vaincu à 12:28 (9 881 / 8 000 🌼) → statue. Reel « פו �
 | 12:00 | Passage + story | trig_01Pa2LpeNqjcTy7pX8vwbiam |
 | 14:00 | Story question (commentaires sous le post = ×2) | trig_017czHKQfA85SZp3oxa2WCy3 |
 | 18:30 | Story vidéo « tirage » | trig_01HH2NQgnsKeEFjq1yP6AyaG |
-| 19:55 | Passage + tirage + programmation de jeudi (jour REEL, « פרק 2 » à 19:00) | trig_01VTAcZDCFchPM4pNroZxd7p |
+| 19:55 | Passage + tirage + programmation de jeudi (jour REEL, « פרק 2 » à 21:00 — test) | trig_01VTAcZDCFchPM4pNroZxd7p |
 | 21:30 | Story « demain פרק 2 » | trig_018W7cbR9LRZR9krpmQ6M1ta |
 
 Le tirage de 20:00 se fait automatiquement dans le jeu (lottery_live), même sans tâche. L'ours (hive_events/bear_state) est automatique dans le jeu.
