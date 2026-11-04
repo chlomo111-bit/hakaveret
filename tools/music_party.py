@@ -2,7 +2,9 @@
 import numpy as np, wave, sys
 SR=44100; D=float(sys.argv[2]) if len(sys.argv)>2 else 12; N=int(SR*D); out=np.zeros(N); rng=np.random.default_rng(7)
 def add(s,at,g=1):
-    i=int(at*SR); j=min(N,i+len(s)); out[i:j]+=g*s[:j-i]
+    i=int(at*SR)
+    if i>=N: return
+    j=min(N,i+len(s)); out[i:j]+=g*s[:j-i]
 def env(n,a,d): x=np.arange(n)/SR; return np.clip(x/a,0,1)*np.exp(-x/d)
 def kick(): n=int(.3*SR); x=np.arange(n)/SR; f=45+120*np.exp(-x*32); return np.sin(2*np.pi*np.cumsum(f)/SR)*env(n,.001,.11)
 def clap(): n=int(.18*SR); return rng.standard_normal(n)*env(n,.001,.05)*.5
