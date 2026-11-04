@@ -14,6 +14,8 @@ Remplace « une vidéo du jour obligatoire chaque jour », « 1 post + 1 reel pa
 8. **Avant chaque texte de vidéo** (Shlomo, 3.11 17:45) : TOUJOURS analyser le contenu précédent — vues/portée/partages du reel d'avant (INSTAGRAM_GET_IG_MEDIA_INSIGHTS) + tous ses commentaires — et en tirer le texte (qui citer, quel hook, quel CTA). Écrire l'analyse en tête de voix.txt. (Depuis le 4.11 20:53 : Claude génère lui-même la voix, voir section VOIX.)
 7. **Priorité absolue** : samedi soir, juste après la sortie de Shabbat, TOUJOURS un reel, quelle que soit l'alternance. Dimanche = post, puis l'alternance reprend.
 
+## ✉️ CROSSOVER « L'ENVELOPPE » (5 jeux, samedi 7.11 19:00) — voir tools/CROSSOVER_ENVELOPPE.md (règles à suivre à la lettre, coordinateur = chat השכנים)
+
 ## 🎙️ VOIX : C'EST CLAUDE QUI LA GÉNÈRE (Shlomo, 4.11 20:53) — ne plus demander de MP3 à Shlomo
 - ElevenLabs : `creative_generate_speech`, voix **Juniper – Grounded and Professional** (voice_id `aMSt68OGf4xUZAnLpTU8`), model `eleven_v4` (tags [excited]/[whispers]/[shouting]/[fast]), generations_count 1, flow `nX48CTcwK9QDmmi0CwD9`. Télécharger le content_url avec curl, puis transcription mot à mot (creative_transcribe_audio) pour la sync.
 - Écrire le texte après l'analyse du contenu précédent, générer la voix vers 16:00 les jours de reel, monter et programmer la publication. Shlomo n'a plus rien à faire.
