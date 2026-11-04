@@ -14,6 +14,15 @@ Remplace « une vidéo du jour obligatoire chaque jour », « 1 post + 1 reel pa
 8. **Avant chaque texte de vidéo** (Shlomo, 3.11 17:45) : TOUJOURS analyser le contenu précédent — vues/portée/partages du reel d'avant (INSTAGRAM_GET_IG_MEDIA_INSIGHTS) + tous ses commentaires — et en tirer le texte (qui citer, quel hook, quel CTA). Écrire l'analyse en tête de voix.txt. Claude ne génère jamais la voix : il donne le texte avec les tags d'émotion ([excited], [whispers]…) et Shlomo génère la voix.
 7. **Priorité absolue** : samedi soir, juste après la sortie de Shabbat, TOUJOURS un reel, quelle que soit l'alternance. Dimanche = post, puis l'alternance reprend.
 
+## 🛠️ AMÉLIORATIONS VALIDÉES PAR SHLOMO (4.11, 20:10) — en vigueur dès le 5.11
+1. **Tirage plus juste** : `run_lottery` exclut automatiquement le gagnant de la veille (s'il y a au moins 2 inscrits) ; il reçoit un « 🛡️ bouclier » = +300 🌼 (champ `shield` du résultat). L'annoncer dans la story du résultat.
+2. **Cadeau d'arrivée** : à chaque passage, pour tout commentateur jamais vu (pas encore dans honey) → `select public.welcome_gift('<handle>');` (abeille dorée = refs 3 + 300 🌼, une seule fois, table welcome_gifts) + réponse « 🎁 מתנת הצטרפות: דבורת זהב ✨ + 300 🌼 » + son nom dans la story du soir.
+3. **Objectifs collectifs atteignables** : objectif du jour = 1,5 × la récolte totale de la veille (honey_days), arrondi à la centaine. Victoire → story de fête.
+4. **Reels au centre** : les jours post, les commentaires du jour sous le DERNIER REEL comptent aussi ×2 (daily_commenters : post du jour + dernier reel). Le post reste simple.
+5. **Reels ≤ 25 s** + mécanique de partage (concours, vote, « שלחו לחברים שיצביעו לכם ») dite à voix et écrite à l'écran.
+6. **Badges visibles 24 h** : roi de la ruche 👑, meilleur commentateur 💬👑 (déjà : cmtCrown), gagnant du tirage 🎟️ → la caméra du reel s'arrête sur leur abeille et dit leur nom.
+7. **Heure des reels** : dès 100 abonnés, lire INSTAGRAM_GET_USER_INSIGHTS `online_followers` (period lifetime) et caler l'heure sur le pic. En attendant : test 21:00 le 5.11.
+
 ## 🔁 OBJECTIF N°1 : FAIRE REPOSTER NOS REELS (Shlomo, 01/11/2026) — RÈGLE OBLIGATOIRE POUR TOUS LES JEUX
 But : que les utilisateurs repostent / partagent nos reels (story, envoi à des amis, repost). C'est la meilleure façon d'avoir de nouveaux visiteurs. Tout le contenu est pensé pour ça.
 1. **Reel pensé pour être partagé** : hook dès la 1re seconde, un moment drôle ou fou que les gens ont envie de montrer, et les vrais joueurs tagués (les gens repartagent quand ils se voient dans la vidéo).
