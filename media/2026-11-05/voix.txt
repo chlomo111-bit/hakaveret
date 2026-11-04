@@ -1,0 +1,19 @@
+# Reel jeu. 5.11 — « פרק 2: פו הדב התעורר » — publication 19:00 — Eleven v3, ~25 s
+# ANALYSE (4.11 17:50) — reel ep1 « מסיבה בכוורת » : 161 vues, 99 comptes, 10 commentaires, 4 PARTAGES (contre 1 pour le reel de l'ours) → l'appel « שלחו לחבר » marche.
+#   MAIS durée moyenne regardée = 10,4 s sur 40 s → trop long : ep2 ≤ 25 s, le moment fort (l'ours bouge) dès la 1re seconde.
+#   Post du 4.11 : 12 comptes seulement → les reels portent le compte, les posts servent au tirage.
+#   Commentaires : 2 NOUVEAUX joueurs veulent un roi : @yahli12349 « תעשו אותי המלך של הכוורת », @ori.adin « תעשו אותו (le bear) למלך ».
+# MÉCANIQUE DE PARTAGE (qui envoie à qui ?) : concours « מלך הכוורת » — chaque joueur ENVOIE la vidéo à SES amis pour qu'ils
+#   commentent/likent son nom → la personne qui a le plus de likes devient roi (couronne 3D dans le jeu). Yahli l'envoie à ses copains, l'ours… c'est nous.
+# Chiffre à vérifier à 20:00 : récolte du 4.11 (1 906 🌼 à 17:50 sur 5 000). Si l'objectif est atteint → remplacer les lignes 4–6 (version B).
+
+[whispers] רגע… הפסל של פו הדב… זז!
+[shouting] פרק 2: פו הדב התעורר!
+[fast] חדשים? כל עוקב הוא דבורה – ואתם מחליטים מה קורה בכוורת.
+[excited] אתמול שלי שמרה עליו, אבל אספנו רק אלפיים אבקות מתוך חמשת אלפים… והאבן נשברה!
+[fast] ועכשיו… מהדורת הכוורת! התגובה של היום – יהלי: "תעשו אותי המלך של הכוורת!"
+[excited] ופו הדב? הוא רוצה את הכתר בעצמו!
+[shouting] אז מי יהיה מלך הכוורת? שלחו את הסרטון לחברים שיצביעו לכם – התגובה עם הכי הרבה לייקים לוקחת את הכתר!
+
+# VERSION B (si 5 000 🌼 atteints ce soir), remplace la ligne 4 :
+# [excited] אתמול שמרנו עליו – חמשת אלפים אבקות! אבל בלילה… האבן נסדקה עוד!
