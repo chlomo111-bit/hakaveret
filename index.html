@@ -192,6 +192,7 @@ textarea.field{font-size:15px;min-height:150px;resize:vertical;direction:rtl}
       <button class="pill pillbtn" id="missBtn" aria-label="משימות היום והסטטיסטיקות שלי">🎯 משימות <b id="missN">0/3</b></button>
       <button class="pill pillbtn" id="ideaBtn" aria-label="תיבת רעיונות">💡 תיבת רעיונות</button>
       <span class="pill demo" id="demoPill" hidden>הדגמה</span>
+      <span class="pill" id="crackPill" hidden style="white-space:normal;text-align:center;border-color:#B9A8FF"></span>
       <span class="pill" id="partyPill" hidden style="white-space:normal;text-align:center;border-color:#FF3DA6"></span>
       <span class="pill" id="bearPill" hidden style="white-space:normal;text-align:center;border-color:#E5484D"></span>
       <span class="pill" id="huntPill" hidden style="white-space:normal;text-align:center">🪙 מטבע זהב של <b id="prizeTxt"></b> מוסתר בכוורת</span>
@@ -1722,7 +1723,7 @@ let bearSt=null,bearSkew=0;
  const arm2=new THREE.Mesh(merge([boxGeo(.8,2,.8,0,-.6,.5,F)]),new THREE.MeshLambertMaterial({vertexColors:true}));arm2.position.set(-1.7,3.6,.5);BEAR.add(arm2);
  BEAR.userData.stone=new THREE.MeshLambertMaterial({color:0xA8A39A});
  const pl=new THREE.PointLight(0xff6040,0,10,1.8);pl.position.set(0,5,2);BEAR.add(pl);BEAR.userData.light=pl;}
-function bearStatue(on){if(BEAR.userData.isStone===on)return;BEAR.userData.isStone=on;BEAR.traverse(o=>{if(o.isMesh){if(on){o.userData.mat=o.userData.mat||o.material;o.material=BEAR.userData.stone}else if(o.userData.mat)o.material=o.userData.mat}})}
+function bearStatue(on){if(BEAR.userData.isStone===on)return;BEAR.userData.isStone=on;BEAR.traverse(o=>{if(o.isMesh&&!o.userData.keep){if(on){o.userData.mat=o.userData.mat||o.material;o.material=BEAR.userData.stone}else if(o.userData.mat)o.material=o.userData.mat}})}
 /* 🔥 2.11 : souhait de @maayan_danon (gagnante du 1.11) « שהכוורת תעלה באש » — la ruche brûle tant que l'ours n'est pas chassé */
 function bearFire(){const on=!!(bearSt&&bearSt.active&&bearSt.day==="2026-11-02"&&!bearSt.won)&&!(typeof E2!=="undefined"&&E2.on);
   if(!on){if(bearFire.was){flames.visible=false;bearFire.was=false}return}bearFire.was=true;flames.visible=true;flames.material.opacity=1;flames.material.color.set(0xFF3A0A);const dt=1/60,a=flames.geometry.attributes.position.array;
@@ -1764,6 +1765,25 @@ function updateParty(t,dt){const on=(window.PARTY_FORCE||partyDay()===PARTY.day)
   PARTY.fw.material.color.setHSL((t*.25)%1,1,.62);PARTY.fw.geometry.attributes.position.needsUpdate=true}
 function renderParty(){const p=$("#partyPill");if(!p)return;p.hidden=!PARTY.on;if(PARTY.on)p.innerHTML=`🎉🪩 מסיבה בכוורת! בזכות <b dir="ltr">@shellydor20</b> (הזוכה של אתמול) – כל הדבורים רוקדות היום 🐝`}
 
+/* 🗿👁️ 4.11 : suite de l'épisode 1 — la statue de פו הדב a ouvert un œil et se fissure. Souhait de @shellydor20 (gagnante 3.11) : « הוא ימשיך להיות אבן » → la ruche doit récolter ensemble 5 000 🌼 avant 20:00 pour qu'il reste en pierre (rpc/crack_state) */
+let crackSt=null;const CRACK=new THREE.Group();BEAR.add(CRACK);CRACK.visible=false;
+{const K=new THREE.MeshBasicMaterial({color:0x000000,fog:false});const E=new THREE.MeshBasicMaterial({color:0xff0000,fog:false});
+ [[-.1,4.4,1.2,.22,1.3,.04,.35],[.6,5.5,1.2,.2,1.0,.04,-.5],[.5,2.8,1.33,.22,1.6,.04,-.4],[-.9,2.2,1.33,.2,1.2,.04,.25],[.2,1.6,1.33,.18,.8,.04,.9]].forEach(c=>{const m=new THREE.Mesh(new THREE.BoxGeometry(c[3],c[4],c[5]),K);m.position.set(c[0],c[1],c[2]);m.rotation.z=c[6];m.userData.keep=true;CRACK.add(m)});
+ const eye=new THREE.Mesh(new THREE.BoxGeometry(.62,.62,.3),E);eye.position.set(-.6,5.6,1.24);eye.userData.keep=true;CRACK.add(eye);
+ const l=new THREE.PointLight(0xff2030,1,4,2);l.position.set(-.6,5.6,2);CRACK.add(l);CRACK.userData={eye,l}}
+async function crackTick(){try{const r=await sb("rpc/crack_state",{method:"POST",body:"{}"});if(!r.ok)return;const j=await r.json();const first=!crackSt;crackSt=j;renderCrack();
+  if(j.active&&first&&!j.won&&!j.lost&&mode==="hive")notify("🗿👁️ הפסל של פו הדב פקח עין ונסדק! אספו יחד 5,000 🌼 עד 20:00 כדי שיישאר אבן 🐝")}catch(e){}}
+function updateCrack(t){const j=crackSt,on=!!(j&&j.active&&BEAR.visible&&!j.won);CRACK.visible=on||!!(j&&j.active&&j.lost);if(!CRACK.visible)return;
+  const k=Math.max(.3,.6+.4*Math.sin(t*3));CRACK.userData.l.intensity=1*k;CRACK.userData.eye.scale.setScalar(.8+.25*k);
+  if(!j.won)BEAR.position.x=6.5+Math.sin(t*40)*.03*(Math.sin(t*.7)>.6?1:0)}
+function renderCrack(){const p=$("#crackPill");if(!p)return;const j=crackSt;if(!j||!j.active){p.hidden=true;return}p.hidden=false;
+  const pct=Math.min(100,Math.round(100*j.total/j.goal)),left=Math.max(0,Math.floor((Date.parse(j.ends_at)-Date.now())/1000));
+  const bar=`<span style="display:inline-block;vertical-align:middle;width:120px;height:12px;border-radius:8px;background:rgba(255,255,255,.18);overflow:hidden;margin:0 6px"><span style="display:block;height:100%;width:${pct}%;background:linear-gradient(90deg,#B9A8FF,#FF4B5C)"></span></span>`;
+  if(j.won)p.innerHTML=`🛡️ הצלחנו! הפסל של פו הדב נשאר אבן (בינתיים… 👀) · <b>${j.total.toLocaleString("he-IL")}</b> 🌼 · ${j.players} דבורים`;
+  else if(j.lost)p.innerHTML=`😱 הפסל נסדק… פו הדב מתעורר! מה יקרה בפרק 2? 🐻`;
+  else p.innerHTML=`🗿👁️ הפסל של פו הדב פקח עין ו<b>נסדק</b>! כמו ש־<b dir="ltr">@shellydor20</b> ביקשה – תשאירו אותו אבן:${bar}<b>${j.total.toLocaleString("he-IL")}</b>/${j.goal.toLocaleString("he-IL")} 🌼 · עוד <b style="font-variant-numeric:tabular-nums">${fmtCountdown(left)}</b>`}
+crackTick();setInterval(crackTick,30000);setInterval(renderCrack,1000);
+
 function loop(){
   if(!window.CAP)requestAnimationFrame(loop);
   try{frameBody()}catch(e){showErr(e)}
@@ -1777,7 +1797,7 @@ function frameBody(){
   {const ab=byHandle.get(ADMIN_HANDLE);if(ab&&posArr.length>ab.i*3+2){angelHalo.visible=true;const sc=beeScale(ab)*BEE_S;angelHalo.position.set(posArr[ab.i*3]+.45*sc*Math.cos(yawArr[ab.i]),posArr[ab.i*3+1]+.62*sc+Math.sin(t*2)*.05,posArr[ab.i*3+2]-.45*sc*Math.sin(yawArr[ab.i]));angelHalo.scale.setScalar(sc*.55)}else angelHalo.visible=false}
   if(mode==="intro"){runIntro(dt);return}
   pollen.rotation.y+=dt*.02;if(treasureHit){treasure.children[0].position.z=Math.sin(t*2)*.08;const hs=6+Math.sin(t*3)*1.5;treasure.userData.halo.scale.set(hs,hs,1)}core.intensity=1.5+Math.sin(t*1.3)*.15;
-  e2Check(t);evCheck(t);evRain(dt);metCheck(t);metIdle(t);updateFlowers(t,dt);updateFountain(t);updateBear(t);updateParty(t,dt);
+  e2Check(t);evCheck(t);evRain(dt);metCheck(t);metIdle(t);updateFlowers(t,dt);updateFountain(t);updateBear(t);updateParty(t,dt);updateCrack(t);
   if(E2.space>0&&stars.visible&&!E2.on)stars.rotation.y+=dt*.01;
   if(EV.on){evFrame(t,dt)}
   else if(E2.on){e2Frame(t,dt)}
