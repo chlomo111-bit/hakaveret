@@ -1,4 +1,4 @@
-# Tâches programmées — הכוורת שלנו (état au 3.11.2026, 20:05)
+# Tâches programmées — הכוורת שלנו (état au 4.11.2026, 20:05)
 Règles (NOUVEAU RÈGLEMENT 3.11, voir ROUTINE.md) : alternance 1 jour REEL / 1 jour POST, jamais deux reels de suite ; stories ≥ 3/jour en alternant image et petite vidéo (musique, sans voix) ; paliers tous les 10 abonnés (+100 🌼 à tous) et grand événement tous les 100 ; vendredi = post + story שבת שלום 1 h avant l'entrée, rien pendant Shabbat, reel TOUJOURS samedi soir à la sortie ; plus de vrai argent (gagnant = 2000 🌼 + choisit l'événement de demain) ; dès le 2.11 : 200 🌼 = ticket, commentaire = ×2.
 
 ## Dimanche 1.11 (fait)
@@ -50,6 +50,17 @@ Résultat : ours vaincu à 12:28 (9 881 / 8 000 🌼) → statue. Reel « פו �
 | 18:30 | Story vidéo « tirage » | trig_01HH2NQgnsKeEFjq1yP6AyaG |
 | 19:55 | Passage + tirage + programmation de jeudi (jour REEL, « פרק 2 » à 21:00 — test) | trig_01VTAcZDCFchPM4pNroZxd7p |
 | 21:30 | Story « demain פרק 2 » | trig_018W7cbR9LRZR9krpmQ6M1ta |
+
+**Mercredi 4.11 (fait)** : post « פו הדב נסדק » (12 comptes) · statue fissurée dans le jeu, objectif 5 000 🌼 raté (2 149, 3 joueurs) → l'ours se réveille · 5 stories (2 vidéos) · tirage : 3 participants, @shellydor20 (3e fois) · המגיב של היום : @ori.adin · 90 abonnés.
+
+## Jeudi 5.11 — 🎬 JOUR REEL « פרק 2 » à 21:00 (TEST d'horaire) · pas de post
+| Quand | Tâche | ID |
+|---|---|---|
+| 08:30 | Production : ours réveillé + concours « מלך הכוורת » dans le jeu, story vidéo | trig_01JNqCC3CMdZv3ajrSTmcAzb |
+| 12:00 | Passage + story « מי יהיה מלך הכוורת? » | trig_015JTuT2vSWgtKL5UtJ9hfMj |
+| 16:00 | Rappel MP3 si besoin ; reel monté dès le MP3, publication 21:00 | trig_01Gcrioe3ZLVPVpMDDAQDBcU |
+| 18:30 | Story vidéo tirage + épisode | trig_012kXXHzj4PydrryPQft7cEf |
+| 19:55 | Passage + tirage + programmation du vendredi (Shabbat) + mesure du test | trig_01DECm4NGVpV8xF3PSMnka63 |
 
 Le tirage de 20:00 se fait automatiquement dans le jeu (lottery_live), même sans tâche. L'ours (hive_events/bear_state) est automatique dans le jeu.
 Anciennes tâches supprimées le 30.10 : voir ANCIENNES_TACHES.md.
