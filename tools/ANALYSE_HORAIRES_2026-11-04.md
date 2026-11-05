@@ -23,3 +23,5 @@ Conclusions
 - Depuis le 28.10, quelle que soit l'heure (08:30, 11:30, 16:00, 19:00, 21:00) : 120–190 comptes. L'heure n'est pas le frein principal ; ce sont les partages (0–4) et la durée regardée (7–10 s).
 - Instagram ne donne pas encore les heures où les abonnés sont en ligne (moins de 100 abonnés) → à relire dès 100.
 - Test proposé : reel à 21:00 (pic du soir en Israël, juste après le tirage, quand les joueurs sont déjà sur Instagram) à comparer avec 19:00, mesuré à 24 h.
+
+- 5.11 ep2 (21:00) à +1 h : 10 comptes, 27 vues, 0 partage, 2 commentaires, watch moyen 11,8 s (ep1 : 10,4 s). Mesure finale samedi 20:36.
