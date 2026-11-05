@@ -1,5 +1,14 @@
 # Routine quotidienne autonome — הכוורת שלנו (@hakaveret_shelanu)
 
+## 🚫 ANTI-SPAM COMMENTAIRES (Shlomo, 05/11/2026) — RÈGLE OBLIGATOIRE POUR TOUS LES JEUX
+« Ça sert à rien de spammer les messages en commentaire. »
+1. **UNE seule réponse du compte par commentaire de joueur.** Avant de répondre, lire les réponses déjà présentes : si le compte a déjà répondu dans ce fil, on ne répond plus (sauf si le joueur pose une nouvelle question directe).
+2. **Ne pas répondre dans le fil d'un joueur pour annoncer autre chose** (gagnant du tirage, commentateur du jour, cadeau d'arrivée, pièces récoltées…). Ces annonces vont en story / dans le reel, ou en UN seul commentaire du compte sous le post — jamais dans le fil de chaque joueur.
+3. **Un joueur qui a gagné plusieurs choses = un seul message** qui regroupe tout.
+4. **Pas de réponse aux emojis seuls ou aux « קדימה » / « 🔥 »** : rien, ou un seul mot si c'est un nouveau joueur.
+5. **Maximum UN commentaire du compte « 👇 הגיבו כאן » par publication**, jamais plus.
+6. Réponse courte, humaine, utile : si elle n'apporte rien de nouveau, on ne l'envoie pas.
+
 ## 📜 NOUVEAU RÈGLEMENT (Shlomo, 03.11.2026) — PRIORITAIRE SUR TOUT LE RESTE
 Remplace « une vidéo du jour obligatoire chaque jour », « 1 post + 1 reel par jour » et le Shabbat fixe à 18:30.
 1. **Alternance** (même rythme pour tous les jeux) : un jour REEL, le jour suivant POST normal. Mar. 3.11 = reel (1er), mer. 4.11 = post, jeu. 5.11 = reel, ven. 6.11 = post, sam. 7.11 soir = reel, dim. 8.11 = post, lun. 9.11 = reel… Jamais deux reels de suite, jamais de vidéo de remplissage.
