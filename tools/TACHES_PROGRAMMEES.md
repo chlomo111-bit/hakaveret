@@ -61,6 +61,29 @@ Résultat : ours vaincu à 12:28 (9 881 / 8 000 🌼) → statue. Reel « פו �
 | 16:00 | Rappel MP3 si besoin ; reel monté dès le MP3, publication 21:00 | trig_01Gcrioe3ZLVPVpMDDAQDBcU |
 | 18:30 | Story vidéo tirage + épisode | trig_012kXXHzj4PydrryPQft7cEf |
 | 19:55 | Passage + tirage + programmation du vendredi (Shabbat) + mesure du test | trig_01DECm4NGVpV8xF3PSMnka63 |
+| 21:00 | Publication ep2 + commentaire CTA + story | trig_01389xQuCGhp26detvLj2Mc8 |
+| 22:00 | Passage 1 h après le reel | trig_01MyswLHufydhsubT3tpzZUm |
+
+**Jeudi 5.11 (fait)** : ours réveillé + couronne · stories 08:30 (voix), 12:00, 16:00, 18:30 (vidéo) · tirage (2 participants) : @shahar_b.y, bouclier +300 🌼 pour @shellydor20 · 91 abonnés.
+
+## Vendredi 6.11 — 🖼️ JOUR POST = CARROUSEL · Shabbat 16:26
+| Quand | Tâche | ID |
+|---|---|---|
+| 08:30 | Passage + CARROUSEL « מי מי בכוורת השבוע » + programmation 12:00/14:00/15:26 | trig_015BUHGErHGKoLEhdjGvYmxC |
+| 10:30 | Production reel crossover « פרק 3 » (voix Claude) → programmé sam. 19:00 | trig_0115U8aGN48ajrQUbWazVE1B |
+| 15:26 | Story « שבת שלום » (programmée à 08:30) — puis RIEN jusqu'à sam. 17:24 | — |
+
+## Samedi 7.11 — 🎬 REEL CROSSOVER « L'ENVELOPPE » 19:00
+| Quand | Tâche | ID |
+|---|---|---|
+| 17:30 | Passage + tirage du vendredi | trig_011jhEt3zMoX1BxsXBr7cnxE |
+| 19:00 | Publication reel crossover (programmée vendredi) | — |
+| 19:40 | Passage + tirage du samedi | trig_01KyFd4Wn3a7SMdjFz5wuHCP |
+| 20:36 | Passage + mesure test 21:00 + programmation dimanche | trig_01RK9KA2kWQoqbD1tuoTD8F4 |
+
+## Dimanche 8.11 / Lundi 9.11
+- Dimanche : carrousel « איך משחקים – 4 צעדים », stories 12:00/19:00 partages crossover (programmées sam. 20:36).
+- Dim. 21:00 : programmation du lundi, ep4 couronnement — trig_01SE48ueDKVqK7QRuvuDbqd8
 
 Le tirage de 20:00 se fait automatiquement dans le jeu (lottery_live), même sans tâche. L'ours (hive_events/bear_state) est automatique dans le jeu.
 Anciennes tâches supprimées le 30.10 : voir ANCIENNES_TACHES.md.
