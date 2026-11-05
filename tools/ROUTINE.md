@@ -30,6 +30,12 @@ Remplace « une vidéo du jour obligatoire chaque jour », « 1 post + 1 reel pa
 - Écrire le texte après l'analyse du contenu précédent, générer la voix vers 16:00 les jours de reel, monter et programmer la publication. Shlomo n'a plus rien à faire.
 - Stories : on peut maintenant ajouter de la voix (courte, 1–2 phrases, ex. « שלי זכתה שוב! מי יעצור אותה הערב? ») sur les petites vidéos de story, en alternance avec des stories musique seule.
 
+## 📈 STRATÉGIE (skill strategie-instagram-pro, 5.11)
+1. Jours « post » = CARROUSEL (5 slides 1080×1350) plutôt qu'une image seule (post du 4.11 : 12 comptes). Ex. ven. 6.11 « מי מי בכוורת השבוע » (1 slide par joueur avec son abeille + titre) ; dim. 8.11 « איך משחקים בכוורת – ב־4 צעדים » pour les nouveaux du crossover.
+2. Passage 1 h après chaque reel (répondre dans la 1re heure).
+3. Fin de reel qui boucle sur la 1re image (revisionnage).
+4. Lun. 9.11 ép. 4 « 👑 יש לנו מלך… » : couronnement du gagnant du vote, caméra sur son abeille.
+
 ## 🛠️ AMÉLIORATIONS VALIDÉES PAR SHLOMO (4.11, 20:10) — en vigueur dès le 5.11
 1. **Tirage plus juste** : `run_lottery` exclut automatiquement le gagnant de la veille (s'il y a au moins 2 inscrits) ; il reçoit un « 🛡️ bouclier » = +300 🌼 (champ `shield` du résultat). L'annoncer dans la story du résultat.
 2. **Cadeau d'arrivée** : à chaque passage, pour tout commentateur jamais vu (pas encore dans honey) → `select public.welcome_gift('<handle>');` (abeille dorée = refs 3 + 300 🌼, une seule fois, table welcome_gifts) + réponse « 🎁 מתנת הצטרפות: דבורת זהב ✨ + 300 🌼 » + son nom dans la story du soir.
