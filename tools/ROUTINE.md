@@ -283,3 +283,13 @@ d. Communication : rappeler de temps en temps (pas tous les jours) dans une stor
 
 ## ✉️ MESSAGES PRIVÉS (constat 2.11)
 - L'API Instagram refuse toute réponse en DM (« outside of allowed window ») même quelques heures après le message : impossible de répondre aux DM depuis les automatisations. Lire les DM à chaque passage et signaler à Shlomo ceux qui demandent une action (ex. paiements, plaintes) ; répondre plutôt en commentaire public quand c'est possible.
+
+## 🎬 GÉNÉRIQUE DES REELS (analyse ep1/ep2, 5.11)
+Constat : frame 0 floue (fondu), hook révélé mot par mot sur ~3 s (« זז! » arrive à 3,3 s), « פו הדב » coupé sur 2 lignes, « התעורר! » rouge sur fond rose illisible, titre « פרק 2 » sans fond, explication nouveaux 4 s (4–8 s) au moment où les gens partent (watch moyen 10–12 s), étiquettes @ des abeilles qui encombrent, aucune signature de série identique d'un épisode à l'autre.
+Règles :
+1. Frame 0 nette + texte du hook déjà affiché (pas de fondu) ; hook lisible en < 1,5 s.
+2. Après le hook : sting de série 0,8 s identique à chaque épisode (logo « הכוורת שלנו » + « פרק N » sur carte sombre + bzz/jingle court) = reconnaissance de la série.
+3. Explication nouveaux = 1 ligne ≤ 1,5 s en bandeau (« כל עוקב = דבורה · אתם מחליטים »), le reste dans la légende.
+4. Étiquettes @ masquées pendant les 4 premières secondes ; ensuite seulement les @ cités.
+5. Texte toujours sur fond sombre, jamais un nom coupé sur 2 lignes.
+6. Badge discret « הכוורת שלנו · פרק N » en haut pendant tout le reel ; fin qui boucle sur l'image d'ouverture.
