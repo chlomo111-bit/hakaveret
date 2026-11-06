@@ -293,3 +293,6 @@ Règles :
 4. Étiquettes @ masquées pendant les 4 premières secondes ; ensuite seulement les @ cités.
 5. Texte toujours sur fond sombre, jamais un nom coupé sur 2 lignes.
 6. Badge discret « הכוורת שלנו · פרק N » en haut pendant tout le reel ; fin qui boucle sur l'image d'ouverture.
+
+## 📁 BUREAU (6.11)
+Nouveau dossier rangé : ~/Desktop/Jeux/hakaveret_shelanu/{1_Reels,2_Stories,3_Posts,4_Sons_voix,5_Apercus_jeu,6_Textes} → y copier les nouveaux fichiers (sous-dossier daté AAAA-MM-JJ).

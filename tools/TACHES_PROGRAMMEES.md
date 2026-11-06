@@ -71,7 +71,9 @@ Résultat : ours vaincu à 12:28 (9 881 / 8 000 🌼) → statue. Reel « פו �
 |---|---|---|
 | 08:30 | Passage + CARROUSEL « מי מי בכוורת השבוע » + programmation 12:00/14:00/15:26 | trig_015BUHGErHGKoLEhdjGvYmxC |
 | 10:30 | Production reel crossover « פרק 3 » (voix Claude) → programmé sam. 19:00 | trig_0115U8aGN48ajrQUbWazVE1B |
-| 15:26 | Story « שבת שלום » (programmée à 08:30) — puis RIEN jusqu'à sam. 17:24 | — |
+| 12:00 | Story vidéo voix + passage | trig_011pN2PfGvQFgNR2cnHB62ND |
+| 14:00 | Story image + passage | trig_01VmTgu8ixzjZf4dDsGt85se |
+| 15:26 | Story « שבת שלום » — puis RIEN jusqu’à sam. 17:24 | trig_01HVZYRw7kALzxuPRSfLYGR2 |
 
 ## Samedi 7.11 — 🎬 REEL CROSSOVER « L'ENVELOPPE » 19:00
 | Quand | Tâche | ID |
