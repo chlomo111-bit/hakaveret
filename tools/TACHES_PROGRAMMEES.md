@@ -79,7 +79,7 @@ Résultat : ours vaincu à 12:28 (9 881 / 8 000 🌼) → statue. Reel « פו �
 | Quand | Tâche | ID |
 |---|---|---|
 | 17:30 | Passage + tirage du vendredi | trig_011jhEt3zMoX1BxsXBr7cnxE |
-| 19:00 | Publication reel crossover (programmée vendredi) | — |
+| 19:00 | Publication reel crossover פרק 3 (e659388) | trig_016mJiCmS4k6UCfqJAcFr4ZH |
 | 19:40 | Passage + tirage du samedi | trig_01KyFd4Wn3a7SMdjFz5wuHCP |
 | 20:36 | Passage + mesure test 21:00 + programmation dimanche | trig_01RK9KA2kWQoqbD1tuoTD8F4 |
 
